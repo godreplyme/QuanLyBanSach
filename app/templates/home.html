@@ -1,6 +1,6 @@
 {% extends 'layout/base.html' %}
 {% block content%}
-<div id="demo" class="carousel slide container" data-bs-ride="carousel">
+<div id="demo" class="carousel slide container slide-banner" data-bs-ride="carousel">
 
     <!-- Indicators/dots -->
     <div class="carousel-indicators">
@@ -10,27 +10,368 @@
     </div>
 
     <!-- The slideshow/carousel -->
-    <div class="carousel-inner">
-        <div class="carousel-item active">
+    <div class="carousel-inner banner-slideshow">
+        <div class="carousel-item banner-slideshow-item active">
             <img src="https://images.hdqwalls.com/download/beautiful-landscape-2-hd-1920x1080.jpg" alt="Los Angeles"
                  class="d-block w-100 img-fluid">
         </div>
-        <div class="carousel-item">
+        <div class="carousel-item banner-slideshow-item">
             <img src="https://images3.alphacoders.com/171/thumb-1920-171245.jpg" alt="Chicago"
                  class="d-block w-100 img-fluid">
         </div>
-        <div class="carousel-item">
+        <div class="carousel-item banner-slideshow-item">
             <img src="https://hdqwalls.com/download/beautiful-scenery-1920x1080.jpg" alt="New York"
                  class="d-block w-100 img-fluid">
         </div>
     </div>
 
     <!-- Left and right controls/icons -->
-    <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
+    <button class="carousel-control-prev butn-banner-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
         <span class="carousel-control-prev-icon"></span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
+    <button class="carousel-control-next butn-banner-next" type="button" data-bs-target="#demo" data-bs-slide="next">
         <span class="carousel-control-next-icon"></span>
     </button>
+
 </div>
+<h2 class="list-header">Featured <b>Products</b></h2>
+<div class="carousel container">
+    <div class="row">
+        <div id="product-slideshow-container" class="carousel slide product-slideshow" data-bs-ride="carousel"
+             data-interval="5">
+            <div class="carousel-indicators mt-10">
+                <button type="button" data-bs-target="#product-slideshow-container" data-bs-slide-to="0"
+                        class="active"></button>
+                <button type="button" data-bs-target="#product-slideshow-container" data-bs-slide-to="1"></button>
+                <button type="button" data-bs-target="#product-slideshow-container" data-bs-slide-to="2"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="row">
+                        <div class="col-6 col-md-4 col-lg-2 flex-grow-1 d-flex justify-content-center mb-4">
+                            <div class="card product-card">
+                                <img src="https://cdn0.fahasa.com/media/catalog/product/3/0/3030000000554.jpg"
+                                     class="card-img-top"
+                                     alt="Product">
+                                <div class="card-body">
+                                    <h5 class="card-title text-truncate">
+                                        Lịch Lò Xo Để Bàn Mini 2025 - Size XS - 7 x 6.5 cm
+                                    </h5>
+                                    <div>
+                                        <span class="text-danger fw-bold fs-5">11.480 đ</span>
+                                        <span class="badge bg-danger ms-2">-18%</span>
+                                    </div>
+                                    <div class="text-muted text-decoration-line-through">
+                                        14.000 đ
+                                    </div>
+                                    <p class="text-muted mt-2 mb-0">Đã bán 52</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2 flex-grow-1 d-flex justify-content-center mb-4">
+                            <div class="card product-card">
+                                <img src="https://cdn0.fahasa.com/media/catalog/product/3/0/3030000000554.jpg"
+                                     class="card-img-top"
+                                     alt="Product">
+                                <div class="card-body">
+                                    <h5 class="card-title text-truncate">
+                                        Lịch Bàn Ngang 2025 - Thuận Buồm Xuôi Gió
+                                    </h5>
+                                    <div>
+                                        <span class="text-danger fw-bold fs-5">30.800 đ</span>
+                                        <span class="badge bg-danger ms-2">-23%</span>
+                                    </div>
+                                    <div class="text-muted text-decoration-line-through">
+                                        40.000 đ
+                                    </div>
+                                    <p class="text-muted mt-2 mb-0">Đã bán 52</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2 flex-grow-1 d-flex justify-content-center mb-4">
+                            <div class="card product-card">
+                                <img src="https://cdn0.fahasa.com/media/catalog/product/3/0/3030000000554.jpg"
+                                     class="card-img-top"
+                                     alt="Product">
+                                <div class="card-body">
+                                    <h5 class="card-title text-truncate">
+                                        Lịch Bàn Ngang 2025 - Thuận Buồm Xuôi Gió
+                                    </h5>
+                                    <div>
+                                        <span class="text-danger fw-bold fs-5">30.800 đ</span>
+                                        <span class="badge bg-danger ms-2">-23%</span>
+                                    </div>
+                                    <div class="text-muted text-decoration-line-through">
+                                        40.000 đ
+                                    </div>
+                                    <p class="text-muted mt-2 mb-0">Đã bán 52</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2 flex-grow-1 d-flex justify-content-center mb-4">
+                            <div class="card product-card">
+                                <img src="https://cdn0.fahasa.com/media/catalog/product/3/0/3030000000554.jpg"
+                                     class="card-img-top"
+                                     alt="Product">
+                                <div class="card-body">
+                                    <h5 class="card-title text-truncate">
+                                        Lịch Bàn Ngang 2025 - Thuận Buồm Xuôi Gió
+                                    </h5>
+                                    <div>
+                                        <span class="text-danger fw-bold fs-5">30.800 đ</span>
+                                        <span class="badge bg-danger ms-2">-23%</span>
+                                    </div>
+                                    <div class="text-muted text-decoration-line-through">
+                                        40.000 đ
+                                    </div>
+                                    <p class="text-muted mt-2 mb-0">Đã bán 52</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2 flex-grow-1 d-flex justify-content-center mb-4">
+                            <div class="card product-card">
+                                <img src="https://cdn0.fahasa.com/media/catalog/product/3/0/3030000000554.jpg"
+                                     class="card-img-top"
+                                     alt="Product">
+                                <div class="card-body">
+                                    <h5 class="card-title text-truncate">
+                                        Lịch Bàn Ngang 2025 - Thuận Buồm Xuôi Gió
+                                    </h5>
+                                    <div>
+                                        <span class="text-danger fw-bold fs-5">30.800 đ</span>
+                                        <span class="badge bg-danger ms-2">-23%</span>
+                                    </div>
+                                    <div class="text-muted text-decoration-line-through">
+                                        40.000 đ
+                                    </div>
+                                    <p class="text-muted mt-2 mb-0">Đã bán 52</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row">
+                        <div class="col-6 col-md-4 col-lg-2 flex-grow-1 d-flex justify-content-center mb-4">
+                            <div class="card product-card">
+                                <img src="https://cdn0.fahasa.com/media/catalog/product/3/0/3030000000554.jpg"
+                                     class="card-img-top"
+                                     alt="Product">
+                                <div class="card-body">
+                                    <h5 class="card-title text-truncate">
+                                        Lịch Lò Xo Để Bàn Mini 2025 - Size XS - 7 x 6.5 cm
+                                    </h5>
+                                    <div>
+                                        <span class="text-danger fw-bold fs-5">11.480 đ</span>
+                                        <span class="badge bg-danger ms-2">-18%</span>
+                                    </div>
+                                    <div class="text-muted text-decoration-line-through">
+                                        14.000 đ
+                                    </div>
+                                    <p class="text-muted mt-2 mb-0">Đã bán 52</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2 flex-grow-1 d-flex justify-content-center mb-4">
+                            <div class="card product-card">
+                                <img src="https://cdn0.fahasa.com/media/catalog/product/3/0/3030000000554.jpg"
+                                     class="card-img-top"
+                                     alt="Product">
+                                <div class="card-body">
+                                    <h5 class="card-title text-truncate">
+                                        Lịch Bàn Ngang 2025 - Thuận Buồm Xuôi Gió
+                                    </h5>
+                                    <div>
+                                        <span class="text-danger fw-bold fs-5">30.800 đ</span>
+                                        <span class="badge bg-danger ms-2">-23%</span>
+                                    </div>
+                                    <div class="text-muted text-decoration-line-through">
+                                        40.000 đ
+                                    </div>
+                                    <p class="text-muted mt-2 mb-0">Đã bán 52</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2 flex-grow-1 d-flex justify-content-center mb-4">
+                            <div class="card product-card">
+                                <img src="https://cdn0.fahasa.com/media/catalog/product/3/0/3030000000554.jpg"
+                                     class="card-img-top"
+                                     alt="Product">
+                                <div class="card-body">
+                                    <h5 class="card-title text-truncate">
+                                        Lịch Bàn Ngang 2025 - Thuận Buồm Xuôi Gió
+                                    </h5>
+                                    <div>
+                                        <span class="text-danger fw-bold fs-5">30.800 đ</span>
+                                        <span class="badge bg-danger ms-2">-23%</span>
+                                    </div>
+                                    <div class="text-muted text-decoration-line-through">
+                                        40.000 đ
+                                    </div>
+                                    <p class="text-muted mt-2 mb-0">Đã bán 52</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2 flex-grow-1 d-flex justify-content-center mb-4">
+                            <div class="card product-card">
+                                <img src="https://cdn0.fahasa.com/media/catalog/product/3/0/3030000000554.jpg"
+                                     class="card-img-top"
+                                     alt="Product">
+                                <div class="card-body">
+                                    <h5 class="card-title text-truncate">
+                                        Lịch Bàn Ngang 2025 - Thuận Buồm Xuôi Gió
+                                    </h5>
+                                    <div>
+                                        <span class="text-danger fw-bold fs-5">30.800 đ</span>
+                                        <span class="badge bg-danger ms-2">-23%</span>
+                                    </div>
+                                    <div class="text-muted text-decoration-line-through">
+                                        40.000 đ
+                                    </div>
+                                    <p class="text-muted mt-2 mb-0">Đã bán 52</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2 flex-grow-1 d-flex justify-content-center mb-4">
+                            <div class="card product-card">
+                                <img src="https://cdn0.fahasa.com/media/catalog/product/3/0/3030000000554.jpg"
+                                     class="card-img-top"
+                                     alt="Product">
+                                <div class="card-body">
+                                    <h5 class="card-title text-truncate">
+                                        Lịch Bàn Ngang 2025 - Thuận Buồm Xuôi Gió
+                                    </h5>
+                                    <div>
+                                        <span class="text-danger fw-bold fs-5">30.800 đ</span>
+                                        <span class="badge bg-danger ms-2">-23%</span>
+                                    </div>
+                                    <div class="text-muted text-decoration-line-through">
+                                        40.000 đ
+                                    </div>
+                                    <p class="text-muted mt-2 mb-0">Đã bán 52</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row">
+                        <div class="col-6 col-md-4 col-lg-2 flex-grow-1 d-flex justify-content-center mb-4">
+                            <div class="card product-card">
+                                <img src="https://cdn0.fahasa.com/media/catalog/product/3/0/3030000000554.jpg"
+                                     class="card-img-top"
+                                     alt="Product">
+                                <div class="card-body">
+                                    <h5 class="card-title text-truncate">
+                                        Lịch Lò Xo Để Bàn Mini 2025 - Size XS - 7 x 6.5 cm
+                                    </h5>
+                                    <div>
+                                        <span class="text-danger fw-bold fs-5">11.480 đ</span>
+                                        <span class="badge bg-danger ms-2">-18%</span>
+                                    </div>
+                                    <div class="text-muted text-decoration-line-through">
+                                        14.000 đ
+                                    </div>
+                                    <p class="text-muted mt-2 mb-0">Đã bán 52</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2 flex-grow-1 d-flex justify-content-center mb-4">
+                            <div class="card product-card">
+                                <img src="https://cdn0.fahasa.com/media/catalog/product/3/0/3030000000554.jpg"
+                                     class="card-img-top"
+                                     alt="Product">
+                                <div class="card-body">
+                                    <h5 class="card-title text-truncate">
+                                        Lịch Bàn Ngang 2025 - Thuận Buồm Xuôi Gió
+                                    </h5>
+                                    <div>
+                                        <span class="text-danger fw-bold fs-5">30.800 đ</span>
+                                        <span class="badge bg-danger ms-2">-23%</span>
+                                    </div>
+                                    <div class="text-muted text-decoration-line-through">
+                                        40.000 đ
+                                    </div>
+                                    <p class="text-muted mt-2 mb-0">Đã bán 52</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2 flex-grow-1 d-flex justify-content-center mb-4">
+                            <div class="card product-card">
+                                <img src="https://cdn0.fahasa.com/media/catalog/product/3/0/3030000000554.jpg"
+                                     class="card-img-top"
+                                     alt="Product">
+                                <div class="card-body">
+                                    <h5 class="card-title text-truncate">
+                                        Lịch Bàn Ngang 2025 - Thuận Buồm Xuôi Gió
+                                    </h5>
+                                    <div>
+                                        <span class="text-danger fw-bold fs-5">30.800 đ</span>
+                                        <span class="badge bg-danger ms-2">-23%</span>
+                                    </div>
+                                    <div class="text-muted text-decoration-line-through">
+                                        40.000 đ
+                                    </div>
+                                    <p class="text-muted mt-2 mb-0">Đã bán 52</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2 flex-grow-1 d-flex justify-content-center mb-4">
+                            <div class="card product-card">
+                                <img src="https://cdn0.fahasa.com/media/catalog/product/3/0/3030000000554.jpg"
+                                     class="card-img-top"
+                                     alt="Product">
+                                <div class="card-body">
+                                    <h5 class="card-title text-truncate">
+                                        Lịch Bàn Ngang 2025 - Thuận Buồm Xuôi Gió
+                                    </h5>
+                                    <div>
+                                        <span class="text-danger fw-bold fs-5">30.800 đ</span>
+                                        <span class="badge bg-danger ms-2">-23%</span>
+                                    </div>
+                                    <div class="text-muted text-decoration-line-through">
+                                        40.000 đ
+                                    </div>
+                                    <p class="text-muted mt-2 mb-0">Đã bán 52</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2 flex-grow-1 d-flex justify-content-center mb-4">
+                            <div class="card product-card">
+                                <img src="https://cdn0.fahasa.com/media/catalog/product/3/0/3030000000554.jpg"
+                                     class="card-img-top"
+                                     alt="Product">
+                                <div class="card-body">
+                                    <h5 class="card-title text-truncate">
+                                        Lịch Bàn Ngang 2025 - Thuận Buồm Xuôi Gió
+                                    </h5>
+                                    <div>
+                                        <span class="text-danger fw-bold fs-5">30.800 đ</span>
+                                        <span class="badge bg-danger ms-2">-23%</span>
+                                    </div>
+                                    <div class="text-muted text-decoration-line-through">
+                                        40.000 đ
+                                    </div>
+                                    <p class="text-muted mt-2 mb-0">Đã bán 52</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev butn-banner-prev custom-btn-prev" type="button" data-bs-target="#product-slideshow-container"
+                    data-bs-slide="prev">
+                <span class="carousel-control-prev-icon d-none"></span>
+                <i class="bi bi-chevron-left"></i> <!-- Sử dụng biểu tượng Bootstrap Icons -->
+            </button>
+
+            <button class="carousel-control-next butn-banner-next custom-btn-next" type="button" data-bs-target="#product-slideshow-container"
+                    data-bs-slide="next">
+                <span class="carousel-control-next-icon d-none"></span>
+                <i class="bi bi-chevron-right"></i> <!-- Sử dụng biểu tượng Bootstrap Icons -->
+            </button>
+        </div>
+    </div>
+</div>
+{% include 'layout/product_list_slideshow.html' %}
 {% endblock %}

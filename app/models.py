@@ -51,9 +51,11 @@ class Sach(BaseModel):
     donGia = Column(Float, nullable=False, default=0)
     soLuongTonKho = Column(Integer, nullable=False, default=0)
     id_TheLoai = Column(Integer, ForeignKey('TheLoai.id'))
+    image = Column(String(255))
 
     chiTietDonHang = relationship('ChiTietDonHang', backref='Sach', lazy=True)
     chiTietNhapSach = relationship('ChiTietNhapSach', backref='Sach', lazy=True)
+
     def __str__(self):
         return self.ten
 
@@ -140,6 +142,40 @@ class ChiTietNhapSach(BaseModel):
     def __str__(self):
         return self.__tablename__ + self.id
 
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
+        cat=[
+            TheLoai(ten='Tiểu thuyết'),
+            TheLoai(ten='Truyện ngắn'),
+            TheLoai(ten='Ngôn tình'),
+            TheLoai(ten='Truyện Tranh'),
+            TheLoai(ten='Trinh thám'),
+            TheLoai(ten='Sách giáo khoa'),
+            TheLoai(ten='Marketing'),
+            TheLoai(ten='Phân tích kinh tế'),
+            TheLoai(ten='Light novel'),
+            TheLoai(ten='Tô màu, luyện chữ'),
+            TheLoai(ten='Sách kiến thức- kĩ năng sống cho trẻ'),
+            TheLoai(ten='Văn học')
+        ]
+        db.session.add_all(cat)
+        sach = [Sach(ten="Chí Phèo", tacGia="Nam Cao",
+                     moTa="Tác phẩm kinh điển của văn học Việt Nam, kể về bi kịch của Chí Phèo.", donGia=75000,
+                     soLuongTonKho=50, id_TheLoai=12, image="https://cdn0.fahasa.com/media/catalog/product/i/m/image_193731.jpg"),
+                Sach(ten="Đắc Nhân Tâm", tacGia="Dale Carnegie",
+                     moTa="Cuốn sách dạy cách giao tiếp và tạo ảnh hưởng lớn nhất mọi thời đại.", donGia=95000,
+                     soLuongTonKho=30, id_TheLoai=11, image="https://cdn0.fahasa.com/media/catalog/product/i/m/image_193731.jpg"),
+                Sach(ten="Dế Mèn Phiêu Lưu Ký", tacGia="Tô Hoài",
+                     moTa="Cuốn sách gắn liền với tuổi thơ của nhiều thế hệ.", donGia=50000, soLuongTonKho=100,
+                     id_TheLoai=12, image="https://cdn0.fahasa.com/media/catalog/product/i/m/image_193731.jpg"),
+                Sach(ten="Vũ Trụ Trong Vỏ Hạt Dẻ", tacGia="Stephen Hawking",
+                     moTa="Một trong những cuốn sách khoa học nổi tiếng nhất của Stephen Hawking.", donGia=120000,
+                     soLuongTonKho=20, id_TheLoai=1, image="https://cdn0.fahasa.com/media/catalog/product/i/m/image_193731.jpg"),
+                Sach(ten="English Grammar in Use", tacGia="Raymond Murphy",
+                     moTa="Cuốn sách ngữ pháp tiếng Anh được hàng triệu người học sử dụng.", donGia=150000,
+                     soLuongTonKho=15, id_TheLoai=2, image="https://cdn0.fahasa.com/media/catalog/product/i/m/image_193731.jpg")
+                ]
+        db.session.add_all(sach)
+        db.session.commit()

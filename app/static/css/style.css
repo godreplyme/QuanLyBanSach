@@ -42,22 +42,17 @@ html{
 }
 
 
-.slide{
+.slide-banner{
     width: 70%;
-    height: 50%;
     margin: auto;
 }
 
-#demo {
-
-}
-
-.carousel-inner {
+.banner-slideshow {
     width: 100%;
     height: auto;
 }
 
-.carousel-item img {
+.banner-slideshow-item img {
     width: 100%;
     height: auto;
 }
@@ -67,15 +62,15 @@ html{
     .slide{
         width:100%;
     }
-    .carousel-inner {
+    .banner-slideshow {
         width: 100%;
         height: 250px;
     }
 
-    .carousel-item img {
+    .banner-slideshow-item img {
         height: 100%;
     }
-    .carousel-control-prev, carousel-control-next{
+    .butn-banner-prev, butn-banner-next{
         width: 50px;
     }
 }
@@ -85,12 +80,139 @@ html{
     .slide{
         width:100%;
     }
-    .carousel-inner {
+    .banner-slideshow {
         height: 200px;
     }
 
-    .carousel-item img {
+    .banner-slideshow-item img {
         height: 100%;
     }
 }
+
+/*slideshow product*/
+.list-header {
+    color: #000;
+    font-size: 26px;
+    font-weight: 300;
+    text-align: center;
+    text-transform: uppercase;
+    position: relative;
+    margin: 30px 0 60px;
+}
+.list-header::after {
+    content: "";
+    width: 100px;
+    position: absolute;
+    margin: 0 auto;
+    height: 4px;
+    border-radius: 1px;
+    background: #7ac400;
+    left: 0;
+    right: 0;
+    bottom: -20px;
+}
+.butn-product-prev, .butn-product-next {
+    height: 44px;
+    width: 40px;
+    background: #7ac400;
+    margin: auto 0;
+    border-radius: 4px;
+    opacity: 0.8;
+}
+.butn-product-prev:hover, .butn-product-next:hover {
+    background: #78bf00;
+    opacity: 1;
+}
+.butn-product-prev i, .butn-product-next i {
+    font-size: 36px;
+    position: absolute;
+    top: 50%;
+    display: inline-block;
+    margin: -19px 0 0 0;
+    z-index: 5;
+    left: 0;
+    right: 0;
+    color: #fff;
+    text-shadow: none;
+    font-weight: bold;
+}
+.butn-product-prev i {
+    margin-left: -2px;
+}
+.butn-product-next i {
+    margin-right: -4px;
+}
+.product-list-indicators {
+    bottom: -50px;
+}
+.product-list-indicators li, .product-list-indicators li.active {
+    width: 10px;
+    height: 10px;
+    margin: 4px;
+    border-radius: 50%;
+    border: none;
+}
+.product-list-indicators li {
+    background: rgba(0, 0, 0, 0.2);
+}
+.product-list-indicators li.active {
+    background: rgba(0, 0, 0, 0.6);
+}
+.product-slideshow .wish-icon {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 99;
+    cursor: pointer;
+    font-size: 16px;
+    color: #abb0b8;
+}
+.product-slideshow .wish-icon .fa-heart {
+    color: #ff6161;
+}
+.star-rating li {
+    padding: 0;
+}
+.star-rating i {
+    font-size: 14px;
+    color: #ffc000;
+}
+
+
+
+
+
+.custom-btn-prev, .custom-btn-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.6); /* Nền đen trong suốt */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+
+/* Hiệu ứng hover */
+.custom-btn-prev:hover, .custom-btn-next:hover {
+    background-color: rgba(255, 255, 255, 0.8); /* Nền trắng nhạt */
+    color: black; /* Đổi màu icon */
+}
+
+/* Tùy chỉnh biểu tượng */
+.custom-btn-prev i, .custom-btn-next i {
+    font-size: 20px; /* Tăng kích thước icon */
+}
+
+
+
+
+
 
