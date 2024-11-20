@@ -212,6 +212,22 @@ html{
 }
 
 
+.product-link {
+    text-decoration: none; /* Xóa gạch chân của liên kết */
+}
+
+.product-card {
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: 1px solid transparent;
+}
+
+.product-link:hover .product-card {
+    transform: scale(1.05); /* Phóng to sản phẩm */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Tạo bóng */
+    border-color: black; /* Thêm viền đen */
+}
+
+
 
 
 
