@@ -31,23 +31,23 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <ul class="multi-column-dropdown">
-                                <li>Item 1</li>
-                                <li>Item 2</li>
-                                <li>Item 3</li>
+                                {% for i in range(0,category|length//3)%}
+                                <li><a href="#">{{category[i].ten}}</a></li>
+                                {% endfor %}
                             </ul>
                         </div>
                         <div class="col-sm-4">
                             <ul class="multi-column-dropdown">
-                                <li>Item 4</li>
-                                <li>Item 5</li>
-                                <li>Item 6</li>
+                                {% for i in range(category|length//3,(category|length//3)*2)%}
+                                <li><a href="#">{{category[i].ten}}</a></li>
+                                {% endfor %}
                             </ul>
                         </div>
                         <div class="col-sm-4">
                             <ul class="multi-column-dropdown">
-                                <li>Item 7</li>
-                                <li>Item 8</li>
-                                <li>Item 9</li>
+                                {% for i in range((category|length//3)*2,category|length)%}
+                                <li><a href="#">{{category[i].ten}}</a></li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </div>
@@ -73,7 +73,7 @@
                        data-bs-toggle="dropdown"><img src="static/images/user.png" alt="Avatar Logo" style="width:40px;"
                                                       class="rounded-pill"> Anonymous</a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Đăng nhập</a></li>
+                        <li><a class="dropdown-item" href="/login">Đăng nhập</a></li>
                         <li><a class="dropdown-item" href="#">Đăng ký</a></li>
                     </ul>
                 </li>

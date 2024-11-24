@@ -1,9 +1,12 @@
 html{
     height: 100%;
-    margin: 0;
-    padding: 0;
-}
 
+}
+body{
+    background-color: #F0F0F0;
+    margin:0px;
+    padding:0px;
+}
 * {
     font-family: Tahoma;
 }
@@ -17,7 +20,13 @@ html{
   border-radius: 0.25rem;
   color: #fff;
 }
-
+.multi-column-dropdown a{
+    text-decoration: none;
+    color: white;
+}
+.multi-column-dropdown a:hover{
+    color: blue;
+}
 .fa-li {
   position: relative;
   left: 0;
@@ -200,7 +209,7 @@ html{
 }
 
 
-/* Hiệu ứng hover */
+/* Hiệu ứng hover product*/
 .custom-btn-prev:hover, .custom-btn-next:hover {
     background-color: rgba(255, 255, 255, 0.8); /* Nền trắng nhạt */
     color: black; /* Đổi màu icon */
@@ -228,7 +237,39 @@ html{
 }
 
 
+/*login form*/
 
+.form-container {
+    height:500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.form-container-content {
+    width: 600px;
+    padding-bottom: 10px;
+}
+
+.nav-tabs .nav-link.active {
+    border-bottom: 2px solid red;
+    color: red;
+}
+.nav-tabs .nav-link {
+    color: blue;
+}
+
+.text-red {
+    color: red;
+}
+
+.text-red {
+    color: red;
+}
 
 
 

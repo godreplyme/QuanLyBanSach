@@ -6,9 +6,12 @@ import untils
 @app.route("/")
 def index():
     sach = untils.load_book()
+    theLoai = untils.load_category()
+    return render_template('home.html', sach=sach, category=theLoai)
 
-    return render_template('home.html', sach=sach)
-
-
+@app.route("/login")
+def login():
+    theLoai = untils.load_category()
+    return render_template('login.html', category=theLoai)
 if __name__ == '__main__':
     app.run()
