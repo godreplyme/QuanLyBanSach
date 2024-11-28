@@ -1,56 +1,4 @@
-html{
-    height: 100%;
-
-}
-body{
-    background-color: #F0F0F0;
-    margin:0px;
-    padding:0px;
-}
-* {
-    font-family: Tahoma;
-}
-.navbar-dark .nav-item .nav-link {
-  color: #fff;
-}
-
-.navbar-dark .nav-item .nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
-  border-radius: 0.25rem;
-  color: #fff;
-}
-.multi-column-dropdown a{
-    text-decoration: none;
-    color: white;
-}
-.multi-column-dropdown a:hover{
-    color: blue;
-}
-.fa-li {
-  position: relative;
-  left: 0;
-}
-.navbar-collapse .dropdown{
-}
-.dropdown-menu.columns-3 {
-    min-width: 900px;
-    padding: 30px 30px;
-    left: -130%;
-}
-.dropdown div.dropdown-menu {
-    min-width: 700px;
-    margin: 10px auto;
-    padding: 30px 30px;
-    left: 0%;
-    text-align: center;
-}
-.multi-column-dropdown {
-    list-style: none;
-    padding: 0;
-}
-
-
+/*slide banner*/
 .slide-banner{
     width: 70%;
     margin: auto;
@@ -187,10 +135,6 @@ body{
     color: #ffc000;
 }
 
-
-
-
-
 .custom-btn-prev, .custom-btn-next {
     position: absolute;
     top: 50%;
@@ -235,41 +179,3 @@ body{
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Tạo bóng */
     border-color: black; /* Thêm viền đen */
 }
-
-
-/*login form*/
-
-.form-container {
-    height:500px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #fff;
-    padding: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-}
-
-.form-container-content {
-    width: 600px;
-    padding-bottom: 10px;
-}
-
-.nav-tabs .nav-link.active {
-    border-bottom: 2px solid red;
-    color: red;
-}
-.nav-tabs .nav-link {
-    color: blue;
-}
-
-.text-red {
-    color: red;
-}
-
-.text-red {
-    color: red;
-}
-
-
-

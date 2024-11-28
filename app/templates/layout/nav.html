@@ -2,7 +2,7 @@
     <!-- Container wrapper -->
     <div class="container">
         <!-- Navbar brand -->
-        <a class="navbar-brand" href="#"><img id="MDB-logo"
+        <a class="navbar-brand" href="{{ url_for('index') }}"><img id="MDB-logo"
                                               src="https://mdbcdn.b-cdn.net/wp-content/uploads/2018/06/logo-mdb-jquery-small.png"
                                               alt="MDB Logo"
                                               draggable="false" height="30"/></a>
@@ -32,21 +32,22 @@
                         <div class="col-sm-4">
                             <ul class="multi-column-dropdown">
                                 {% for i in range(0,category|length//3)%}
-                                <li><a href="#">{{category[i].ten}}</a></li>
+                                <li><a href="{{ url_for('list_book', category_id=category[i].id)}}">{{category[i].ten}}</a></li>
                                 {% endfor %}
                             </ul>
                         </div>
                         <div class="col-sm-4">
                             <ul class="multi-column-dropdown">
                                 {% for i in range(category|length//3,(category|length//3)*2)%}
-                                <li><a href="#">{{category[i].ten}}</a></li>
+                                <li><a href="{{ url_for('list_book', category_id=category[i].id)}}">{{category[i].ten}}</a></li>
                                 {% endfor %}
                             </ul>
                         </div>
                         <div class="col-sm-4">
                             <ul class="multi-column-dropdown">
+                                <li><a href="{{ url_for('list_book')}}">Tất cả sản phẩm</a></li>
                                 {% for i in range((category|length//3)*2,category|length)%}
-                                <li><a href="#">{{category[i].ten}}</a></li>
+                                <li><a href="{{ url_for('list_book', category_id=category[i].id)}}">{{category[i].ten}}</a></li>
                                 {% endfor %}
                             </ul>
                         </div>
@@ -73,8 +74,8 @@
                        data-bs-toggle="dropdown"><img src="static/images/user.png" alt="Avatar Logo" style="width:40px;"
                                                       class="rounded-pill"> Anonymous</a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="/login">Đăng nhập</a></li>
-                        <li><a class="dropdown-item" href="#">Đăng ký</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('login', tab='login') }}">Đăng nhập</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('login', tab='register')}}">Đăng ký</a></li>
                     </ul>
                 </li>
             </ul>

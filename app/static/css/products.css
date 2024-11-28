@@ -1,0 +1,69 @@
+.filter-sidebar {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+}
+.filter-sidebar h6 {
+    cursor: pointer;}
+.product-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    background-color: #fff;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.product-link {
+    text-decoration: none; /* Xóa gạch chân của liên kết */
+}
+
+.product-card {
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: 1px solid transparent;
+}
+.product-card img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 15px;
+}
+
+.product-card .discount-badge {
+    background-color: #f8d7da;
+    color: #a71d2a;
+    font-weight: bold;
+    padding: 5px;
+    border-radius: 4px;
+}
+.product-link:hover .product-card {
+    transform: scale(1.05); /* Phóng to sản phẩm */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Tạo bóng */
+    border-color: black; /* Thêm viền đen */
+        transition: transform 0.3s, box-shadow 0.3s;
+}
+/* Đảm bảo khoảng cách và sắp xếp đúng */
+.product-grid .col {
+    flex: 1 0 0;
+}
+
+/* Chiều rộng 30% trên màn hình lớn */
+@media (min-width: 992px) {
+    .product-grid .col {
+        max-width: 30%;
+    }
+}
+
+/* Hiển thị 2 sản phẩm trên hàng khi ở màn hình nhỏ hơn */
+@media (max-width: 991.98px) {
+    .product-grid .col {
+        max-width: 50%;
+    }
+}
+
+/* Khi nhỏ hơn 576px: hiển thị 1 sản phẩm mỗi hàng */
+@media (max-width: 575.98px) {
+    .product-grid .col {
+        max-width: 100%;
+    }
+}

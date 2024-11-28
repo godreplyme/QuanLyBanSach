@@ -1,0 +1,71 @@
+{% extends 'layout/base.html' %}
+{% block css %}
+<link href="{{ url_for('static', filename='css/products.css')}}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3 mb-4">
+            <!-- Collapsible Filter for smaller screens -->
+            <div class="d-lg-none mb-3">
+                <button class="btn btn-primary w-100" data-bs-toggle="collapse" data-bs-target="#filterSidebar"
+                        aria-expanded="false" aria-controls="filterSidebar">
+                    Danh Mục Lọc
+                </button>
+            </div>
+            <!-- Filter Sidebar Content -->
+            <div id="filterSidebar" class="filter-sidebar collapse d-lg-block">
+                <h5>Lọc Theo</h5>
+                <hr>
+                <!-- Giá -->
+                <div class="mb-4">
+                    <h6 data-bs-toggle="collapse" data-bs-target="#priceFilter" aria-expanded="false"
+                        aria-controls="priceFilter">
+                        Giá <span class="float-end">+</span>
+                    </h6>
+                    <div id="priceFilter" class="collapse show">
+                        <div><input type="checkbox" id="price1"> <label for="price1">0đ - 150,000đ</label></div>
+                        <div><input type="checkbox" id="price2"> <label for="price2">150,000đ - 300,000đ</label></div>
+                        <div><input type="checkbox" id="price3"> <label for="price3">300,000đ - 500,000đ</label></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="col-lg-9">
+            <div class="row g-4 justify-content-evenly">
+                <!-- Thẻ sản phẩm -->
+                {% for l in lb %}
+                <a href="#" class="product-link col-6 col-md-4 col-lg-4">
+                    <div class="product-card">
+                        <img src="{{l.image}}" alt="Product Image" class="img-fluid">
+                        <div class="card-body">
+                            <h5 class="card-title text-truncate">
+                                {{l.ten}}
+                            </h5>
+                            <div>
+                                <span class="text-danger fw-bold fs-5">{{l.donGia}}đ</span>
+                            </div>
+                            <button class="btn btn-outline-danger rounded-pill px-4 py-2 w-100">
+                                Thêm vào giỏ hàng
+                            </button>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+                <!-- Các sản phẩm khác -->
+            </div>
+        </div>
+        {% if page>1 %}
+        <ul class="pagination justify-content-end mt-4">
+            {% for p in range(1,page+1) %}
+            <li class="page-item"><a class="page-link" href="{{url_for('list_book',page=p)}}">{{p}}</a></li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

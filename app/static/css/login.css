@@ -1,0 +1,32 @@
+/*login form*/
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.form-container-content {
+    width: 600px;
+    padding-bottom: 10px;
+}
+
+.nav-tabs .nav-link.active {
+    border-bottom: 2px solid red;
+    color: red;
+}
+.nav-tabs .nav-link {
+    color: blue;
+}
+
+.text-red {
+    color: red;
+}
+
+.text-red {
+    color: red;
+}

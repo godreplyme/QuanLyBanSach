@@ -1,14 +1,17 @@
 {% extends 'layout/base.html' %}
+{% block css %}
+<link href="{{ url_for('static', filename='css/login.css')}}" rel="stylesheet">
+{% endblock %}
 {% block content %}
-<div class="form-container">
+<div class="form-container" onload="initializeForm()">
     <div class="form-container-content">
         <div class="form-content">
             <ul class="nav nav-tabs justify-content-center pt-2 pb-1 w-100">
                 <li class="nav-item w-50">
-                    <a class="nav-link active text-center" href="#" id="login-tab" onclick="switchForm('login')">Đăng nhập</a>
+                    <a class="nav-link {% if active_tab == 'login' %}active{% endif %} text-center" href="#" id="login-tab" onclick="switchForm('login')">Đăng nhập</a>
                 </li>
                 <li class="nav-item w-50">
-                    <a class="nav-link text-center" href="#" id="register-tab" onclick="switchForm('register')">Đăng ký</a>
+                    <a class="nav-link {% if active_tab == 'register' %}active{% endif %} text-center" href="#" id="register-tab" onclick="switchForm('register')">Đăng ký</a>
                 </li>
             </ul>
             <form id="login-form" class="mt-4">
@@ -29,7 +32,11 @@
                 <button type="button" class="btn btn-login btn-success w-100 mt-3">Đăng nhập</button>
             </form>
 
-            <form id="register-form" class="mt-4 d-none">
+            <form id="register-form" class="mt-4 d-none" method="post">
+                <div class="mb-3 py-1">
+                    <label for="registerEmail" class="form-label">Họ và tên</label>
+                    <input type="email" class="form-control" id="registerName" placeholder="Nhập tên">
+                </div>
                 <div class="mb-3 py-1">
                     <label for="registerEmail" class="form-label">Email</label>
                     <input type="email" class="form-control" id="registerEmail" placeholder="Nhập email">
@@ -47,33 +54,7 @@
         </div>
     </div>
 </div>
-<script>
-    function switchForm(formType) {
-    // Tabs
-    const loginTab = document.getElementById('login-tab');
-    const registerTab = document.getElementById('register-tab');
-
-    // Forms
-    const loginForm = document.getElementById('login-form');
-    const registerForm = document.getElementById('register-form');
-
-    if (formType === 'login') {
-        // Hiển thị form đăng nhập, ẩn form đăng ký
-        loginForm.classList.remove('d-none');
-        registerForm.classList.add('d-none');
-
-        // Kích hoạt tab đăng nhập, bỏ kích hoạt tab đăng ký
-        loginTab.classList.add('active');
-        registerTab.classList.remove('active');
-    } else if (formType === 'register') {
-        // Hiển thị form đăng ký, ẩn form đăng nhập
-        registerForm.classList.remove('d-none');
-        loginForm.classList.add('d-none');
-
-        // Kích hoạt tab đăng ký, bỏ kích hoạt tab đăng nhập
-        registerTab.classList.add('active');
-        loginTab.classList.remove('active');
-    }
-}
-</script>
-{%endblock%}
+{% endblock %}
+{% block js %}
+<script src="{{url_for('static', filename = 'js/login.js')}}"></script>
+{% endblock %}
