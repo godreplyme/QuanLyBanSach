@@ -69,15 +69,34 @@
                         <i class="fa-solid fa-cart-shopping"></i> Giỏ hàng
                     </a>
                 </li>
+                {% if current_user.is_authenticated %}
+                 <li class="nav-item dropdown m-auto" style="width: 200px;">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
+                       data-bs-toggle="dropdown"><img src="
+                        {% if current_user.anhDaiDien %}
+                            {{ current_user.anhDaiDien }}
+                        {% else %}
+                            {{ url_for('static', filename='images/user.png')}}
+                        {% endif %}
+                        " alt="{{current_user.username}}" style="width:40px;"
+                                                      class="rounded-pill"> {{ current_user.hoVaTen }}</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Trang cá nhân</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('logout') }}">Đăng xuất</a></li>
+                    </ul>
+                </li>
+                {% else %}
                 <li class="nav-item dropdown m-auto" style="width: 200px;">
                     <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
                        data-bs-toggle="dropdown"><img src="static/images/user.png" alt="Avatar Logo" style="width:40px;"
                                                       class="rounded-pill"> Anonymous</a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ url_for('login', tab='login') }}">Đăng nhập</a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('login', tab='register')}}">Đăng ký</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('login') }}">Đăng nhập</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('register') }}">Đăng ký</a></li>
                     </ul>
                 </li>
+                {% endif %}
+
             </ul>
         </div>
         <!-- Collapsible wrapper -->

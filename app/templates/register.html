@@ -1,0 +1,50 @@
+{% extends 'layout/base.html' %}
+{% block css %}
+<link href="{{ url_for('static', filename='css/login.css')}}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+{% if err_msg %}
+<div class="alert alert-danger">
+    <h3>{{err_msg}}</h3>
+</div>
+{% endif %}
+<div class="form-container">
+    <div class="form-container-content">
+        <div class="form-content">
+            <ul class="nav nav-tabs justify-content-center pt-2 pb-1 w-100">
+                <li class="nav-item w-100">
+                    <a class="nav-link active text-center" href="#" id="register-tab">Đăng ký</a>
+                </li>
+            </ul>
+
+            <form id="register-form" class="mt-4" method="post" action="{{ url_for('register') }}" enctype="multipart/form-data">
+                <div class="mb-3 py-1">
+                    <label for="registerName" class="form-label">Họ và tên</label>
+                    <input type="text" class="form-control" id="registerName" name="registerName" placeholder="Nhập tên" required>
+                </div>
+                <div class="mb-3 py-1">
+                    <label for="registerEmail" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="registerEmail" name="registerEmail" placeholder="Nhập email">
+                </div>
+                <div class="mb-3 py-1">
+                    <label for="registerUserName" class="form-label">Email</label>
+                    <input type="text" class="form-control" id="registerUserName" name="registerUserName" placeholder="Nhập tên đăng nhập" required>
+                </div>
+                <div class="mb-3 py-1">
+                    <label for="registerPassword" class="form-label">Mật khẩu</label>
+                    <input type="password" class="form-control" id="registerPassword" name="registerPassword" placeholder="Nhập mật khẩu">
+                </div>
+                <div class="mb-3 py-1">
+                    <label for="confirmPassword" class="form-label">Nhập lại mật khẩu</label>
+                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu">
+                </div>
+                <div class="mb-3 py-1">
+                    <label for="avatar" class="form-label">Ảnh đại diện</label>
+                    <input type="file" class="form-control" id="avatar" name="avatar">
+                </div>
+                <button type="submit" class="btn btn-register btn-success w-100 mt-3">Đăng ký</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

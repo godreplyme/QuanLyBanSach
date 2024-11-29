@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 from datetime import date, datetime
 from app import db, app
 from enum import Enum
+from flask_login import UserMixin
 
 
 class BaseModel(db.Model):
@@ -24,7 +25,7 @@ class TrangThai(Enum):
 
 
 # Cơ sở dữ liệu cho người dùng
-class NguoiDung(BaseModel):
+class NguoiDung(BaseModel, UserMixin):
     __tablename__ = 'NguoiDung'
 
     username = Column(String(50), unique=True)
@@ -34,9 +35,9 @@ class NguoiDung(BaseModel):
     ngaySinh = Column(Date, default=date.today())
     gioiTinh = Column(Integer, default=0)  # 0-nam 1-nu
     sdt = Column(String(12), default='')
-    email = Column(String(50), nullable=False, default='')
+    email = Column(String(50), default='')
     diaChi = Column(String(100), default='')
-    anhDaiDien = Column(String(50), default='')  # Đường dẫn ảnh đại diện
+    anhDaiDien = Column(String(255), default='')  # Đường dẫn ảnh đại diện
     vaiTro = Column(SQLEnum(VaiTro), default=VaiTro.USER)
 
     donHang = relationship('DonHang', backref='NguoiDung', lazy=True)
