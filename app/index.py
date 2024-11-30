@@ -1,4 +1,4 @@
-import math, utils, cloudinary.uploader
+import math, utils, cloudinary.uploader, admin
 from app import app, loginMNG
 from flask import render_template, request, redirect, url_for
 from flask_login import login_user, logout_user

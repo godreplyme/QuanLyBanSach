@@ -1,3 +1,5 @@
+import hashlib
+from logging.config import valid_ident
 from sqlalchemy import Column, String, Integer, Boolean, Date, Float, Enum as SQLEnum, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from datetime import date, datetime
@@ -15,6 +17,7 @@ class BaseModel(db.Model):
 class VaiTro(Enum):
     ADMIN = 1
     USER = 2
+    EMPLOYEE = 3
 
 
 class TrangThai(Enum):
@@ -41,6 +44,12 @@ class NguoiDung(BaseModel, UserMixin):
     vaiTro = Column(SQLEnum(VaiTro), default=VaiTro.USER)
 
     donHang = relationship('DonHang', backref='NguoiDung', lazy=True)
+
+    def is_admin(self):
+        return self.vaiTro == VaiTro.ADMIN
+
+    def is_employee(self):
+        return self.vaiTro == VaiTro.EMPLOYEE
 
     def __str__(self):
         return self.hoVaTen
@@ -224,4 +233,17 @@ if __name__ == '__main__':
                      image="https://cdn0.fahasa.com/media/catalog/product/n/x/nxbtre_full_21352023_023516_1.jpg")
                 ]
         db.session.add_all(sach)
+        admin = NguoiDung(hoVaTen='Hồ Vũ',username='abc'
+                          ,password= '698d51a19d8a121ce581499d7b701668' # username: abc, pass: 111
+                          ,email='vu123@gmail.com',vaiTro=VaiTro.ADMIN
+                          ,anhDaiDien='https://res.cloudinary.com/dcrsia5sh/image/upload/v1732855504/mpkxldxtz440munykvf5.jpg')
+        customer = NguoiDung(hoVaTen='Vũ',username='vvv'
+                          ,password= '698d51a19d8a121ce581499d7b701668' # username: vvv, pass: 111
+                          ,email='vu123@gmail.com',vaiTro=VaiTro.USER
+                          ,anhDaiDien='https://res.cloudinary.com/dcrsia5sh/image/upload/v1732855504/mpkxldxtz440munykvf5.jpg')
+        employee= NguoiDung(hoVaTen='Nguyễn Vũ',username='aaa'
+                          ,password= '698d51a19d8a121ce581499d7b701668' # username: aaa, pass: 111
+                          ,email='vu123@gmail.com',vaiTro=VaiTro.EMPLOYEE
+                          ,anhDaiDien='https://res.cloudinary.com/dcrsia5sh/image/upload/v1732855504/mpkxldxtz440munykvf5.jpg')
+        db.session.add_all([admin,customer,employee])
         db.session.commit()
