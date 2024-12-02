@@ -1,7 +1,9 @@
-import math, utils, cloudinary.uploader, admin
-from app import app, loginMNG
+import math, utils, cloudinary.uploader, admin, hashlib
+from os import rename
+
+from app import app, loginMNG, db
 from flask import render_template, request, redirect, url_for
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, current_user
 
 
 @app.context_processor
@@ -34,6 +36,8 @@ def list_book():
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
     err_msg = ''
     if request.method.__eq__('POST'):
         name = request.form.get('registerName')
@@ -60,6 +64,8 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
     err_msg = ''
     if request.method.__eq__('POST'):
         username = request.form.get('username')
@@ -82,6 +88,73 @@ def user_load(user_id):
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
+
+@app.route('/profile')
+def profile():
+    check = checkAuthenticated()
+    if check:
+        return check
+    checkAuthenticated()
+    return render_template('profile.html')
+
+
+@app.route('/changeProfile', methods=['GET', 'POST'])
+def changeProfile():
+    check = checkAuthenticated()
+    if check:
+        return check
+    if request.method.__eq__('POST'):
+        checkAuthenticated()
+        name = request.form.get('name')
+        phone = request.form.get('phone')
+        address = request.form.get('address')
+        email = request.form.get('email')
+        gender = request.form.get('gender')
+        birthday = request.form.get('birthday')
+
+        current_user.hoVaTen = name
+        current_user.sdt = phone
+        current_user.diaChi = address
+        current_user.email = email
+        current_user.gioiTinh = 0 if gender == 'male' else 1
+        current_user.ngaySinh = birthday
+        try:
+            db.session.commit()
+            redirect(url_for('profile'))
+        except Exception as e:
+            db.session.rollback()
+    return render_template('changeProfile.html')
+
+
+@app.route("/changePassword", methods=['GET', 'POST'])
+def changePassword():
+    err_msg = ''
+    suc_msg = ''
+    check = checkAuthenticated()
+    if check:
+        return check
+    if request.method.__eq__('POST'):
+
+        old = request.form.get('old')
+        new = request.form.get('new')
+        confirm = request.form.get('confirm')
+
+        if current_user.password.__eq__(str(hashlib.md5(old.strip().encode('utf-8')).hexdigest())):
+            if new.__eq__(confirm):
+                current_user.password = str(hashlib.md5(new.strip().encode('utf-8')).hexdigest())
+                db.session.commit()
+                suc_msg = 'Đổi mật khẩu thành công'
+            else:
+                err_msg = 'Mật khẩu nhập lại không trùng khớp, mời nhập lại'
+        else:
+            err_msg = 'Mật khẩu cũ không đúng, mời nhập lại'
+    return render_template('changePassword.html', err_msg=err_msg, suc_msg=suc_msg)
+
+
+def checkAuthenticated():
+    if not current_user.is_authenticated:
+        return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
