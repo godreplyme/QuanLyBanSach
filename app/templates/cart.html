@@ -1,0 +1,24 @@
+{% extends 'layout/base.html' %}
+{% block content%}
+<h1 class="text-center text-success mt-1">GIỎ HÀNG</h1>
+
+{% if 'cart' in session %}
+    <table class="table">
+        <tr>
+            <th>Id</th>
+            <th>Tên sản phẩm</th>
+            <th>Đơn giá</th>
+            <th>Số lượng</th>
+            <th></th>
+        </tr>
+    </table>
+{% else %}
+<div  class="alert alert-info mt-1">Không có sản phẩm trong giỏ!</div>
+<div class="mt-1">
+    <a title="Thanh toán" class="nav-link d-flex align-items-center me-3" href="/payment">
+        <button class="btn btn-success">Thanh toán</button>
+    </a>
+</div>
+{% endif %}
+
+{% endblock %}

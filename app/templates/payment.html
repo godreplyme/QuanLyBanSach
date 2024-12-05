@@ -1,0 +1,136 @@
+{% extends 'layout/base.html' %}
+{% block content%}
+
+
+{% if 'cart' in session %}
+{% if current_user.is_authenticated %}
+
+{% else %}
+
+{% endif %}
+
+{% else %}
+<!-- Thanh tiêu đề -->
+<div class="title">
+    <!-- <span style="font: normal 2rem  Arial; color: black">Thanh toán</span> -->
+    <ul class="menu-tab pt-3 pb-3">
+        <li>
+            <a href="/cart">Giỏ hàng</a> 
+        </li>
+        <li>
+            <i class="fa-solid fa-angle-right fa-sm"></i>
+        </li>
+        <li class="animated-tab"><a href="/payment">Thanh toán</a></li>
+    </ul>
+</div> 
+
+<!-- Thanh toán -->
+<section class="container p-3"> 
+    <!-- Địa chỉ nhận hàng --> 
+    <div class="cart-tab mb-4 p-3">
+        <h4>Thông tin người nhận</h4>
+    <form action="/action_page.php">
+        <div class="mb-3 mt-3">
+          <label for="username" class="form-label">Họ và tên:</label>
+          <input type="text" class="form-control" id="username" placeholder="Nhập họ và tên" name="username" required>
+        </div>
+        <div class="mb-3">
+          <label for="phone" class="form-label">Số điện thoại:</label>
+          <input type="tel" class="form-control" id="tel" placeholder="Nhập số điện thoại(Vd:(0)123456789)" 
+          name="phone" pattern="[0][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" required>
+        </div>
+        <div class="mb-3">
+            <label for="city" class="form-label">Địa chỉ nhận hàng:</label>
+            <input type="text" class="form-control" id="city" placeholder="Nhập địa chỉ nhận hàng" name="city" required>
+        </div>
+        <!-- <button type="submit" class="btn btn-danger">Submit</button> -->
+    </form>
+    </div> 
+
+    <!-- <form class="row g-3 needs-validation" novalidate>
+        <div class="col-md-4">
+          <label for="validationCustom01" class="form-label">First name</label>
+          <input type="text" class="form-control" id="validationCustom01" required>
+          <div class="valid-feedback">
+            Looks good!
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label for="validationCustom02" class="form-label">Last name</label>
+          <input type="text" class="form-control" id="validationCustom02" required>
+          <div class="valid-feedback">
+            Looks good!
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label for="validationCustomUsername" class="form-label">Username</label>
+          <div class="input-group has-validation">
+            <span class="input-group-text" id="inputGroupPrepend">@</span>
+            <input type="text" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required>
+            <div class="invalid-feedback">
+              Please choose a username.
+            </div>
+          </div>
+        </div>
+    </form> -->
+    
+    <div class="cart-tab mb-4 p-3">
+        <h4>Sản phẩm</h4>
+        <table class="table">
+            <tr>
+                <th>Tên sản phẩm</th>
+                <th>Đơn giá</th>
+                <th>Số lượng</th>
+                <th>Thành tiền</th>
+            </tr>
+            <tr></tr>
+        </table>
+    </div>
+
+    <div class="cart-tab mb-4 p-3">
+        <h4>Phương thức thanh toán</h4>
+        <form action="/action_page.php">
+            <div class="form-check">
+              <input type="radio" class="form-check-input" id="radio1" name="optradio" checked>
+              <label class="form-check-label" for="radio1">Thanh toán trực tiếp</label>
+            </div>
+            <div class="form-check">
+              <input type="radio" class="form-check-input" id="radio2" name="optradio">
+              <label class="form-check-label" for="radio2">Thanh toán Momo</label>
+            </div>
+          </form>
+    </div>
+
+    <div class="alert alert-light">
+        <h3>Tổng tiền: VNĐ</h3>
+    </div>
+
+    <div class="mb-4">
+        <a title="Thanh toán" class="nav-link d-flex align-items-center me-3" href="#">
+            <button type="submit" class="btn btn-danger">Xác nhận thanh toán</button>
+        </a>
+    </div>
+
+      <!-- Chưa chọn sản phẩm để thanh toán -->
+    <div class="cart-tab">
+        <div style="display:flex; justify-content: center; align-items: center;">
+            <div style="text-align: center;">
+                <div>
+                    <img title="Giỏ hàng rỗng" src="static/images/cart-empty.png" alt="Cart empty"style="width:30rem"/>
+                </div>
+                <p style="font: italic 1.2rem fangsong;">Bạn chưa chọn sản phẩm nào để mua. Vui lòng quay lại trang giỏ hàng để chọn sản phẩm!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a title="Thanh toán" class="nav-link d-flex align-items-center me-3" href="/cart">
+            <button type="submit" class="btn btn-danger">Quay lại giỏ hàng</button>
+        </a>
+    </div>
+
+</section>
+
+{% endif %}
+
+{% endblock %}
