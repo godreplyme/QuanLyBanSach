@@ -2,7 +2,8 @@
     <!-- Container wrapper -->
     <div class="container">
         <!-- Navbar brand -->
-        <a title="MDB.com" class="navbar-brand" href="/"><img id="MDB-logo"
+
+        <a class="navbar-brand" href="{{ url_for('index') }}"><img id="MDB-logo"
                                               src="https://mdbcdn.b-cdn.net/wp-content/uploads/2018/06/logo-mdb-jquery-small.png"
                                               alt="MDB Logo"
                                               draggable="false" height="30"/></a>
@@ -24,30 +25,31 @@
             <!--                </li>-->
             <!--            </ul>-->
             <div class="dropdown">
-                <a href="#" class="dropdown-toggle text-white" data-bs-toggle="dropdown" style="color=white;">
+                <a href="#" class="dropdown-toggle text-white" data-bs-toggle="dropdown" style="color:white;">
                     <i class="fa-solid fa-bars"></i> Menu
                 </a>
                 <div class="dropdown-menu p-3 bg-dark text-white">
                     <div class="row">
                         <div class="col-sm-4">
                             <ul class="multi-column-dropdown">
-                                <li>Item 1</li>
-                                <li>Item 2</li>
-                                <li>Item 3</li>
+                                {% for i in range(0,category|length//3)%}
+                                <li><a href="{{ url_for('list_book', category_id=category[i].id)}}">{{category[i].ten}}</a></li>
+                                {% endfor %}
                             </ul>
                         </div>
                         <div class="col-sm-4">
                             <ul class="multi-column-dropdown">
-                                <li>Item 4</li>
-                                <li>Item 5</li>
-                                <li>Item 6</li>
+                                {% for i in range(category|length//3,(category|length//3)*2)%}
+                                <li><a href="{{ url_for('list_book', category_id=category[i].id)}}">{{category[i].ten}}</a></li>
+                                {% endfor %}
                             </ul>
                         </div>
                         <div class="col-sm-4">
                             <ul class="multi-column-dropdown">
-                                <li>Item 7</li>
-                                <li>Item 8</li>
-                                <li>Item 9</li>
+                                <li><a href="{{ url_for('list_book')}}">Tất cả sản phẩm</a></li>
+                                {% for i in range((category|length//3)*2,category|length)%}
+                                <li><a href="{{ url_for('list_book', category_id=category[i].id)}}">{{category[i].ten}}</a></li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </div>
@@ -55,9 +57,9 @@
             </div>
             <!-- Left links -->
 
-            <form class="d-flex align-items-center w-100 form-search">
+            <form class="d-flex align-items-center w-100 form-search" action="{{url_for('list_book')}}">
                 <div class="input-group">
-                    <input type="search" class="form-control" placeholder="Search" aria-label="Search"/>
+                    <input type="search" class="form-control" placeholder="Search" aria-label="Search" name="keyword"/>
                 </div>
                 <a href="#!" class="text-white"><i class="fas fa-search ps-3"></i></a>
             </form>
@@ -68,18 +70,44 @@
                         <i class="fa-solid fa-cart-shopping"></i> Giỏ hàng
                     </a>
                 </li>
+                {% if current_user.is_authenticated %}
+                 <li class="nav-item dropdown m-auto" style="width: 200px;">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
+                       data-bs-toggle="dropdown"><img src="
+                        {% if current_user.anhDaiDien %}
+                            {{ current_user.anhDaiDien }}
+                        {% else %}
+                            {{ url_for('static', filename='images/user.png')}}
+                        {% endif %}
+                        " alt="{{current_user.username}}" style="width:40px;"
+                                                      class="rounded-pill"><span style="margin-left:10px;"> {{ current_user.hoVaTen }}</span></a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{url_for('profile')}}">Trang cá nhân</a></li>
+                        {% if current_user.is_authenticated and current_user.is_admin() %}
+                        <li><a class="dropdown-item" href="/admin">Trang quản trị</a></li>
+                        {% endif %}
+                        {% if current_user.is_authenticated and current_user.is_employee() %}
+                        <li><a class="dropdown-item" href="/admin/importbook">Trang nhập sách</a></li>
+                        {% endif %}
+                        <li><a class="dropdown-item" href="{{ url_for('logout') }}">Đăng xuất</a></li>
+                    </ul>
+                </li>
+                {% else %}
                 <li class="nav-item dropdown m-auto" style="width: 200px;">
                     <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
                        data-bs-toggle="dropdown"><img src="static/images/user.png" alt="Avatar Logo" style="width:40px;"
                                                       class="rounded-pill"> Anonymous</a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Đăng nhập</a></li>
-                        <li><a class="dropdown-item" href="#">Đăng ký</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('login') }}">Đăng nhập</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('register') }}">Đăng ký</a></li>
                     </ul>
                 </li>
+                {% endif %}
+
             </ul>
         </div>
         <!-- Collapsible wrapper -->
     </div>
     <!-- Container wrapper -->
 </nav>
+<!--<div class="alert alert-danger">{{current_user.vaiTro}}</div>-->

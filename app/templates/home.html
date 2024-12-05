@@ -1,6 +1,9 @@
 {% extends 'layout/base.html' %}
+{% block css %}
+<link href="{{ url_for('static', filename='css/home.css')}}" rel="stylesheet">
+{% endblock %}
 {% block content%}
-<div id="demo" class="carousel slide container slide-banner" data-bs-ride="carousel" data-bs-interval="5000">
+<div id="demo" class="carousel slide container slide-banner w-100" data-bs-ride="carousel" data-bs-interval="5000">
 
     <!-- Indicators/dots -->
     <div class="carousel-indicators">
@@ -12,11 +15,13 @@
     <!-- The slideshow/carousel -->
     <div class="carousel-inner banner-slideshow">
         <div class="carousel-item banner-slideshow-item active">
-            <img src="https://cdn0.fahasa.com/media/magentothem/banner7/BlackFridayCGS_Banner_840x320.png" alt="Los Angeles"
+            <img src="https://cdn0.fahasa.com/media/magentothem/banner7/BlackFridayCGS_Banner_840x320.png"
+                 alt="Los Angeles"
                  class="d-block w-100 img-fluid">
         </div>
         <div class="carousel-item banner-slideshow-item">
-            <img src="https://cdn0.fahasa.com/media/magentothem/banner7/TrangCTT2511_Mainbanner_840x320.jpg" alt="Chicago"
+            <img src="https://cdn0.fahasa.com/media/magentothem/banner7/TrangCTT2511_Mainbanner_840x320.jpg"
+                 alt="Chicago"
                  class="d-block w-100 img-fluid">
         </div>
         <div class="carousel-item banner-slideshow-item">
@@ -45,11 +50,11 @@
                 <button type="button" data-bs-target="#product-slideshow-container" data-bs-slide-to="1"></button>
                 <button type="button" data-bs-target="#product-slideshow-container" data-bs-slide-to="2"></button>
             </div>
-            <div class="carousel-inner">
+            <div class="carousel-inner p-4">
                 <div class="carousel-item active">
                     <div class="row">
                         {% for i in range(0,5)%}
-                        <a href="#"
+                        <a href="{{ url_for('productDetail', sach_id=sach[i].id) }}"
                            class="product-link col-6 col-md-4 col-lg-2 flex-grow-1 d-flex justify-content-center mb-4">
                             <div class="card product-card">
                                 <img src="{{sach[i].image}}"
@@ -60,7 +65,7 @@
                                         {{sach[i].ten}}
                                     </h5>
                                     <div>
-                                        <span class="text-danger fw-bold fs-5">11.480 đ</span>
+                                        <span class="text-danger fw-bold fs-5">{{sach[i].donGia}} đ</span>
                                     </div>
                                     <button class="btn btn-outline-danger rounded-pill px-4 py-2 w-100">
                                         Thêm vào giỏ hàng
@@ -72,9 +77,9 @@
                     </div>
                 </div>
                 <div class="carousel-item">
-                     <div class="row">
+                    <div class="row">
                         {% for i in range(5,10)%}
-                        <a href="#"
+                        <a href="{{ url_for('productDetail', sach_id=sach[i].id) }}"
                            class="product-link col-6 col-md-4 col-lg-2 flex-grow-1 d-flex justify-content-center mb-4">
                             <div class="card product-card">
                                 <img src="{{sach[i].image}}"
@@ -85,7 +90,7 @@
                                         {{sach[i].ten}}
                                     </h5>
                                     <div>
-                                        <span class="text-danger fw-bold fs-5">11.480 đ</span>
+                                        <span class="text-danger fw-bold fs-5">{{ sach[i].donGia }}đ</span>
                                     </div>
                                     <button class="btn btn-outline-danger rounded-pill px-4 py-2 w-100">
                                         Thêm vào giỏ hàng
@@ -97,9 +102,9 @@
                     </div>
                 </div>
                 <div class="carousel-item">
-                     <div class="row">
+                    <div class="row">
                         {% for i in range(10,15)%}
-                        <a href="#"
+                        <a href="{{ url_for('productDetail', sach_id=sach[i].id) }}"
                            class="product-link col-6 col-md-4 col-lg-2 flex-grow-1 d-flex justify-content-center mb-4">
                             <div class="card product-card">
                                 <img src="{{sach[i].image}}"
@@ -110,7 +115,7 @@
                                         {{sach[i].ten}}
                                     </h5>
                                     <div>
-                                        <span class="text-danger fw-bold fs-5">11.480 đ</span>
+                                        <span class="text-danger fw-bold fs-5">{{sach[i].donGia}}đ</span>
                                     </div>
                                     <button class="btn btn-outline-danger rounded-pill px-4 py-2 w-100">
                                         Thêm vào giỏ hàng
@@ -138,5 +143,4 @@
         </div>
     </div>
 </div>
-{% include 'layout/product_list_slideshow.html' %}
 {% endblock %}

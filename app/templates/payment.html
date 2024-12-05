@@ -1,4 +1,7 @@
 {% extends 'layout/base.html' %}
+{% block css %}
+<link href="{{ url_for('static', filename='css/payment.css')}}" rel="stylesheet">
+{% endblock %}
 {% block content%}
 
 
@@ -13,7 +16,7 @@
 <!-- Thanh tiêu đề -->
 <div class="title">
     <!-- <span style="font: normal 2rem  Arial; color: black">Thanh toán</span> -->
-    <ul class="menu-tab pt-3 pb-3">
+    <ul class="menu-tab pt-2 pb-2">
         <li>
             <a href="/cart">Giỏ hàng</a> 
         </li>
@@ -25,7 +28,7 @@
 </div> 
 
 <!-- Thanh toán -->
-<section class="container p-3"> 
+<section class="p-3"> 
     <!-- Địa chỉ nhận hàng --> 
     <div class="cart-tab mb-4 p-3">
         <h4>Thông tin người nhận</h4>

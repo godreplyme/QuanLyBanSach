@@ -1,0 +1,39 @@
+.table-wrapper {
+  max-height: 300px; /* Chiều cao tối đa cho bảng */
+  overflow-y: auto; /* Kích hoạt cuộn dọc */
+  border: 1px solid #dee2e6; /* Viền bảng */
+}
+
+.table-wrapper table thead th {
+  position: sticky;
+  top: 0; /* Giữ cố định phần tiêu đề */
+  background: #f8f9fa; /* Màu nền tiêu đề */
+  z-index: 2; /* Đảm bảo tiêu đề luôn nằm trên các hàng */
+}
+
+
+.sidebar {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.active-menu {
+  color: #dc3545 !important;
+  text-decoration: underline;
+}
+.col-stt{
+    width:5%;
+}
+.col-book{
+    width:45%;
+}
+.col-cate{
+    width:15%;
+}
+.col-author{
+    width:25%;
+}
+.col-quantity{
+    width:10%;
+}

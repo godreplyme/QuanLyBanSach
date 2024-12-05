@@ -1,47 +1,4 @@
-html{
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
-
-* {
-    font-family: Tahoma;
-}
-.navbar-dark .nav-item .nav-link {
-  color: #fff;
-}
-
-.navbar-dark .nav-item .nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
-  border-radius: 0.25rem;
-  color: #fff;
-}
-
-.fa-li {
-  position: relative;
-  left: 0;
-}
-.navbar-collapse .dropdown{
-}
-.dropdown-menu.columns-3 {
-    min-width: 900px;
-    padding: 30px 30px;
-    left: -130%;
-}
-.dropdown div.dropdown-menu {
-    min-width: 700px;
-    margin: 10px auto;
-    padding: 30px 30px;
-    left: 0%;
-    text-align: center;
-}
-.multi-column-dropdown {
-    list-style: none;
-    padding: 0;
-}
-
-
+/*slide banner*/
 .slide-banner{
     width: 70%;
     margin: auto;
@@ -178,10 +135,6 @@ html{
     color: #ffc000;
 }
 
-
-
-
-
 .custom-btn-prev, .custom-btn-next {
     position: absolute;
     top: 50%;
@@ -200,7 +153,7 @@ html{
 }
 
 
-/* Hiệu ứng hover */
+/* Hiệu ứng hover product*/
 .custom-btn-prev:hover, .custom-btn-next:hover {
     background-color: rgba(255, 255, 255, 0.8); /* Nền trắng nhạt */
     color: black; /* Đổi màu icon */
@@ -226,33 +179,3 @@ html{
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Tạo bóng */
     border-color: black; /* Thêm viền đen */
 }
-
-/* title thanh toan */
-.title {
-    background-color: ghostwhite ;
-    font: normal 2rem  Arial; 
-    color: black;
-    padding: 0 5rem;
-}
-
-/* ảnh giỏ hàng khi chưa chọn sản phẩm mua */
-.cart-tab {
-    background-color: whitesmoke;
-    border: 0;
-    border-radius: 0.5rem;
-}
-
-/* Menu thanh toán */
-ul.menu-tab {
-    list-style-type: none;
-    display: flex;
-}
-ul.menu-tab > li > a {
-    text-decoration: none;
-    text-transform: capitalize;
-    color: black;
-    padding: 0 0.5rem;
-} 
-
-
-

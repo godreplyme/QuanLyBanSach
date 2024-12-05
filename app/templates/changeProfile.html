@@ -1,0 +1,65 @@
+{% extends 'layout/base.html' %}
+{% block css %}
+<link href="{{ url_for('static', filename='css/info_changepass.css')}}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+
+<body>
+  <div class="container-fluid profile-container pt-4">
+    <div class="row flex-grow-1">
+      <!-- Sidebar -->
+      <div class="col-lg-3 col-md-4 d-md-block pb-4">
+        <div class="sidebar">
+          <ul class="nav flex-column">
+            <li class="nav-item"><a href="{{url_for('profile')}}" class="nav-link text-dark active-menu">Hồ sơ cá nhân</a></li>
+            <hr>
+            <li class="nav-item"><a href="{{url_for('changePassword')}}" class="nav-link text-dark ">Đổi mật khẩu</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="col-lg-9 col-md-8">
+        <div class="profile-card">
+          <h4 class="text-center">Hồ sơ cá nhân</h4>
+          <hr>
+          <form method="post" action="{{url_for('changeProfile')}}">
+            <div class="mb-3">
+              <label for="name" class="form-label">Họ và tên</label>
+              <input type="text" class="form-control" id="name" name="name" placeholder="Họ và tên" value="{{current_user.hoVaTen}}">
+            </div>
+            <div class="mb-3">
+              <label for="phone" class="form-label">Số điện thoại</label>
+              <input type="text" class="form-control" id="phone" name="phone" placeholder="Số điện thoại" value="{{current_user.sdt}}">
+            </div>
+            <div class="mb-3">
+              <label for="address" class="form-label">Địa chỉ</label>
+              <input type="text" class="form-control" id="address" name="address" placeholder="Địa chỉ" value="{{current_user.diaChi}}">
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="{{current_user.email  }}">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Giới tính</label>
+              <div>
+                <input type="radio" id="male" name="gender" value="male"
+                {% if current_user.gioiTinh == 0%} checked {%endif%}>
+                <label for="male">Nam</label>
+                <input type="radio" id="female" name="gender" value="female"
+                {% if current_user.gioiTinh == 1%} checked {%endif%}>
+                <label for="female">Nữ</label>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="birthday" class="form-label">Birthday</label>
+              <input type="date" class="form-control" id="birthday" name="birthday" value="{{ current_user.ngaySinh.strftime('%Y-%m-%d') }}">
+            </div>
+            <button type="submit" class="btn btn-success">Lưu thay đổi</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+{% endblock %}

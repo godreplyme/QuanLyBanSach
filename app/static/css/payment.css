@@ -1,0 +1,24 @@
+/* title thanh toan */
+.title {
+    font: normal 2rem  Arial; 
+    color: black;
+}
+
+/* ảnh giỏ hàng khi chưa chọn sản phẩm mua */
+.cart-tab {
+    background-color: whitesmoke;
+    border: 0;
+    border-radius: 0.5rem;
+}
+
+/* Menu thanh toán */
+ul.menu-tab {
+    list-style-type: none;
+    display: flex;
+}
+ul.menu-tab > li > a {
+    text-decoration: none;
+    text-transform: capitalize;
+    color: black;
+    padding: 0 0.5rem;
+} 
