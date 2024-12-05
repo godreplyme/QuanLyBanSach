@@ -56,9 +56,9 @@
             </div>
             <!-- Left links -->
 
-            <form class="d-flex align-items-center w-100 form-search">
+            <form class="d-flex align-items-center w-100 form-search" action="{{url_for('list_book')}}">
                 <div class="input-group">
-                    <input type="search" class="form-control" placeholder="Search" aria-label="Search"/>
+                    <input type="search" class="form-control" placeholder="Search" aria-label="Search" name="keyword"/>
                 </div>
                 <a href="#!" class="text-white"><i class="fas fa-search ps-3"></i></a>
             </form>

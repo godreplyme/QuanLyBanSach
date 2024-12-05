@@ -38,7 +38,7 @@
             <div class="row g-4 justify-content-evenly">
                 <!-- Thẻ sản phẩm -->
                 {% for l in lb %}
-                <a href="#" class="product-link col-6 col-md-4 col-lg-4">
+                <a href="{{ url_for('productDetail', sach_id=l.id) }}" class="product-link col-6 col-md-4 col-lg-4">
                     <div class="product-card">
                         <img src="{{l.image}}" alt="Product Image" class="img-fluid">
                         <div class="card-body">

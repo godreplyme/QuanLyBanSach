@@ -3,7 +3,7 @@
 <link href="{{ url_for('static', filename='css/home.css')}}" rel="stylesheet">
 {% endblock %}
 {% block content%}
-<div id="demo" class="carousel slide container slide-banner" data-bs-ride="carousel" data-bs-interval="5000">
+<div id="demo" class="carousel slide container slide-banner w-100" data-bs-ride="carousel" data-bs-interval="5000">
 
     <!-- Indicators/dots -->
     <div class="carousel-indicators">
@@ -54,7 +54,7 @@
                 <div class="carousel-item active">
                     <div class="row">
                         {% for i in range(0,5)%}
-                        <a href="#"
+                        <a href="{{ url_for('productDetail', sach_id=sach[i].id) }}"
                            class="product-link col-6 col-md-4 col-lg-2 flex-grow-1 d-flex justify-content-center mb-4">
                             <div class="card product-card">
                                 <img src="{{sach[i].image}}"
@@ -79,7 +79,7 @@
                 <div class="carousel-item">
                     <div class="row">
                         {% for i in range(5,10)%}
-                        <a href="#"
+                        <a href="{{ url_for('productDetail', sach_id=sach[i].id) }}"
                            class="product-link col-6 col-md-4 col-lg-2 flex-grow-1 d-flex justify-content-center mb-4">
                             <div class="card product-card">
                                 <img src="{{sach[i].image}}"
@@ -104,7 +104,7 @@
                 <div class="carousel-item">
                     <div class="row">
                         {% for i in range(10,15)%}
-                        <a href="#"
+                        <a href="{{ url_for('productDetail', sach_id=sach[i].id) }}"
                            class="product-link col-6 col-md-4 col-lg-2 flex-grow-1 d-flex justify-content-center mb-4">
                             <div class="card product-card">
                                 <img src="{{sach[i].image}}"

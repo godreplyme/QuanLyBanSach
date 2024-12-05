@@ -1,0 +1,67 @@
+{% extends 'layout/base.html' %}
+{% block css %}
+<link href="{{ url_for('static', filename='css/import.css')}}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<div class="row flex-grow-1 mt-5">
+    <!-- Sidebar -->
+    <div class="col-lg-3 col-md-4 d-md-block pb-4">
+        <div class="sidebar">
+            <ul class="nav flex-column">
+                <li class="nav-item"><a href="{{url_for('import_book')}}" class="nav-link text-dark active-menu">Phiếu nhập sách</a></li>
+                <hr>
+                <li class="nav-item"><a href="{{url_for('create_import')}}" class="nav-link text-dark">Lập phiếu nhập sách</a></li>
+                <hr>
+                <li class="nav-item"><a href="{{url_for('add_book')}}" class="nav-link text-dark">Thêm sách</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-9 col-md-8">
+        <div>
+            <h3>Phiếu nhập sách</h3>
+            <div class="table-wrapper">
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th>Mã nhập sách</th>
+                        <th>Ngày nhập sách</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Item 1</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="mt-5">
+            <h5>Danh sách nhập sách</h5>
+            <div class="table-wrapper">
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th class="col-stt">STT</th>
+                        <th class="col-book">Sách</th>
+                        <th class="col-cate">Thể loại</th>
+                        <th class="col-author">Tác giả</th>
+                        <th class="col-quantity">Số lượng</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Item 1</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,5 +1,5 @@
 import math, utils, cloudinary.uploader, admin, hashlib
-from os import rename
+from os import rename, renames
 
 from app import app, loginMNG, db
 from flask import render_template, request, redirect, url_for
@@ -23,14 +23,15 @@ def index():
 def list_book():
     cate_id = request.args.get('category_id')
     page = int(request.args.get('page', 1))
+    kw = request.args.get('keyword')
     size = app.config['LIST_SIZE']
     start = (page - 1) * size
     end = start + size
 
-    books = utils.get_list_books(cate_id)[start:end]
-    l = len(utils.get_list_books(cate_id))
+    books = utils.get_list_books(id_category=cate_id, kw=kw)[start:end]
+    l = len(utils.get_list_books(id_category=cate_id, kw=kw))
     return render_template('products.html',
-                           page=math.ceil(len(utils.get_list_books(cate_id)) / app.config['LIST_SIZE']),
+                           page=math.ceil(l / app.config['LIST_SIZE']),
                            lb=books)
 
 
@@ -150,6 +151,27 @@ def changePassword():
         else:
             err_msg = 'Mật khẩu cũ không đúng, mời nhập lại'
     return render_template('changePassword.html', err_msg=err_msg, suc_msg=suc_msg)
+
+
+@app.route("/products/<int:sach_id>")
+def productDetail(sach_id):
+    book = utils.get_book_by_id(sach_id)
+    return render_template('productDetail.html', sach=book)
+
+
+@app.route("/import")
+def import_book():
+    return render_template('importHome.html')
+
+
+@app.route('/importCreate')
+def create_import():
+    return render_template('importCreate.html')
+
+
+@app.route('/addBook')
+def add_book():
+    return render_template('addBook.html')
 
 
 def checkAuthenticated():
