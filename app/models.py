@@ -3,9 +3,10 @@ from logging.config import valid_ident
 from sqlalchemy import Column, String, Integer, Boolean, Date, Float, Enum as SQLEnum, ForeignKey, DateTime, Text
 from sqlalchemy.orm import relationship
 from datetime import date, datetime
-from app import db, app
+from __init__ import db, app
 from enum import Enum
 from flask_login import UserMixin
+
 
 
 class BaseModel(db.Model):

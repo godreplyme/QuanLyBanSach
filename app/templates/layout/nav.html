@@ -2,6 +2,7 @@
     <!-- Container wrapper -->
     <div class="container">
         <!-- Navbar brand -->
+
         <a class="navbar-brand" href="{{ url_for('index') }}"><img id="MDB-logo"
                                               src="https://mdbcdn.b-cdn.net/wp-content/uploads/2018/06/logo-mdb-jquery-small.png"
                                               alt="MDB Logo"
@@ -24,7 +25,7 @@
             <!--                </li>-->
             <!--            </ul>-->
             <div class="dropdown">
-                <a href="#" class="dropdown-toggle text-white" data-bs-toggle="dropdown" style="color=white;">
+                <a href="#" class="dropdown-toggle text-white" data-bs-toggle="dropdown" style="color:white;">
                     <i class="fa-solid fa-bars"></i> Menu
                 </a>
                 <div class="dropdown-menu p-3 bg-dark text-white">
@@ -65,7 +66,7 @@
 
             <ul class="navbar-nav ms-3">
                 <li class="nav-item m-auto" style="width: 130px;">
-                    <a class="nav-link d-flex align-items-center me-3" href="#!">
+                    <a title="Chi tiết giỏ hàng" class="nav-link d-flex align-items-center me-3" href="/cart">
                         <i class="fa-solid fa-cart-shopping"></i> Giỏ hàng
                     </a>
                 </li>

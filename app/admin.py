@@ -4,7 +4,7 @@ from flask_login import current_user
 from flask_sqlalchemy.track_modifications import models_committed
 from wtforms.fields.simple import StringField
 from flask_wtf import FlaskForm
-from app import app, db
+from __init__ import app, db
 from flask_admin import Admin, AdminIndexView, expose, BaseView
 from flask_admin.contrib.sqla import ModelView
 from models import Sach, TheLoai, PhieuNhapSach, ChiTietNhapSach

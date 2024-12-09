@@ -1,9 +1,15 @@
 import math, utils, cloudinary.uploader, admin, hashlib
 from doctest import debug
 from os import rename, renames
+<<<<<<< HEAD
 from models import *
 from app import app, loginMNG, db
 from flask import render_template, request, redirect, url_for, jsonify, flash
+=======
+
+from __init__ import app, loginMNG, db
+from flask import render_template, request, redirect, url_for
+>>>>>>> 6e1a1d5843dc4f6a9a20809afbaf361d83535815
 from flask_login import login_user, logout_user, current_user
 
 
@@ -13,7 +19,6 @@ def default_response():
         'category': utils.get_category(),
         'sach': utils.get_book_home()
     }
-
 
 @app.route("/")
 def index():
@@ -260,6 +265,16 @@ def add_book():
 def checkAuthenticated():
     if not current_user.is_authenticated:
         return redirect(url_for('index'))
+
+
+@app.route('/cart')
+def cart():
+    return render_template('cart.html')
+
+
+@app.route('/payment')
+def payment():
+    return render_template('payment.html')
 
 
 if __name__ == '__main__':
