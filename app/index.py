@@ -1,15 +1,13 @@
 import math, utils, cloudinary.uploader, admin, hashlib
 from doctest import debug
 from os import rename, renames
-<<<<<<< HEAD
 from models import *
 from app import app, loginMNG, db
 from flask import render_template, request, redirect, url_for, jsonify, flash
-=======
 
-from __init__ import app, loginMNG, db
-from flask import render_template, request, redirect, url_for
->>>>>>> 6e1a1d5843dc4f6a9a20809afbaf361d83535815
+
+
+
 from flask_login import login_user, logout_user, current_user
 
 
