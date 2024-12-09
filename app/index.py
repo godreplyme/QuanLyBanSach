@@ -2,7 +2,7 @@ import math, utils, cloudinary.uploader, admin, hashlib
 from doctest import debug
 from os import rename, renames
 from models import *
-from app import app, loginMNG, db
+from __init__ import app, loginMNG, db
 from flask import render_template, request, redirect, url_for, jsonify, flash
 
 
