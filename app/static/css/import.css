@@ -37,3 +37,21 @@
 .col-quantity{
     width:10%;
 }
+
+#searchResults {
+    position: absolute;
+    background-color: white;
+    z-index: 10;
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+#searchResults .list-group-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+#searchResults .list-group-item:hover {
+    background-color: #f1f1f1; /* Màu nền khi hover */
+}

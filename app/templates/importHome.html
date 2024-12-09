@@ -8,9 +8,11 @@
     <div class="col-lg-3 col-md-4 d-md-block pb-4">
         <div class="sidebar">
             <ul class="nav flex-column">
-                <li class="nav-item"><a href="{{url_for('import_book')}}" class="nav-link text-dark active-menu">Phiếu nhập sách</a></li>
+                <li class="nav-item"><a href="{{url_for('import_book')}}" class="nav-link text-dark active-menu">Phiếu
+                    nhập sách</a></li>
                 <hr>
-                <li class="nav-item"><a href="{{url_for('create_import')}}" class="nav-link text-dark">Lập phiếu nhập sách</a></li>
+                <li class="nav-item"><a href="{{url_for('create_import')}}" class="nav-link text-dark">Lập phiếu nhập
+                    sách</a></li>
                 <hr>
                 <li class="nav-item"><a href="{{url_for('add_book')}}" class="nav-link text-dark">Thêm sách</a></li>
             </ul>
@@ -28,40 +30,52 @@
                     </tr>
                     </thead>
                     <tbody>
+                    {% for phieu in list_import %}
                     <tr>
-                        <td>1</td>
-                        <td>Item 1</td>
+
+                        <td>{{phieu.id}}</td>
+                        <td>
+                            <form method="post" class="d-inline">
+                                <input type="hidden" name="id_Import" value="{{ phieu.id }}">
+                                <button type="submit" class="btn btn-link">{{ phieu.ngayNhapSach.strftime('%Y-%m-%d')
+                                    }}
+                                </button>
+                            </form>
+                        </td>
                     </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
-        <div class="mt-5">
-            <h5>Danh sách nhập sách</h5>
-            <div class="table-wrapper">
-                <table class="table table-striped table-hover">
-                    <thead>
-                    <tr>
-                        <th class="col-stt">STT</th>
-                        <th class="col-book">Sách</th>
-                        <th class="col-cate">Thể loại</th>
-                        <th class="col-author">Tác giả</th>
-                        <th class="col-quantity">Số lượng</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Item 1</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+        <!-- Content: Details of selected PhieuNhapSach -->
+        <div class="col-md-8 pt-3 w-100">
+            {% if selected_import %}
+            <h5>Chi tiết phiếu nhập: {{ selected_import.ngayNhapSach.strftime('%Y-%m-%d') }}</h5>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th class="col-stt">#</th>
+                    <th class="col-book">Tên sách</th>
+                    <th class="col-cate">Thể loại</th>
+                    <th class="col-author">Tác giả</th>
+                    <th class="col-quantity">Số lượng</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for ct in list_import_detail %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ ct.ten_sach }}</td>
+                    <td>{{ ct.ten_the_loai }}</td>
+                    <td>{{ ct.tac_gia }}</td>
+                    <td>{{ ct.soLuong }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
         </div>
     </div>
 </div>
-
 {% endblock %}

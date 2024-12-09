@@ -1,6 +1,6 @@
 import hashlib
 from logging.config import valid_ident
-from sqlalchemy import Column, String, Integer, Boolean, Date, Float, Enum as SQLEnum, ForeignKey, DateTime
+from sqlalchemy import Column, String, Integer, Boolean, Date, Float, Enum as SQLEnum, ForeignKey, DateTime, Text
 from sqlalchemy.orm import relationship
 from datetime import date, datetime
 from app import db, app
@@ -60,7 +60,7 @@ class Sach(BaseModel):
 
     ten = Column(String(100), nullable=False)
     tacGia = Column(String(50), nullable=False)
-    moTa = Column(String(255), default='')
+    moTa = Column(Text, default='')
     donGia = Column(Float, nullable=False, default=0)
     soLuongTonKho = Column(Integer, nullable=False, default=0)
     id_TheLoai = Column(Integer, ForeignKey('TheLoai.id'))
@@ -246,4 +246,22 @@ if __name__ == '__main__':
                           ,email='vu123@gmail.com',vaiTro=VaiTro.EMPLOYEE
                           ,anhDaiDien='https://res.cloudinary.com/dcrsia5sh/image/upload/v1732855504/mpkxldxtz440munykvf5.jpg')
         db.session.add_all([admin,customer,employee])
+
+        phieuNhapSach=[
+            PhieuNhapSach(ngayNhapSach=datetime(2024, 12, 1)),
+            PhieuNhapSach(ngayNhapSach=datetime(2024, 12, 2)),
+            PhieuNhapSach(ngayNhapSach=datetime(2024, 12, 3)),
+            PhieuNhapSach(ngayNhapSach=datetime(2024, 12, 4)),
+            PhieuNhapSach(ngayNhapSach=datetime(2024, 12, 5)),
+            PhieuNhapSach(ngayNhapSach=datetime(2024, 12, 6))
+        ]
+        chiTietNhapSach=[
+            ChiTietNhapSach(soLuong=50,id_Sach=1,id_PhieuNhapSach=1),
+            ChiTietNhapSach(soLuong=20,id_Sach=2,id_PhieuNhapSach=1),
+            ChiTietNhapSach(soLuong=30, id_Sach=3,id_PhieuNhapSach=2),
+            ChiTietNhapSach(soLuong=40,id_Sach=4,id_PhieuNhapSach=2)
+        ]
+        db.session.add_all(phieuNhapSach)
+        db.session.add_all(chiTietNhapSach)
+
         db.session.commit()
