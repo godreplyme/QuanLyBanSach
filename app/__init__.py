@@ -7,7 +7,7 @@ import cloudinary
 app = Flask(__name__)
 
 app.secret_key='skdljfsdlfjkfljasflajsflks'
-app.config["SQLALCHEMY_DATABASE_URI"] ="mysql+pymysql://root:%s@localhost/bookstore?charset=utf8mb4" % quote("runa@2610")
+app.config["SQLALCHEMY_DATABASE_URI"] ="mysql+pymysql://root:%s@localhost/bookstore?charset=utf8mb4" % quote("vrain2403")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 app.config["LIST_SIZE"] = 9
 

@@ -1,0 +1,109 @@
+{% extends 'layout/base_employee.html' %}
+{% block create_import %}
+active
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header pb-0">
+                <h5>Tra cứu số lượng sách</h5>
+            </div>
+            <div class="form-group p-4 pb-0">
+                <label class="form-control-label" for="searchSach">Tìm kiếm sách:</label>
+                <input type="text" class="form-control" id="searchSach" aria-describedby="basic-addon3"
+                       placeholder="Nhập tên sách" , name="q">
+                <div id="searchResults" class="list-group mt-1"></div>
+            </div>
+            <div class="table-responsive p-0">
+                <table class="table align-items-center mb-0">
+                    <thead>
+                    <tr>
+                        <th class=" text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 w-10">
+                            Mã sách
+                        </th>
+                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 w-40">
+                            Tên sách
+                        </th>
+                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 w-20">
+                            Thể loại
+                        </th>
+                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 w-20">
+                            Tác giả
+                        </th>
+                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 w-10">
+                            Số lượng tồn kho
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody id="selectedSachTable">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header pb-0">
+                <h5>Nhập thông tin nhập kho</h5>
+            </div>
+            <form method="post" id="nhapSachForm">
+                <div class="card-body p-4 pb-0">
+
+                    <div class="form-group">
+                        <label class="form-control-label" for="ngayNhap">Ngày nhập kho:</label>
+                        <input type="date" class="form-control" id="ngayNhap" aria-describedby="basic-addon3"
+                               name="ngayNhap" value="{{ today }}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control-label" for="nhanVien">Nhân viên nhập kho: </label>
+                        <input type="text" class="form-control" id="nhanVien" aria-describedby="basic-addon3"
+                               value="{{ current_user.hoVaTen }}" disabled>
+                    </div>
+                    <div class="table-responsive p-0">
+                        <table class="table align-items-center mb-0">
+                            <thead>
+                            <tr>
+                                <th class=" text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 w-10">
+                                    Mã sách
+                                </th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 w-35">
+                                    Tên sách
+                                </th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 w-15">
+                                    Thể loại
+                                </th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 w-10">
+                                    Tác giả
+                                </th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 w-10">
+                                    Số lượng
+                                </th>
+                                <th class="w-10">
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody id="nhapSachTable">
+                            </tbody>
+                        </table>
+                        <button type="button" class="btn btn-primary mt-3" id="addRow">Thêm dòng</button>
+                        <div class="d-flex justify-content-end">
+                            <a  class="btn btn-danger mx-3">Hủy</a>
+                            <button type="submit" class="btn btn-success mx-3">Xác nhận</button>
+                        </div>
+                        <input type="hidden" value="{{ quy_dinh.soLuongNhapToiThieu }}" id="so_luong_nhap_toi_thieu"
+                               name="so_luong_nhap_toi_thieu">
+                        <input type="hidden" value="{{ quy_dinh.gioiHanNhap }}" id="gioi_han_nhap" name="gioi_han_nhap">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{{ url_for('static', filename='js/importCreate.js') }}"></script>
+{% endblock %}

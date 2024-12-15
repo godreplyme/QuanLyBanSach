@@ -15,7 +15,7 @@
 .sidebar {
   background-color: #fff;
   border-radius: 10px;
-  padding: 20px;
+  padding: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 .active-menu {
@@ -38,7 +38,7 @@
     width:10%;
 }
 
-#searchResults {
+#searchResults, #searchResults2 {
     position: absolute;
     background-color: white;
     z-index: 10;
@@ -47,11 +47,11 @@
     overflow-y: auto;
 }
 
-#searchResults .list-group-item {
+#searchResults .list-group-item,#searchResults2 .list-group-item {
     padding: 10px;
     border-bottom: 1px solid #ddd;
 }
 
-#searchResults .list-group-item:hover {
+#searchResults .list-group-item:hover,#searchResults2 .list-group-item:hover {
     background-color: #f1f1f1; /* Màu nền khi hover */
 }
