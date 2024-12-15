@@ -14,11 +14,47 @@
     </table>
 {% else %}
 <div  class="alert alert-info mt-1">Không có sản phẩm trong giỏ!</div>
-<div class="mt-1">
-    <a title="Thanh toán" class="nav-link d-flex align-items-center me-3" href="/payment">
-        <button class="btn btn-success">Thanh toán</button>
-    </a>
-</div>
+  
+    {% if current_user.is_authenticated %}
+    <div class="mt-1">
+        <a title="Thanh toán" class="nav-link d-flex align-items-center me-3" href="/payment">
+            <button class="btn btn-success" onclick="pay()">Thanh toán</button>
+        </a>          
+    </div>
+    {% else %}
+    <div class="container mt-3">        
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+          Thanh toán
+        </button>
+      </div>
+      
+      <!-- The Modal -->
+      <div class="modal fade" id="myModal">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+      
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">Thông báo</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+      
+            <!-- Modal body -->
+            <div class="modal-body">
+                <p>Bạn cần <a href="/login?next=/cart">đăng nhập</a> để thanh toán!</p>
+            </div>
+      
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+            </div>
+      
+          </div>
+        </div>
+      </div>
+    {% endif %}
 {% endif %}
-
+{% endblock %}
+{% block js %}
+<script src="{{ url_for('static', filename='js/cart.js') }}"></script>
 {% endblock %}

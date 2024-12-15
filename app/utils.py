@@ -2,6 +2,7 @@ from sqlalchemy import func
 from models import *
 from __init__ import db, app
 import os, hashlib
+import dao
 
 
 def get_book():

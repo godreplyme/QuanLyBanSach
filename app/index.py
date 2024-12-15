@@ -1,9 +1,9 @@
-import math, utils, cloudinary.uploader, admin, hashlib
+import math, utils, cloudinary.uploader, admin, hashlib, dao
 from os import rename, renames
 
 from __init__ import app, loginMNG, db
-from flask import render_template, request, redirect, url_for
-from flask_login import login_user, logout_user, current_user
+from flask import render_template, request, redirect, url_for, session, jsonify
+from flask_login import login_user, logout_user, current_user, login_required
 
 
 @app.context_processor
@@ -182,6 +182,30 @@ def checkAuthenticated():
 def cart():
     return render_template('cart.html')
 
+
+@app.route('/api/pay')
+@login_required
+def pay():
+    # ghi nhận đơn hàng
+    key = app.config['CART_KEY'] # lấy 'cart' ra
+    cart = session.get(key)
+
+    try: # check có bị lỗi ko, thường bị lỗi ràng buộc về CSDL
+        dao.save_order(cart)
+    except Exception as ex: # lỗi thì vào đây
+        print(str(ex))
+        return jsonify({
+            "status": 500,
+            "message": "Lỗi hệ thống",
+        })
+    else: # chạy lệnh success
+        #del session(key) # xóa cart trong session, vì đã thanh toán xong
+        pass
+
+    return jsonify({ 
+        "status": 200,
+        "message": "Hoàn tất thanh toán",
+    })
 
 @app.route('/payment')
 def payment():
