@@ -1,4 +1,9 @@
+import hashlib
+from logging.config import valid_ident
+from sqlalchemy import Column, String, Integer, Boolean, Date, Float, Enum as SQLEnum, ForeignKey, DateTime
+from sqlalchemy.orm import relationship
 from datetime import date, datetime
+from __init__ import db, app
 from enum import Enum
 from flask_login import UserMixin
 from sqlalchemy import Column, String, Integer, Boolean, Date, Float, Enum as SQLEnum, ForeignKey, DateTime, Text
@@ -30,17 +35,14 @@ class VaiTro(Enum):
             return 'Nhân viên nhập sách'
 
 class TrangThai(Enum):
-    DA_DAT_HANG = 1
-    DANG_CHO_THANH_TOAN = 2
-    DANG_GIAO_HANG = 3
-    DA_NHAN_HANG = 4
-    CHO_NHAN_HANG = 5
-    DA_HUY = 6
+    DANG_CHO_THANH_TOAN = 1
+    DANG_GIAO_HANG = 2
+    DA_NHAN_HANG = 3
+    CHO_NHAN_HANG = 4
+    DA_HUY = 5
 
     def __str__(self):
-        if self == TrangThai.DA_DAT_HANG:
-            return 'Đã đặt hàng'
-        elif self == TrangThai.DANG_CHO_THANH_TOAN:
+        if self == TrangThai.DANG_CHO_THANH_TOAN:
             return 'Đang chờ thanh toán'
         elif self == TrangThai.DANG_GIAO_HANG:
             return 'Đang giao hàng'
@@ -61,8 +63,9 @@ class PhuongThucThanhToan(Enum):
 
 
 # Cơ sở dữ liệu cho người dùng
-class NguoiDung(BaseModel, UserMixin):
+class NguoiDung(BaseModel,UserMixin):
     __tablename__ = 'NguoiDung'
+    __table_args__ = {'extend_existing': True}
 
     username = Column(String(50), unique=True)
     password = Column(String(50), nullable=False, default='')
@@ -145,7 +148,7 @@ class DonHang(BaseModel):
     ngayDatHang = Column(DateTime, default=datetime.now())
     ngayThanhToan = Column(DateTime)
 
-    trangThai = Column(SQLEnum(TrangThai), default=TrangThai.DA_DAT_HANG, nullable=False)
+    trangThai = Column(SQLEnum(TrangThai), default=TrangThai.DANG_CHO_THANH_TOAN, nullable=False)
     phuongThucThanhToan = Column(SQLEnum(PhuongThucThanhToan), nullable=False)
     nguoiDung = Column(Integer, ForeignKey(NguoiDung.id), nullable=True)
     chiTietDonHang = relationship('ChiTietDonHang', backref='DonHang', lazy=True)
@@ -322,7 +325,7 @@ if __name__ == '__main__':
 
         don_hang = [
             DonHang(ngayDatHang=datetime(2024, 12, 1), ngayThanhToan=datetime(2024, 12, 11),
-                    trangThai=TrangThai.DA_DAT_HANG, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TIEP, nguoiDung=1),
+                    trangThai=TrangThai.DANG_CHO_THANH_TOAN, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TIEP, nguoiDung=1),
             DonHang(ngayDatHang=datetime(2024, 12, 2), ngayThanhToan=datetime(2024, 12, 12),
                     trangThai=TrangThai.DANG_CHO_THANH_TOAN, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TUYEN,
                     nguoiDung=2),
@@ -333,7 +336,7 @@ if __name__ == '__main__':
             DonHang(ngayDatHang=datetime(2024, 12, 5), ngayThanhToan=datetime(2024, 12, 15), trangThai=TrangThai.DA_HUY,
                     phuongThucThanhToan=PhuongThucThanhToan.TRUC_TIEP, nguoiDung=2),
             DonHang(ngayDatHang=datetime(2024, 12, 6), ngayThanhToan=datetime(2024, 12, 16),
-                    trangThai=TrangThai.DA_DAT_HANG, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TUYEN, nguoiDung=3),
+                    trangThai=TrangThai.DANG_CHO_THANH_TOAN, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TUYEN, nguoiDung=3),
             DonHang(ngayDatHang=datetime(2024, 12, 7), ngayThanhToan=datetime(2024, 12, 17),
                     trangThai=TrangThai.DANG_CHO_THANH_TOAN, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TIEP,
                     nguoiDung=1),

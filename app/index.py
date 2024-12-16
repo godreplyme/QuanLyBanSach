@@ -5,7 +5,7 @@ from __init__ import app, loginMNG, db
 from flask import render_template, request, redirect, url_for, jsonify, flash, send_file
 from docx import Document
 from sqlalchemy import func
-from flask_login import login_user, logout_user, current_user, login_required
+from flask_login import login_user, logout_user, current_user
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import parse_xml
 from docx.oxml.ns import nsdecls
@@ -164,8 +164,8 @@ def changePassword():
 @app.route("/products/<int:sach_id>", methods=['GET','POST'])
 def productDetail(sach_id):
     book = utils.get_book_by_id(sach_id)
-    if request.method.__eq__('POST'):
-        data = request.json # Lấy dữ liệu JSON từ body của POST request
+    if request.method == 'POST':
+        data = request.get_json()  # Lấy dữ liệu JSON từ body của POST request
         print(data)
         quantity = data.get('quantity')  # Lấy giá trị số lượng, mặc định là 1 nếu không có
         if not current_user.is_authenticated:
@@ -397,7 +397,6 @@ def bill():
 
 
 @app.route('/billCreate', methods=['GET', 'POST'])
-@login_required
 def create_bill():
     check = checkEmployee()
     if check:
@@ -449,7 +448,6 @@ def create_bill():
 
 
 @app.route('/billExport', methods=['POST'])
-@login_required
 def export_bill():
     data = request.json
     ngay_dat_hang = data.get('ngayDatHang')
@@ -529,45 +527,92 @@ def checkImporter():
 
 @app.route('/cart')
 def cart():
-    return render_template('cart.html')
+    if not current_user.is_authenticated:
+        return redirect('/login')
+        # Giả sử bạn lấy đơn hàng từ database dựa trên user_id
+    current_user_id = current_user.id  # ID người dùng hiện tại (nếu có đăng nhập)
+
+    # lấy giỏ hàng của người dùng đang đăng nhập hiện tại ( mỗi người chỉ có 1 giỏ hàng)
+    gio_hang = GioHang.query.filter_by(nguoiDung=current_user_id).first()
+    if not gio_hang:
+        return render_template('cart.html', carts=[])  # nếu giỏ hàng rỗng thì trả về rỗng
+    # lấy danh sách chi tiết giỏ hàng của người dùng
+    chi_tiet_GH = ChiTietGioHang.query.filter_by(gioHang=gio_hang.id).all()
+
+    danh_sach_sach = []
+    for chi_tiet in chi_tiet_GH:
+        danh_sach_sach.append({
+            'image': chi_tiet.Sach.image,
+            'ten': chi_tiet.Sach.ten,
+            'tacGia': chi_tiet.Sach.tacGia,
+            'soLuong': chi_tiet.soLuong,
+            'donGia': chi_tiet.Sach.donGia,
+            'tongTien': chi_tiet.soLuong * chi_tiet.Sach.donGia,  # Tính tổng tiền
+        })
+    # Truyền dữ liệu vào template giỏ hàng
+    return render_template('cart.html', carts=danh_sach_sach)
 
 
-@app.route('/api/products/<int:sach_id>', methods=['GET','POST'])
+# # Lấy đơn hàng ở trạng thái TRONG_GIO_HANG
+# don_hangs = DonHang.query.filter_by(nguoiDung=current_user_id, trangThai=TrangThai.TRONG_GIO_HANG).all()
+# # Lấy danh sách sách thông qua ChiTietDonHang
+# danh_sach_sach=[]
+# for don_hang in don_hangs:
+#    chi_tiet_DH = ChiTietDonHang.query.filter_by(id_DonHang=don_hang.id).all()
+#    for chi_tiet in chi_tiet_DH:
+#        danh_sach_sach.append({
+#            'image':chi_tiet.sach.image,
+#            'ten': chi_tiet.sach.ten,
+#            'tacGia': chi_tiet.sach.tacGia,
+#            'soLuong': chi_tiet.soLuong,
+#            'donGia': chi_tiet.sach.donGia,
+#            'tongTien': chi_tiet.tongTien,
+#        })
+# print("Danh sách đơn hàng:", don_hangs)
+# for don_hang in don_hangs:
+#     chi_tiet_DH = ChiTietDonHang.query.filter_by(id_DonHang=don_hang.id).all()
+#     print("Chi tiết đơn hàng:", chi_tiet_DH)
+# print("Danh sách sách:", danh_sach_sach)
+# # Chuyển dữ liệu đơn hàng vào template
+# return render_template('cart.html', carts=danh_sach_sach)
+
+
+@app.route('/products/<int:sach_id>', methods=['POST'])
 def add_to_cart(sach_id):
     # Lấy số lượng từ body của yêu cầu
-    print(request)
-    if request.method == 'POST':
-        data = request.get_json()  # Lấy dữ liệu JSON từ body của POST request
-        print(data)
-        quantity = data.get('quantity')  # Lấy giá trị số lượng, mặc định là 1 nếu không có
-        if not current_user.is_authenticated:
-            return redirect(url_for('login'))
-        # Lấy giỏ hàng của người dùng
-        gio_hang = GioHang.query.filter_by(nguoiDung=current_user.id).first()
-        # #truy vấn sản phẩm theo id
-        # product = Sach.query.filter_by(id=sach_id).first()
-        if gio_hang is None:
-            # Nếu không có giỏ hàng, tạo mới giỏ hàng cho người dùng
-            gio_hang = GioHang(nguoiDung=current_user.id)
-            db.session.add(gio_hang)
-            db.session.commit()
-        # Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
-        chi_tiet = ChiTietGioHang.query.filter(
-            ChiTietGioHang.gioHang == gio_hang.id,   # Đảm bảo `gio_hang` là một đối tượng
-            ChiTietGioHang.sach == sach_id).first()  # Đảm bảo `sach` là một đối tượng
-
-        if chi_tiet:
-            # Nếu sản phẩm đã có trong giỏ hàng, tăng số lượng lên
-            chi_tiet.soLuong += int(quantity)
-        else:
-            # Nếu sản phẩm chưa có trong giỏ hàng, tạo mới chi tiết giỏ hàng
-            chi_tiet = ChiTietGioHang(gioHang=gio_hang.id, sachID=sach_id, soLuong=int(quantity))
-            db.session.add(chi_tiet)
-
-        db.session.commit()
-
-        # return redirect(url_for('add_to_cart', sach_id=sach_id))
-        return jsonify({"message": "Sản phẩm đã được thêm vào giỏ hàng!"})
+    # print(request)
+    # if request.method == 'POST':
+    #     data = request.get_json()  # Lấy dữ liệu JSON từ body của POST request
+    #     print(data)
+    #     quantity = data.get('quantity')  # Lấy giá trị số lượng, mặc định là 1 nếu không có
+    #     if not current_user.is_authenticated:
+    #         return redirect(url_for('login'))
+    #     # Lấy giỏ hàng của người dùng
+    #     gio_hang = GioHang.query.filter_by(nguoiDung=current_user.id).first()
+    #     # #truy vấn sản phẩm theo id
+    #     # product = Sach.query.filter_by(id=sach_id).first()
+    #     if gio_hang is None:
+    #         # Nếu không có giỏ hàng, tạo mới giỏ hàng cho người dùng
+    #         gio_hang = GioHang(nguoiDung=current_user.id)
+    #         db.session.add(gio_hang)
+    #         db.session.commit()
+    #     # Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
+    #     chi_tiet = ChiTietGioHang.query.filter(
+    #         ChiTietGioHang.gioHang == gio_hang.id,  # Đảm bảo `gio_hang` là một đối tượng
+    #         ChiTietGioHang.sachID == sach_id).first()  # Đảm bảo `sach` là một đối tượng
+    #
+    #     if chi_tiet:
+    #         # Nếu sản phẩm đã có trong giỏ hàng, tăng số lượng lên
+    #         chi_tiet.soLuong += int(quantity)
+    #     else:
+    #         # Nếu sản phẩm chưa có trong giỏ hàng, tạo mới chi tiết giỏ hàng
+    #         chi_tiet = ChiTietGioHang(gioHang=gio_hang.id, sachID=sach_id, soLuong=int(quantity))
+    #         db.session.add(chi_tiet)
+    #
+    #     db.session.commit()
+    #
+    #     # return redirect(url_for('add_to_cart', sach_id=sach_id))
+    #     return jsonify({"message": "Sản phẩm đã được thêm vào giỏ hàng!"})
     return render_template('productDetail.html')  # Chuyển hướng về trang giỏ hàng
 
     # Trả về phản hồi dưới dạng JSON (nếu cần)
@@ -581,7 +626,7 @@ def payment():
 
 @app.route('/test')
 def test():
-    return render_template('sign_in.html')
+    return render_template('employee_profile.html')
 
 
 if __name__ == '__main__':
