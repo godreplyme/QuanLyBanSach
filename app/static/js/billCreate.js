@@ -24,12 +24,12 @@
                   if (!isExisting) {
                       var row = `
                     <tr>
-                        <td name="id">${data[0].id}</td>
-                        <td name="name">${data[0].ten}</td>
-                        <td name="category">${data[0].theLoai}</td>
-                        <td name="price">${data[0].donGia}</td>
-                        <td><input type="number" name="quantity" class="form-control" value="1"></td>
-                        <td><button type="button" class="btn btn-danger deleteRow">Xóa</button></td>
+                        <td name="id" class="text-center">${data[0].id}</td>
+                        <td name="name" class="text-center">${data[0].ten}</td>
+                        <td name="category" class="text-center">${data[0].theLoai}</td>
+                        <td name="price" class="text-center">${data[0].donGia}</td>
+                        <td class="text-center"><input type="number" name="quantity" class="form-control" value="1"></td>
+                        <td class="text-center"><button type="button" class="btn btn-danger deleteRow mb-0">Xóa</button></td>
                     </tr>
                 `;
                       $('#danh_sach_san_pham').append(row);

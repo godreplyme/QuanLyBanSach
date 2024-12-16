@@ -60,14 +60,15 @@
     }
 
     // Gửi yêu cầu POST đến Flask server
-    fetch(`/products/${sachId}`, {
-        method: 'POST',
+    fetch(`/api/products/${sachId}`, {
+        method: "POST",
+        body: JSON.stringify({ "quantity": parseInt(quantity, 10) }), // Gửi dữ liệu dưới dạng JSON
         headers: {
             'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ quantity: parseInt(quantity, 10) }) // Gửi dữ liệu dưới dạng JSON
+        }
+
     })
-    .then(response => response.json())
+    .then(res => res.json())
     .then(data => {
         console.log("Phản hồi từ server:", data);
         // Có thể cập nhật UI, ví dụ như hiển thị thông báo giỏ hàng đã cập nhật

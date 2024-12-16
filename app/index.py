@@ -5,7 +5,7 @@ from __init__ import app, loginMNG, db
 from flask import render_template, request, redirect, url_for, jsonify, flash, send_file
 from docx import Document
 from sqlalchemy import func
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, current_user, login_required
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import parse_xml
 from docx.oxml.ns import nsdecls
@@ -91,12 +91,14 @@ def user_load(user_id):
 
 
 @app.route('/logout')
+@login_required
 def logout():
     logout_user()
     return redirect(url_for('login'))
 
 
 @app.route('/profile')
+@login_required
 def profile():
     check = checkAuthenticated()
     if check:
@@ -106,6 +108,7 @@ def profile():
 
 
 @app.route('/changeProfile', methods=['GET', 'POST'])
+@login_required
 def changeProfile():
     check = checkAuthenticated()
     if check:
@@ -133,6 +136,7 @@ def changeProfile():
 
 
 @app.route("/changePassword", methods=['GET', 'POST'])
+@login_required
 def changePassword():
     err_msg = ''
     suc_msg = ''
@@ -160,8 +164,8 @@ def changePassword():
 @app.route("/products/<int:sach_id>", methods=['GET','POST'])
 def productDetail(sach_id):
     book = utils.get_book_by_id(sach_id)
-    if request.method == 'POST':
-        data = request.get_json()  # Lấy dữ liệu JSON từ body của POST request
+    if request.method.__eq__('POST'):
+        data = request.json # Lấy dữ liệu JSON từ body của POST request
         print(data)
         quantity = data.get('quantity')  # Lấy giá trị số lượng, mặc định là 1 nếu không có
         if not current_user.is_authenticated:
@@ -196,6 +200,7 @@ def productDetail(sach_id):
 
 
 @app.route("/import", methods=['GET', 'POST'])
+@login_required
 def import_book():
     check = checkImporter()
     if check:
@@ -255,6 +260,7 @@ def import_book():
 
 
 @app.route('/importCreate', methods=['GET', 'POST'])
+@login_required
 def create_import():
     check = checkImporter()
     if check:
@@ -303,6 +309,7 @@ def create_import():
 
 
 @app.route('/addBook', methods=['GET', 'POST'])
+@login_required
 def add_book():
     check = checkImporter()
     if check:
@@ -334,6 +341,7 @@ def add_book():
 
 
 @app.route('/bill', methods=['GET', 'POST'])
+@login_required
 def bill():
     check = checkEmployee()
     if check:
@@ -389,6 +397,7 @@ def bill():
 
 
 @app.route('/billCreate', methods=['GET', 'POST'])
+@login_required
 def create_bill():
     check = checkEmployee()
     if check:
@@ -440,6 +449,7 @@ def create_bill():
 
 
 @app.route('/billExport', methods=['POST'])
+@login_required
 def export_bill():
     data = request.json
     ngay_dat_hang = data.get('ngayDatHang')
@@ -522,7 +532,7 @@ def cart():
     return render_template('cart.html')
 
 
-@app.route('/products/<int:sach_id>', methods=['POST'])
+@app.route('/api/products/<int:sach_id>', methods=['GET','POST'])
 def add_to_cart(sach_id):
     # Lấy số lượng từ body của yêu cầu
     print(request)
@@ -543,8 +553,8 @@ def add_to_cart(sach_id):
             db.session.commit()
         # Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
         chi_tiet = ChiTietGioHang.query.filter(
-            ChiTietGioHang.gioHang == gio_hang.id,  # Đảm bảo `gio_hang` là một đối tượng
-            ChiTietGioHang.sachID == sach_id).first()  # Đảm bảo `sach` là một đối tượng
+            ChiTietGioHang.gioHang == gio_hang.id,   # Đảm bảo `gio_hang` là một đối tượng
+            ChiTietGioHang.sach == sach_id).first()  # Đảm bảo `sach` là một đối tượng
 
         if chi_tiet:
             # Nếu sản phẩm đã có trong giỏ hàng, tăng số lượng lên
@@ -571,7 +581,7 @@ def payment():
 
 @app.route('/test')
 def test():
-    return render_template('employee_profile.html')
+    return render_template('sign_in.html')
 
 
 if __name__ == '__main__':
