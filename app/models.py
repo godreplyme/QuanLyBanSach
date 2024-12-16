@@ -3,6 +3,9 @@ from logging.config import valid_ident
 from sqlalchemy import Column, String, Integer, Boolean, Date, Float, Enum as SQLEnum, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from datetime import date, datetime
+
+from tensorboard.compat.tensorflow_stub import string
+
 from __init__ import db, app
 from enum import Enum
 from flask_login import UserMixin
@@ -23,14 +26,18 @@ class VaiTro(Enum):
 
 class TrangThai(Enum):
     TRONG_GIO_HANG = 1
-    DA_XAC_NHAN = 2
-    DA_THANH_TOAN = 3
-    DA_HUY = 4
+    DA_DAT_HANG = 2
+    DANG_CHO_THANH_TOAN = 3
+    DANG_GIAO_HANG = 4
+    DA_NHAN_HANG = 5
+    CHO_NHAN_HANG = 6
+    DA_HUY = 7
 
 
 # Cơ sở dữ liệu cho người dùng
-class NguoiDung(BaseModel, UserMixin):
+class NguoiDung(BaseModel,UserMixin):
     __tablename__ = 'NguoiDung'
+    __table_args__ = {'extend_existing': True}
 
     username = Column(String(50), unique=True)
     password = Column(String(50), nullable=False, default='')
@@ -45,6 +52,7 @@ class NguoiDung(BaseModel, UserMixin):
     vaiTro = Column(SQLEnum(VaiTro), default=VaiTro.USER)
 
     donHang = relationship('DonHang', backref='NguoiDung', lazy=True)
+    gio_hang = relationship('GioHang', backref='NguoiDung', lazy=True)
 
     def is_admin(self):
         return self.vaiTro == VaiTro.ADMIN
@@ -58,6 +66,7 @@ class NguoiDung(BaseModel, UserMixin):
 
 class Sach(BaseModel):
     __tablename__ = 'Sach'
+    __table_args__ = {'extend_existing': True}
 
     ten = Column(String(100), nullable=False)
     tacGia = Column(String(50), nullable=False)
@@ -68,15 +77,30 @@ class Sach(BaseModel):
     image = Column(String(255))
     active = Column(Boolean, nullable=False, default=True)
 
-    chiTietDonHang = relationship('ChiTietDonHang', backref='Sach', lazy=True)
-    chiTietNhapSach = relationship('ChiTietNhapSach', backref='Sach', lazy=True)
-
     def __str__(self):
         return self.ten
 
+class GioHang(BaseModel):
+        __tablename__='GioHang'
+        __table_args__ = {'extend_existing': True}
+
+        nguoiDung = Column(Integer, ForeignKey(NguoiDung.id))
+        chiTietGioHang = relationship('ChiTietGioHang', backref='GioHang', lazy=True)
+
+
+class ChiTietGioHang(BaseModel):
+        __tablename__='ChiTietGioHang'
+        __table_args__ = {'extend_existing': True}
+
+        gioHang = Column(Integer, ForeignKey(GioHang.id))
+        sachID = Column(Integer, ForeignKey(Sach.id))
+        soLuong = Column(Integer, nullable=False, default=1)  # Số lượng sách
+
+        sach = relationship('Sach', backref='ChiTietGioHang', lazy=True)
 
 class TheLoai(BaseModel):
     __tablename__ = 'TheLoai'
+    __table_args__ = {'extend_existing': True}
 
     ten = Column(String(100), nullable=False)
 
@@ -88,8 +112,9 @@ class TheLoai(BaseModel):
 
 class DonHang(BaseModel):
     __tablename__ = 'DonHang'
+    __table_args__ = {'extend_existing': True}
 
-    ngayDatHang = Column(DateTime, default=datetime.now())
+    ngayDatHang = Column(DateTime, default=datetime.now)
     ngayThanhToan = Column(DateTime)
     tongTien = Column(Float)
 
@@ -104,6 +129,7 @@ class DonHang(BaseModel):
 
 class PhuongThucThanhToan(BaseModel):
     __tablename__ = 'PhuongThucThanhToan'
+    __table_args__ = {'extend_existing': True}
 
     ten = Column(String(50), nullable=False)
 
@@ -115,18 +141,23 @@ class PhuongThucThanhToan(BaseModel):
 
 class ChiTietDonHang(BaseModel):
     __tablename__ = 'ChiTietDonHang'
+    __table_args__ = {'extend_existing': True}
 
-    id_Sach = Column(Integer, ForeignKey(Sach.id))
+    Sach_id = Column(Integer, ForeignKey(Sach.id))
     id_DonHang = Column(Integer, ForeignKey(DonHang.id))
     soLuong = Column(Integer, nullable=False)
     tongTien = Column(Float, nullable=False)
 
+    # Thêm relationship để liên kết với bảng Sach
+    sach = relationship('Sach', backref='chiTietDonHang')
+
     def __str__(self):
-        return self.__tablename__ + self.id_Sach + self.id_DonHang
+        return self.__tablename__ + self.Sach_id + self.id_DonHang
 
 
 class PhieuNhapSach(BaseModel):
     __tablename__ = 'PhieuNhapSach'
+    __table_args__ = {'extend_existing': True}
 
     ngayNhapSach = Column(DateTime, nullable=False, default=datetime.now())
 
@@ -138,6 +169,7 @@ class PhieuNhapSach(BaseModel):
 
 class ChiTietNhapSach(BaseModel):
     __tablename__ = 'ChiTietNhapSach'
+    __table_args__ = {'extend_existing': True}
 
     soLuong = Column(Integer, nullable=False)
     id_Sach = Column(Integer, ForeignKey(Sach.id))
@@ -146,6 +178,12 @@ class ChiTietNhapSach(BaseModel):
     def __str__(self):
         return self.__tablename__ + self.id
 
+    class QuyDinh(BaseModel):
+        __tablename__ = 'QuyDinh'
+        __table_args__ = {'extend_existing': True}
+        soLuongNhapToiThieu = Column(Integer, nullable=False, default=150)
+        soLuongTonToiThieu = Column(Integer, nullable=False, default=300)
+        thoiGianQuyDinh = Column(Integer, nullable=False, default=48)
 
 if __name__ == '__main__':
     with app.app_context():
@@ -234,6 +272,7 @@ if __name__ == '__main__':
                      image="https://cdn0.fahasa.com/media/catalog/product/n/x/nxbtre_full_21352023_023516_1.jpg")
                 ]
         db.session.add_all(sach)
+
         admin = NguoiDung(hoVaTen='Hồ Vũ',username='abc'
                           ,password= '698d51a19d8a121ce581499d7b701668' # username: abc, pass: 111
                           ,email='vu123@gmail.com',vaiTro=VaiTro.ADMIN
@@ -247,4 +286,43 @@ if __name__ == '__main__':
                           ,email='vu123@gmail.com',vaiTro=VaiTro.EMPLOYEE
                           ,anhDaiDien='https://res.cloudinary.com/dcrsia5sh/image/upload/v1732855504/mpkxldxtz440munykvf5.jpg')
         db.session.add_all([admin,customer,employee])
+        phuongThucTT= [
+            PhuongThucThanhToan(ten='Trực Tiếp'),
+            PhuongThucThanhToan(ten='Trực Tuyến')
+        ]
+        db.session.add_all(phuongThucTT)
+        donhangs = [
+            DonHang(
+                ngayDatHang=datetime.now(),
+                ngayThanhToan=datetime.now(),
+                tongTien=50000,
+                trangThai=TrangThai.TRONG_GIO_HANG,
+                phuongThucThanhToan=1,
+                nguoiDung=2
+            )
+        ]
+        db.session.add_all(donhangs)
+        giohangs = [
+            GioHang(
+                nguoiDung=2
+            )
+        ]
+        db.session.add_all(giohangs)
+        chiTietGH = [
+            ChiTietGioHang(
+                gioHang = 1,
+                sachID = 1,
+                soLuong=2
+            )
+        ]
+        db.session.add_all(chiTietGH)
+        chiTietDonHang = [
+            ChiTietDonHang(
+            Sach_id=1,
+            id_DonHang=1,
+            soLuong=2,
+            tongTien=40000
+        )]
+        db.session.add_all(chiTietDonHang)
+
         db.session.commit()

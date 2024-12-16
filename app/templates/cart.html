@@ -2,23 +2,38 @@
 {% block content%}
 <h1 class="text-center text-success mt-1">GIỎ HÀNG</h1>
 
-{% if 'cart' in session %}
+{% if carts%}
     <table class="table">
         <tr>
-            <th>Id</th>
+            <th></th>
+            <th></th>
             <th>Tên sản phẩm</th>
             <th>Đơn giá</th>
             <th>Số lượng</th>
             <th></th>
         </tr>
+        {% for c in carts %}
+        <tr>
+            <th><input type="checkbox" class="product-checkbox" data-product-id="{{ c.id }}" /></th>
+            <td><img src="{{ c.image }}" alt="Product Image" class="img-fluid" style="height: 10em"></td>
+            <td>{{ c.ten }}</td>
+            <td>{{ c.donGia }}</td>
+            <td>
+                <input type="number" value="{{ c.soLuong }}" class="form-control">
+            </td>
+            <td>
+                <button class="btn btn-danger">&times;</button>
+            </td>
+        </tr>
+        {% endfor %}
     </table>
 {% else %}
 <div  class="alert alert-info mt-1">Không có sản phẩm trong giỏ!</div>
+
+{% endif %}
 <div class="mt-1">
     <a title="Thanh toán" class="nav-link d-flex align-items-center me-3" href="/payment">
         <button class="btn btn-success">Thanh toán</button>
     </a>
 </div>
-{% endif %}
-
 {% endblock %}
