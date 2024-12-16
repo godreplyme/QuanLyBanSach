@@ -29,6 +29,6 @@ function addToCart() {
     })
     .catch(err => {
         console.error("Lỗi khi gửi request:", err);
-        alert("Đã có lỗi xảy ra. Vui lòng thử lại.");
+        alert("Vui lòng đăng nhập để thêm vào giỏ hàng!");
     });
 }
