@@ -1,2 +1,136 @@
 {% extends 'layout/base_employee.html' %}
-{%  %}
+
+{% block bill_home %}
+active
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header pb-0 d-flex justify-content-between">
+                <h5>Danh sách đơn hàng</h5>
+                {% if page>1 %}
+                <ul class="pagination pagination-info ">
+                    <li class="page-item {% if current_page == 1 %}disabled{% endif %}">
+                        <a class="page-link" href="{{url_for('bill')}}" aria-label="Previous">
+                            <span aria-hidden="true"><i class="ni ni-bold-left" aria-hidden="true"></i></span>
+                        </a>
+                    </li>
+                    {% for p in range(1,page+1) %}
+                    <li class="page-item {% if p == current_page %}active{% endif %}">
+                        <a class="page-link" href="{{url_for('bill',page=p)}}">{{p}}</a>
+                    </li>
+                    {% endfor %}
+                    <li class="page-item {% if current_page == page %}disabled{% endif %}">
+                        <a class="page-link" href="{{ url_for('bill', page=current_page+1) }}"
+                           aria-label="Next">
+                            <span aria-hidden="true"><i class="ni ni-bold-right" aria-hidden="true"></i></span>
+                        </a>
+                    </li>
+                </ul>
+                {% endif %}
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+                <div class="table-responsive p-0">
+                    <table class="table align-items-center mb-0">
+                        <thead>
+                        <tr>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 w-10">
+                                Mã đơn hàng
+                            </th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 w-20">
+                                Ngày tạo đơn
+                            </th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 w-20">
+                                Khách hàng
+                            </th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 w-15">
+                                Phương thức thanh toán
+                            </th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 w-15">
+                                Thành tiền
+                            </th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 w-15">
+                                Trạng thái
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for hd in list_bill %}
+                        <tr class="load-detail" data-id="{{ hd.id_don_hang }}">
+                            <td>
+                                <div class="d-flex px-2 py-1">
+                                    <div class="d-flex flex-column justify-content-center">
+                                        <h6 class="mb-0 text-sm">{{ hd.id_don_hang }}</h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-link load-detail" data-id="{{ hd.id_don_hang }}">
+                                    {{ hd.ngay_dat_hang.strftime('%d-%m-%Y') }}
+                                </button>
+                            </td>
+                            <td class="align-middle text-center text-sm">
+                                {{hd.ten_user}}
+                            </td>
+                            <td class="align-middle text-center text-sm">
+                                {{hd.pttt}}
+                            </td>
+                            <td class="align-middle text-center text-sm">
+                                {{hd.tong_gia}}
+                            </td>
+                            <td class="align-middle text-center text-sm">
+                                {{hd.trang_thai}}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header pb-0">
+                <h6 id="detail-title">Chi tiết đơn hàng {% if selected_bill %}
+                    {{selected_bill.id}} {% endif %}:</h6>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+                <div class="table-responsive p-0">
+                    <table class="table align-items-center justify-content-center mb-0" id="detail-table">
+                        <thead>
+                        <tr>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 w-10">
+                                #
+                            </th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 w-40">
+                                Tên sách
+                            </th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 w-20">
+                                Thể loại
+                            </th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 w-20">
+                                Tác giả
+                            </th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center w-10">
+                                Số lượng
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script src="{{ url_for('static', filename='js/billCreate.js') }}"></script>
+{% endblock %}

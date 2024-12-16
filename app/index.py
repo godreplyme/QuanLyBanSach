@@ -342,7 +342,7 @@ def bill():
     size = app.config['LIST_SIZE']
     start = (page - 1) * size
     end = start + size
-    id_bill = request.form.get('id_bill')
+    id_bill = None
     list_bill = db.session.query(DonHang.id.label('id_don_hang'),
                                  DonHang.ngayDatHang.label('ngay_dat_hang'),
                                  DonHang.phuongThucThanhToan.label('pttt'),
@@ -355,21 +355,37 @@ def bill():
         .group_by(DonHang.id, DonHang.ngayDatHang, DonHang.phuongThucThanhToan, NguoiDung.hoVaTen,
                   DonHang.trangThai).order_by(DonHang.id.desc()).all()
     l = len(list_bill)
+    current_page = int(request.args.get('page', 1))
     list_bill = list_bill[start:end]
     selected_bill = None
-    list_bill_detail = None
-    if id_bill:
-        selected_bill = utils.get_bill_by_id(int(id_bill))
-        list_bill_detail = db.session.query(ChiTietDonHang.soLuong, Sach.ten.label("ten_sach"),
-                                            Sach.tacGia.label("tac_gia"), TheLoai.ten.label("ten_the_loai")) \
-            .join(Sach, ChiTietDonHang.id_Sach == Sach.id) \
-            .join(TheLoai, Sach.id_TheLoai == TheLoai.id) \
-            .filter(ChiTietDonHang.id_DonHang == id_bill) \
-            .all()
+    list_bill_detail = []
+    if request.method=='POST':
+        data=request.json
+        id_bill=data.get('id_Bill')
+        if id_bill:
+            selected_bill = utils.get_bill_by_id(int(id_bill))
+            list_bill_detail = db.session.query(ChiTietDonHang.soLuong, Sach.ten.label("ten_sach"),
+                                                Sach.tacGia.label("tac_gia"), TheLoai.ten.label("ten_the_loai")) \
+                .join(Sach, ChiTietDonHang.id_Sach == Sach.id) \
+                .join(TheLoai, Sach.id_TheLoai == TheLoai.id) \
+                .filter(ChiTietDonHang.id_DonHang == id_bill) \
+                .all()
+        details = [{
+            "ten_sach": ct.ten_sach,
+            "ten_the_loai": ct.ten_the_loai,
+            "tac_gia": ct.tac_gia,
+            "soLuong": ct.soLuong
+        } for ct in list_bill_detail]
 
-    return render_template('billHome.html', list_bill=list_bill,
+        return jsonify({
+            "success": True,
+            "details": details,
+            "ngay_dat_hang": selected_bill.ngayDatHang.strftime('%d-%m-%Y') if selected_bill else None
+        })
+    return render_template('bill_home.html', list_bill=list_bill,
                            selected_bill=selected_bill, list_bill_detail=list_bill_detail,
-                           page=math.ceil(l / app.config['LIST_SIZE']))
+                           page=math.ceil(l / app.config['LIST_SIZE']),
+                           current_page=current_page)
 
 
 @app.route('/billCreate', methods=['GET', 'POST'])
@@ -391,7 +407,7 @@ def create_bill():
                 for book in books
             ]
             return jsonify(results)
-        return render_template('billCreate.html', today=datetime.today().date())
+        return render_template('create_bill.html', today=datetime.today().date())
     elif request.method == 'POST':
         data = request.json
         ngay_lap_hoa_don = data.get('ngayDatHang')

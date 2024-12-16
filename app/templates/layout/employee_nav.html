@@ -4,7 +4,7 @@
             <h2 style="color:white;">
                 {% if current_user.is_importer() %}
                 NHÂN VIÊN NHẬP SÁCH
-                {% elif current_user.is_employeee() %}
+                {% elif current_user.is_employee() %}
                 NHÂN VIÊN BÁN SÁCH
                 {% endif %}
             </h2>

@@ -21,7 +21,7 @@
     <link rel="apple-touch-icon" sizes="76x76" href="{{ url_for('static', filename='images/logo.png') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
     <title>
-        Argon Dashboard 3 by Creative Tim
+        BookStore
     </title>
     <!--     Fonts and icons     -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet"/>
@@ -54,7 +54,7 @@
         </a>
     </div>
     <hr class="horizontal dark mt-0">
-    <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+    <div class="collapse navbar-collapse w-auto " id="sidenav-collapse-main">
         <ul class="navbar-nav">
             {% if current_user.is_importer() %}
             <li class="nav-item">
@@ -84,19 +84,19 @@
             </li>
             {% elif current_user.is_employee() %}
              <li class="nav-item">
-                <a class="nav-link {% block import_home %} {% endblock %}" href="{{ url_for('import_book') }}">
+                <a class="nav-link {% block bill_home %} {% endblock %}" href="{{ url_for('import_book') }}">
                     <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-app text-dark text-sm opacity-10"></i>
+                        <i class="ni ni-collection text-dark text-sm opacity-10"></i>
                     </div>
-                    <span class="nav-link-text ms-1">Phiếu nhập sách</span>
+                    <span class="nav-link-text ms-1">Danh sách đơn hàng</span>
                 </a>
             </li>
              <li class="nav-item">
-                <a class="nav-link {% block import_home %} {% endblock %}" href="{{ url_for('import_book') }}">
+                <a class="nav-link {% block create_bill %} {% endblock %}" href="{{ url_for('create_bill') }}">
                     <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-app text-dark text-sm opacity-10"></i>
+                        <i class="fa-solid fa-plus text-dark text-sm opacity-10"></i>
                     </div>
-                    <span class="nav-link-text ms-1">Phiếu nhập sách</span>
+                    <span class="nav-link-text ms-1">Lập hóa đơn</span>
                 </a>
             </li>
             {% endif %}
