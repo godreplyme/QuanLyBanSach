@@ -1,0 +1,79 @@
+{% extends 'layout/base_employee.html' %}
+{% block create_bill %}
+active
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header pb-0">
+                <h5>Lập hóa đơn</h5>
+            </div>
+            <form method="post" id="hoadonForm">
+                <div class="card-body p-4 pb-0">
+
+                    <div class="form-group">
+                        <label class="form-control-label" for="ten_kh">Họ và tên khách hàng: </label>
+                        <input type="text" class="form-control" id="ten_kh" aria-describedby="basic-addon3"
+                               name="ten_kh" placeholder="Nhập họ và tên">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control-label" for="ngay_lap_hoa_don">Ngày lập hóa đơn: </label>
+                        <input type="date" class="form-control" id="ngay_lap_hoa_don" aria-describedby="basic-addon3"
+                               name="ngay_lap_hoa_don" value="{{ today }}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control-label" for="nhanVien">Nhân viên lập hóa đơn: </label>
+                        <input type="text" class="form-control" id="nhanVien" aria-describedby="basic-addon3"
+                               value="{{ current_user.hoVaTen }}" disabled>
+                    </div>
+                    <h5>Danh sách sản phẩm</h5>
+                    <div class="m-3 d-flex align-items-center">
+                        <label for="id" class="form-label" style="width: 30%">Nhập mã thủ công:</label>
+                        <input type="text" class="form-control m-2" id="id" name="id">
+                        <button type="button" class="btn btn-primary" id="addRow" style="width: 30%">Thêm sản phẩm
+                        </button>
+                    </div>
+                    <div class="table-responsive p-0">
+                        <table class="table align-items-center mb-0">
+                            <thead>
+                            <tr>
+                                <th class=" text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 w-10">
+                                    Mã sách
+                                </th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 w-35">
+                                    Tên sách
+                                </th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 w-15">
+                                    Thể loại
+                                </th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 w-10">
+                                    Đơn giá
+                                </th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 w-10">
+                                    Số lượng
+                                </th>
+                                <th class="w-10">
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody id="danh_sach_san_pham">
+                            </tbody>
+                        </table>
+                        <div class="d-flex justify-content-end">
+                            <button type="button" class="btn btn-danger" id="cancelBill">Hủy hóa đơn</button>
+                            <button type="button" class="btn btn-success mx-3" id="export"><i class="fa-solid fa-print"></i>Xuất hóa đơn</button>
+                            <button type="submit" class="btn btn-success mx-3">Xác nhận</button>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{{ url_for('static', filename='js/billCreate.js') }}"></script>
+{% endblock %}

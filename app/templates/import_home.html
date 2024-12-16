@@ -1,0 +1,116 @@
+{% extends 'layout/base_employee.html' %}
+{% block import_home %}
+active
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header pb-0 d-flex justify-content-between">
+                <h5>Danh sách phiếu nhập sách</h5>
+                {% if page>1 %}
+                <ul class="pagination pagination-info ">
+                    <li class="page-item {% if current_page == 1 %}disabled{% endif %}">
+                        <a class="page-link" href="{{url_for('import_book')}}" aria-label="Previous">
+                            <span aria-hidden="true"><i class="ni ni-bold-left" aria-hidden="true"></i></span>
+                        </a>
+                    </li>
+                    {% for p in range(1,page+1) %}
+                    <li class="page-item {% if p == current_page %}active{% endif %}">
+                        <a class="page-link" href="{{url_for('import_book',page=p)}}">{{p}}</a>
+                    </li>
+                    {% endfor %}
+                    <li class="page-item {% if current_page == page %}disabled{% endif %}">
+                        <a class="page-link" href="{{ url_for('import_book', page=current_page+1) }}"
+                           aria-label="Next">
+                            <span aria-hidden="true"><i class="ni ni-bold-right" aria-hidden="true"></i></span>
+                        </a>
+                    </li>
+                </ul>
+                {% endif %}
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+                <div class="table-responsive p-0">
+                    <table class="table align-items-center mb-0">
+                        <thead>
+                        <tr>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                Mã phiếu nhập sách
+                            </th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                Ngày nhập sách
+                            </th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                Nhân viên nhập sách
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for phieu in list_import %}
+                        <tr class="load-detail" data-id="{{ phieu.id }}">
+                            <td>
+                                <div class="d-flex px-2 py-1">
+                                    <div class="d-flex flex-column justify-content-center">
+                                        <h6 class="mb-0 text-sm">{{ phieu.id }}</h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-link" data-id="{{ phieu.id }}">
+                                    {{ phieu.ngayNhapSach.strftime('%d-%-m-%Y') }}
+                                </button>
+                            </td>
+                            <td class="align-middle text-center text-sm">
+                                {{phieu.hoVaTen}}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header pb-0">
+                <h6 id="detail-title">Chi tiết phiếu nhập {% if selected_import %}
+                    {{selected_import.ngayNhapSach.strftime('%d-%m-%Y')}} {% endif %}:</h6>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+                <div class="table-responsive p-0">
+                    <table class="table align-items-center justify-content-center mb-0" id="detail-table">
+                        <thead>
+                        <tr>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 w-10">
+                                #
+                            </th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 w-40">
+                                Tên sách
+                            </th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 w-20">
+                                Thể loại
+                            </th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 w-20">
+                                Tác giả
+                            </th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center w-10">
+                                Số lượng
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script src="{{ url_for('static', filename='js/importCreate.js') }}"></script>
+{% endblock %}
