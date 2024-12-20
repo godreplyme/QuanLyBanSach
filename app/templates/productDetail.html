@@ -33,7 +33,7 @@
             </div>
                 <input id="id" type="hidden" value="{{sach.id}}">
                 <button class="btn btn-success px-4" onclick="addToCart()">Thêm vào giỏ hàng</button>
-                <button class="btn btn-primary px-4">Mua ngay</button>
+                <button class="btn btn-primary px-4" onclick="paymentNow({{ sach.id }}, {{ sach.ten }}, {{ sach.donGia }})">Mua ngay</button>
             <!-- E-commerce Links -->
             <div class="mt-5">
                 <h4>Giới thiệu sách</h4>
@@ -60,15 +60,14 @@
     }
 
     // Gửi yêu cầu POST đến Flask server
-    fetch(`/api/products/${sachId}`, {
-        method: "POST",
-        body: JSON.stringify({ "quantity": parseInt(quantity, 10) }), // Gửi dữ liệu dưới dạng JSON
+    fetch(`/products/${sachId}`, {
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json'
-        }
-
+        },
+        body: JSON.stringify({ quantity: parseInt(quantity, 10) }) // Gửi dữ liệu dưới dạng JSON
     })
-    .then(res => res.json())
+    .then(response => response.json())
     .then(data => {
         console.log("Phản hồi từ server:", data);
         // Có thể cập nhật UI, ví dụ như hiển thị thông báo giỏ hàng đã cập nhật

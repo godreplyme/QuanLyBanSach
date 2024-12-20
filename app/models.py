@@ -149,7 +149,7 @@ class DonHang(BaseModel):
     ngayThanhToan = Column(DateTime)
 
     trangThai = Column(SQLEnum(TrangThai), default=TrangThai.DANG_CHO_THANH_TOAN, nullable=False)
-    phuongThucThanhToan = Column(SQLEnum(PhuongThucThanhToan), nullable=False)
+    phuongThucThanhToan = Column(SQLEnum(PhuongThucThanhToan),default=PhuongThucThanhToan.TRUC_TIEP, nullable=False)
     nguoiDung = Column(Integer, ForeignKey(NguoiDung.id), nullable=True)
     chiTietDonHang = relationship('ChiTietDonHang', backref='DonHang', lazy=True)
 
@@ -324,52 +324,10 @@ if __name__ == '__main__':
         db.session.add_all(chiTietNhapSach)
 
         don_hang = [
-            DonHang(ngayDatHang=datetime(2024, 12, 1), ngayThanhToan=datetime(2024, 12, 11),
-                    trangThai=TrangThai.DANG_CHO_THANH_TOAN, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TIEP, nguoiDung=1),
-            DonHang(ngayDatHang=datetime(2024, 12, 2), ngayThanhToan=datetime(2024, 12, 12),
-                    trangThai=TrangThai.DANG_CHO_THANH_TOAN, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TUYEN,
-                    nguoiDung=2),
-            DonHang(ngayDatHang=datetime(2024, 12, 3), ngayThanhToan=datetime(2024, 12, 13),
-                    trangThai=TrangThai.DANG_GIAO_HANG, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TIEP, nguoiDung=3),
-            DonHang(ngayDatHang=datetime(2024, 12, 4), ngayThanhToan=datetime(2024, 12, 14),
-                    trangThai=TrangThai.DA_NHAN_HANG, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TUYEN, nguoiDung=1),
-            DonHang(ngayDatHang=datetime(2024, 12, 5), ngayThanhToan=datetime(2024, 12, 15), trangThai=TrangThai.DA_HUY,
-                    phuongThucThanhToan=PhuongThucThanhToan.TRUC_TIEP, nguoiDung=2),
-            DonHang(ngayDatHang=datetime(2024, 12, 6), ngayThanhToan=datetime(2024, 12, 16),
-                    trangThai=TrangThai.DANG_CHO_THANH_TOAN, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TUYEN, nguoiDung=3),
-            DonHang(ngayDatHang=datetime(2024, 12, 7), ngayThanhToan=datetime(2024, 12, 17),
-                    trangThai=TrangThai.DANG_CHO_THANH_TOAN, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TIEP,
-                    nguoiDung=1),
-            DonHang(ngayDatHang=datetime(2024, 12, 8), ngayThanhToan=datetime(2024, 12, 18),
-                    trangThai=TrangThai.DANG_GIAO_HANG, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TUYEN,
-                    nguoiDung=2),
-            DonHang(ngayDatHang=datetime(2024, 12, 9), ngayThanhToan=datetime(2024, 12, 19),
-                    trangThai=TrangThai.DA_NHAN_HANG, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TIEP, nguoiDung=3),
-            DonHang(ngayDatHang=datetime(2024, 12, 10), ngayThanhToan=datetime(2024, 12, 20),
-                    trangThai=TrangThai.DA_HUY, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TUYEN, nguoiDung=1)
         ]
         db.session.add_all(don_hang)
         chi_tiet_don_hang = [
-            ChiTietDonHang(id_Sach=1, id_DonHang=1, soLuong=2),
-            ChiTietDonHang(id_Sach=2, id_DonHang=1, soLuong=3),
-            ChiTietDonHang(id_Sach=3, id_DonHang=2, soLuong=1),
-            ChiTietDonHang(id_Sach=4, id_DonHang=2, soLuong=5),
-            ChiTietDonHang(id_Sach=5, id_DonHang=3, soLuong=2),
-            ChiTietDonHang(id_Sach=6, id_DonHang=3, soLuong=1),
-            ChiTietDonHang(id_Sach=7, id_DonHang=4, soLuong=4),
-            ChiTietDonHang(id_Sach=8, id_DonHang=4, soLuong=2),
-            ChiTietDonHang(id_Sach=9, id_DonHang=5, soLuong=1),
-            ChiTietDonHang(id_Sach=10, id_DonHang=5, soLuong=3),
-            ChiTietDonHang(id_Sach=11, id_DonHang=6, soLuong=2),
-            ChiTietDonHang(id_Sach=12, id_DonHang=6, soLuong=1),
-            ChiTietDonHang(id_Sach=13, id_DonHang=7, soLuong=5),
-            ChiTietDonHang(id_Sach=14, id_DonHang=7, soLuong=2),
-            ChiTietDonHang(id_Sach=15, id_DonHang=8, soLuong=4),
-            ChiTietDonHang(id_Sach=16, id_DonHang=8, soLuong=1),
-            ChiTietDonHang(id_Sach=1, id_DonHang=9, soLuong=2),
-            ChiTietDonHang(id_Sach=2, id_DonHang=9, soLuong=3),
-            ChiTietDonHang(id_Sach=3, id_DonHang=10, soLuong=4),
-            ChiTietDonHang(id_Sach=4, id_DonHang=10, soLuong=2)
+
         ]
         db.session.add_all(chi_tiet_don_hang)
         quy_dinh=QuyDinh(soLuongNhapToiThieu=150, gioiHanNhap=300, thoiGianQuyDinh=48)
