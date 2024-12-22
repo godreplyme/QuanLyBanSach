@@ -1,67 +1,69 @@
 from flask import redirect, url_for, request
 from flask_admin.contrib.sqla.fields import QuerySelectField
-from flask_login import current_user
+from flask_login import current_user, logout_user
 from flask_sqlalchemy.track_modifications import models_committed
 from wtforms.fields.simple import StringField
-from flask_wtf import FlaskForm
 from __init__ import app, db
 from flask_admin import Admin, AdminIndexView, expose, BaseView
 from flask_admin.contrib.sqla import ModelView
-from models import Sach, TheLoai, PhieuNhapSach, ChiTietNhapSach
+from models import Sach, TheLoai, PhieuNhapSach, ChiTietNhapSach, NguoiDung, VaiTro
 from datetime import datetime
 
 
-# Tùy chỉnh giao diện chính
 class MyAdminIndexView(AdminIndexView):
     def is_accessible(self):
-        return current_user.is_authenticated and current_user.is_admin()
+        return current_user.is_anonymous or current_user.vaiTro is VaiTro.ADMIN
 
     def inaccessible_callback(self, name, **kwargs):
         return redirect(url_for('index'))
 
 
-# Tùy chỉnh giao diện cho Admin
 class AdminView(ModelView):
     def is_accessible(self):
-        return current_user.is_authenticated and current_user.is_admin()
+        return current_user.is_authenticated and current_user.vaiTro is VaiTro.ADMIN
 
     def inaccessible_callback(self, name, **kwargs):
         return redirect(url_for('index'))
 
 
+class ProductView(AdminView):
+    pass
 
-# Tùy chỉnh giao diện cho Nhân viên
-class Importer(ModelView):
+
+class CategoryView(AdminView):
+    can_export = True
+    column_searchable_list = ['ten']
+    column_filters = ['ten']
+    can_view_details = True
+    column_list = ['ten', 'sach']
+
+
+class MyView(BaseView):
     def is_accessible(self):
-        return current_user.is_authenticated and current_user.is_employee()
+        return current_user.is_authenticated
 
-    def inaccessible_callback(self, name, **kwargs):
-        return redirect(url_for('index'))
 
-    # Chỉ định các cột sử dụng trong form
-    form_columns = ['id_Sach', 'soLuong']
+class StatsView(MyView):
+    @expose('/')
+    def index(self):
 
-    # Ghi đè các field mặc định
-    form_overrides = {
-        'id_Sach': QuerySelectField
-    }
+        return self.render('admin/statis.html')
 
-    # Cung cấp các query_factory cho các trường QuerySelectField
-    form_args = {
-        'id_Sach': {
-            'query_factory': lambda: Sach.query.all(),
-            'get_label': 'ten'
-        }
-    }
 
-# Cấu hình Flask-Admin với template
+class LogoutView(MyView):
+    @expose('/')
+    def index(self):
+        logout_user()
+        return redirect("/admin")
+
+
 admin = Admin(app=app, name='Quản lý hệ thống', template_mode='bootstrap4', index_view=MyAdminIndexView())
 
-# Thêm bảng và quyền riêng
-admin.add_view(AdminView(Sach, db.session, name='Quản lý Sách'))
-admin.add_view(AdminView(TheLoai, db.session, name='Quản lý Thể Loại'))
+admin.add_view(ProductView(Sach, db.session, name='Quản lý Sách'))
+admin.add_view(CategoryView(TheLoai, db.session, name='Quản lý Thể Loại'))
+admin.add_view(AdminView(NguoiDung, db.session, name='Quản lý Người Dùng'))
+admin.add_view(StatsView(name='Thống Kê Báo Cáo'))
+admin.add_view(LogoutView(name='Đăng xuất'))
 
 
 
-# admin.add_view(PhieuNhapSachView(ChiTietNhapSach, db.session, name='Thêm Sách', endpoint='importbook'))
-admin.add_view(Importer(ChiTietNhapSach,db.session, name="Phiếu", endpoint='importbook'))

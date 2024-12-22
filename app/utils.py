@@ -42,15 +42,50 @@ def add_user(name, username, password, **kw):
         db.session.commit()
 
 
-def check_login(username, password):
+def check_login(username, password, role=None):
     if username and password:
         password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
-        return NguoiDung.query.filter(NguoiDung.username.__eq__(username.strip()),
-                                      NguoiDung.password.__eq__(password)).first()
+        u = NguoiDung.query.filter(NguoiDung.username.__eq__(username.strip()),
+                                      NguoiDung.password.__eq__(password))
+        if role:
+            u = u.filter(NguoiDung.vaiTro.__eq__(role))
+
+        return u.first()
 
 
 def get_user_by_id(user_id):
     return NguoiDung.query.get(user_id)
 
+
 def get_book_by_id(book_id):
     return Sach.query.get(book_id)
+
+
+def get_import():
+    return PhieuNhapSach.query.order_by(PhieuNhapSach.ngayNhapSach.desc()).all()
+
+
+def get_import_by_id(id=None):
+    return PhieuNhapSach.query.get(id)
+
+def add_book(ten, tacGia, donGia, **kw):
+    sach = Sach(
+        ten=ten,
+        tacGia=tacGia,
+        moTa=kw.get('moTa'),
+        donGia=donGia,
+        id_TheLoai=kw.get('id_TheLoai'),
+        image=kw.get('image'),
+    )
+    with app.app_context():
+        db.session.add(sach)
+        db.session.commit()
+
+def get_bill():
+    return DonHang.query.order_by(DonHang.id.desc()).all()
+
+def get_bill_by_id(id=None):
+    return DonHang.query.get(id)
+
+def get_qd():
+    return QuyDinh.query.first()

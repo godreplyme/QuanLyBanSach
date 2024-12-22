@@ -19,3 +19,4 @@ def save_order(cart):
                 raise ValueError("{} số lượng tồn không đủ".format(Sach.ten))
             db.session.add(detail)
         db.session.commit()
+
