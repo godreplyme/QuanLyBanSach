@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 import cloudinary
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='./static/')
 
 app.secret_key='skdljfsdlfjkfljasflajsflks'
 app.config["SQLALCHEMY_DATABASE_URI"] ="mysql+pymysql://root:%s@localhost/bookstore?charset=utf8mb4" % quote("runa@2610")

@@ -1,4 +1,9 @@
+import hashlib
+from logging.config import valid_ident
+from sqlalchemy import Column, String, Integer, Boolean, Date, Float, Enum as SQLEnum, ForeignKey, DateTime
+from sqlalchemy.orm import relationship
 from datetime import date, datetime
+from __init__ import db, app
 from enum import Enum
 from flask_login import UserMixin
 from sqlalchemy import Column, String, Integer, Boolean, Date, Float, Enum as SQLEnum, ForeignKey, DateTime, Text
@@ -30,17 +35,14 @@ class VaiTro(Enum):
             return 'Nhân viên nhập sách'
 
 class TrangThai(Enum):
-    DA_DAT_HANG = 1
-    DANG_CHO_THANH_TOAN = 2
-    DANG_GIAO_HANG = 3
-    DA_NHAN_HANG = 4
-    CHO_NHAN_HANG = 5
-    DA_HUY = 6
+    DANG_CHO_THANH_TOAN = 1
+    DANG_GIAO_HANG = 2
+    DA_NHAN_HANG = 3
+    CHO_NHAN_HANG = 4
+    DA_HUY = 5
 
     def __str__(self):
-        if self == TrangThai.DA_DAT_HANG:
-            return 'Đã đặt hàng'
-        elif self == TrangThai.DANG_CHO_THANH_TOAN:
+        if self == TrangThai.DANG_CHO_THANH_TOAN:
             return 'Đang chờ thanh toán'
         elif self == TrangThai.DANG_GIAO_HANG:
             return 'Đang giao hàng'
@@ -61,8 +63,9 @@ class PhuongThucThanhToan(Enum):
 
 
 # Cơ sở dữ liệu cho người dùng
-class NguoiDung(BaseModel, UserMixin):
+class NguoiDung(BaseModel,UserMixin):
     __tablename__ = 'NguoiDung'
+    __table_args__ = {'extend_existing': True}
 
     username = Column(String(50), unique=True)
     password = Column(String(50), nullable=False, default='')
@@ -144,9 +147,9 @@ class DonHang(BaseModel):
     ngayDatHang = Column(DateTime, default=datetime.now())
     ngayThanhToan = Column(DateTime)
 
-    trangThai = Column(SQLEnum(TrangThai), default=TrangThai.DA_DAT_HANG, nullable=False)
-    phuongThucThanhToan = Column(SQLEnum(PhuongThucThanhToan), nullable=False)
-    nguoiDung = Column(Integer, ForeignKey(NguoiDung.id), nullable=False)
+    trangThai = Column(SQLEnum(TrangThai), default=TrangThai.DANG_CHO_THANH_TOAN, nullable=False)
+    phuongThucThanhToan = Column(SQLEnum(PhuongThucThanhToan),default=PhuongThucThanhToan.TRUC_TIEP, nullable=False)
+    nguoiDung = Column(Integer, ForeignKey(NguoiDung.id), nullable=True)
     chiTietDonHang = relationship('ChiTietDonHang', backref='DonHang', lazy=True)
 
     def __str__(self):
@@ -320,52 +323,10 @@ if __name__ == '__main__':
         db.session.add_all(chiTietNhapSach)
 
         don_hang = [
-            DonHang(ngayDatHang=datetime(2024, 12, 1), ngayThanhToan=datetime(2024, 12, 11),
-                    trangThai=TrangThai.DA_DAT_HANG, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TIEP, nguoiDung=1),
-            DonHang(ngayDatHang=datetime(2024, 12, 2), ngayThanhToan=datetime(2024, 12, 12),
-                    trangThai=TrangThai.DANG_CHO_THANH_TOAN, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TUYEN,
-                    nguoiDung=2),
-            DonHang(ngayDatHang=datetime(2024, 12, 3), ngayThanhToan=datetime(2024, 12, 13),
-                    trangThai=TrangThai.DANG_GIAO_HANG, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TIEP, nguoiDung=3),
-            DonHang(ngayDatHang=datetime(2024, 12, 4), ngayThanhToan=datetime(2024, 12, 14),
-                    trangThai=TrangThai.DA_NHAN_HANG, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TUYEN, nguoiDung=1),
-            DonHang(ngayDatHang=datetime(2024, 12, 5), ngayThanhToan=datetime(2024, 12, 15), trangThai=TrangThai.DA_HUY,
-                    phuongThucThanhToan=PhuongThucThanhToan.TRUC_TIEP, nguoiDung=2),
-            DonHang(ngayDatHang=datetime(2024, 12, 6), ngayThanhToan=datetime(2024, 12, 16),
-                    trangThai=TrangThai.DA_DAT_HANG, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TUYEN, nguoiDung=3),
-            DonHang(ngayDatHang=datetime(2024, 12, 7), ngayThanhToan=datetime(2024, 12, 17),
-                    trangThai=TrangThai.DANG_CHO_THANH_TOAN, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TIEP,
-                    nguoiDung=1),
-            DonHang(ngayDatHang=datetime(2024, 12, 8), ngayThanhToan=datetime(2024, 12, 18),
-                    trangThai=TrangThai.DANG_GIAO_HANG, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TUYEN,
-                    nguoiDung=2),
-            DonHang(ngayDatHang=datetime(2024, 12, 9), ngayThanhToan=datetime(2024, 12, 19),
-                    trangThai=TrangThai.DA_NHAN_HANG, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TIEP, nguoiDung=3),
-            DonHang(ngayDatHang=datetime(2024, 12, 10), ngayThanhToan=datetime(2024, 12, 20),
-                    trangThai=TrangThai.DA_HUY, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TUYEN, nguoiDung=1)
         ]
         db.session.add_all(don_hang)
         chi_tiet_don_hang = [
-            ChiTietDonHang(id_Sach=1, id_DonHang=1, soLuong=2),
-            ChiTietDonHang(id_Sach=2, id_DonHang=1, soLuong=3),
-            ChiTietDonHang(id_Sach=3, id_DonHang=2, soLuong=1),
-            ChiTietDonHang(id_Sach=4, id_DonHang=2, soLuong=5),
-            ChiTietDonHang(id_Sach=5, id_DonHang=3, soLuong=2),
-            ChiTietDonHang(id_Sach=6, id_DonHang=3, soLuong=1),
-            ChiTietDonHang(id_Sach=7, id_DonHang=4, soLuong=4),
-            ChiTietDonHang(id_Sach=8, id_DonHang=4, soLuong=2),
-            ChiTietDonHang(id_Sach=9, id_DonHang=5, soLuong=1),
-            ChiTietDonHang(id_Sach=10, id_DonHang=5, soLuong=3),
-            ChiTietDonHang(id_Sach=11, id_DonHang=6, soLuong=2),
-            ChiTietDonHang(id_Sach=12, id_DonHang=6, soLuong=1),
-            ChiTietDonHang(id_Sach=13, id_DonHang=7, soLuong=5),
-            ChiTietDonHang(id_Sach=14, id_DonHang=7, soLuong=2),
-            ChiTietDonHang(id_Sach=15, id_DonHang=8, soLuong=4),
-            ChiTietDonHang(id_Sach=16, id_DonHang=8, soLuong=1),
-            ChiTietDonHang(id_Sach=1, id_DonHang=9, soLuong=2),
-            ChiTietDonHang(id_Sach=2, id_DonHang=9, soLuong=3),
-            ChiTietDonHang(id_Sach=3, id_DonHang=10, soLuong=4),
-            ChiTietDonHang(id_Sach=4, id_DonHang=10, soLuong=2)
+
         ]
         db.session.add_all(chi_tiet_don_hang)
         quy_dinh=QuyDinh(soLuongNhapToiThieu=150, gioiHanNhap=300, thoiGianQuyDinh=48)

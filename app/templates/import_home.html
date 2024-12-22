@@ -47,7 +47,7 @@ active
                         </thead>
                         <tbody>
                         {% for phieu in list_import %}
-                        <tr>
+                        <tr class="load-detail" data-id="{{ phieu.id }}">
                             <td>
                                 <div class="d-flex px-2 py-1">
                                     <div class="d-flex flex-column justify-content-center">
@@ -56,8 +56,8 @@ active
                                 </div>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-link load-detail" data-id="{{ phieu.id }}">
-                                    {{ phieu.ngayNhapSach.strftime('%Y-%m-%d') }}
+                                <button type="button" class="btn btn-link" data-id="{{ phieu.id }}">
+                                    {{ phieu.ngayNhapSach.strftime('%d-%m-%Y') }}
                                 </button>
                             </td>
                             <td class="align-middle text-center text-sm">

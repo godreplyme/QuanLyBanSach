@@ -2,59 +2,39 @@
 {% block content%}
 <h1 class="text-center text-success mt-1">GIỎ HÀNG</h1>
 
-{% if 'cart' in session %}
+{% if carts%}
     <table class="table">
         <tr>
-            <th>Id</th>
-            <th>Tên sản phẩm</th>
-            <th>Đơn giá</th>
-            <th>Số lượng</th>
-            <th></th>
+            <td></td>
+            <td></td>
+            <td>Tên sản phẩm</td>
+            <td>Đơn giá</td>
+            <td>Số lượng</td>
+            <td></td>
         </tr>
+        {% for c in carts %}
+        <tr data-product-id="{{ c.id }}" data-ten="{{ c.ten }}" data-donGia=" {{c.donGia}}">
+            <td><input type="checkbox" class="product-checkbox"  /></td>
+            <td><img src="{{ c.image }}" alt="Product Image" class="img-fluid" style="height: 10em"></td>
+            <td>{{ c.ten }}</td>
+            <td>{{ c.donGia }}</td>
+            <td>
+                <input type="number" value="{{ c.soLuong }}" class="form-control">
+            </td>
+            <td>
+                <button class="btn btn-danger">&times;</button>
+            </td>
+        </tr>
+        {% endfor %}
     </table>
 {% else %}
 <div  class="alert alert-info mt-1">Không có sản phẩm trong giỏ!</div>
-  
-    {% if current_user.is_authenticated %}
-    <div class="mt-1">
-        <a title="Thanh toán" class="nav-link d-flex align-items-center me-3" href="/payment">
-            <button class="btn btn-success" onclick="pay()">Thanh toán</button>
-        </a>          
-    </div>
-    {% else %}
-    <div class="container mt-3">        
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
-          Thanh toán
-        </button>
-    </div>
-      
-      <!-- The Modal -->
-      <div class="modal fade" id="myModal">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-      
-            <!-- Modal Header -->
-            <div class="modal-header">
-              <h4 class="modal-title">Thông báo</h4>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-      
-            <!-- Modal body -->
-            <div class="modal-body">
-                <p>Bạn cần <a href="/login?next=/cart">đăng nhập</a> để thanh toán!</p>
-            </div>
-      
-            <!-- Modal footer -->
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
-            </div>
-      
-          </div>
-        </div>
-      </div>
-    {% endif %}
+
 {% endif %}
-{% endblock %}
-{% block js %}
-<script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+<div class="mt-1">
+    <a title="Thanh toán" class="nav-link d-flex align-items-center me-3" href="/payment">
+        <button class="btn btn-success" id="checkout-btn" onclick="collectSelectedProducts()">Thanh toán</button>
+    </a>
+</div>
+
 {% endblock %}

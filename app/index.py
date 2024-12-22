@@ -1,8 +1,9 @@
 import math, utils, cloudinary.uploader, admin, hashlib, os, dao
+import json
 import docx
 from models import *
 from __init__ import app, loginMNG, db
-from flask import render_template, request, redirect, url_for, jsonify, flash, send_file, session
+from flask import render_template, request, redirect, url_for, jsonify, flash, send_file, Flask, session
 from docx import Document
 from sqlalchemy import func
 from flask_login import login_user, logout_user, current_user, login_required
@@ -108,12 +109,14 @@ def user_load(user_id):
 
 
 @app.route('/logout')
+@login_required
 def logout():
     logout_user()
     return redirect(url_for('login'))
 
 
 @app.route('/profile')
+@login_required
 def profile():
     check = checkAuthenticated()
     if check:
@@ -123,6 +126,7 @@ def profile():
 
 
 @app.route('/changeProfile', methods=['GET', 'POST'])
+@login_required
 def changeProfile():
     check = checkAuthenticated()
     if check:
@@ -150,6 +154,7 @@ def changeProfile():
 
 
 @app.route("/changePassword", methods=['GET', 'POST'])
+@login_required
 def changePassword():
     err_msg = ''
     suc_msg = ''
@@ -210,9 +215,46 @@ def productDetail(sach_id):
         # return redirect(url_for('add_to_cart', sach_id=sach_id))
         return jsonify({"message": "Sản phẩm đã được thêm vào giỏ hàng!"})
     return render_template('productDetail.html', sach=book)
+@app.route("/paymentNow", methods=['POST'])
+def paymentNow():
+    if not current_user.is_authenticated:
+        return jsonify({"error": "Bạn cần đăng nhập để thanh toán."}), 401
+
+    if request.method == 'POST':
+        try:
+            # Lấy dữ liệu từ body của yêu cầu
+            data = request.get_json()
+            print("Dữ liệu nhận được:", data)
+
+            product = data.get('quantity')  # Giá trị mặc định nếu không có
+
+            # Tạo đơn hàng
+            don_hang = DonHang(nguoiDung=current_user.id)
+            db.session.add(don_hang)
+            db.session.commit()
+
+            sach_id = product.get('id')
+            quantity = product.get('quantity', 1)
+
+            chi_tiet = ChiTietDonHang(
+                id_DonHang=don_hang.id,
+                id_Sach=sach_id,
+                soLuong=int(quantity)
+            )
+            db.session.add(chi_tiet)
+
+            db.session.commit()
+
+            return jsonify({"message": "Thanh toán thành công!", "donHangId": don_hang.id})
+        except Exception as e:
+            print("Lỗi:", e)
+            return jsonify({"error": str(e)}), 500
+    return render_template('payment.html')
+#note
 
 
 @app.route("/import", methods=['GET', 'POST'])
+@login_required
 def import_book():
     check = checkImporter()
     if check:
@@ -272,6 +314,7 @@ def import_book():
 
 
 @app.route('/importCreate', methods=['GET', 'POST'])
+@login_required
 def create_import():
     check = checkImporter()
     if check:
@@ -320,6 +363,7 @@ def create_import():
 
 
 @app.route('/addBook', methods=['GET', 'POST'])
+@login_required
 def add_book():
     check = checkImporter()
     if check:
@@ -351,6 +395,7 @@ def add_book():
 
 
 @app.route('/bill', methods=['GET', 'POST'])
+@login_required
 def bill():
     check = checkEmployee()
     if check:
@@ -359,7 +404,7 @@ def bill():
     size = app.config['LIST_SIZE']
     start = (page - 1) * size
     end = start + size
-    id_bill = request.form.get('id_bill')
+    id_bill = None
     list_bill = db.session.query(DonHang.id.label('id_don_hang'),
                                  DonHang.ngayDatHang.label('ngay_dat_hang'),
                                  DonHang.phuongThucThanhToan.label('pttt'),
@@ -372,24 +417,41 @@ def bill():
         .group_by(DonHang.id, DonHang.ngayDatHang, DonHang.phuongThucThanhToan, NguoiDung.hoVaTen,
                   DonHang.trangThai).order_by(DonHang.id.desc()).all()
     l = len(list_bill)
+    current_page = int(request.args.get('page', 1))
     list_bill = list_bill[start:end]
     selected_bill = None
-    list_bill_detail = None
-    if id_bill:
-        selected_bill = utils.get_bill_by_id(int(id_bill))
-        list_bill_detail = db.session.query(ChiTietDonHang.soLuong, Sach.ten.label("ten_sach"),
-                                            Sach.tacGia.label("tac_gia"), TheLoai.ten.label("ten_the_loai")) \
-            .join(Sach, ChiTietDonHang.id_Sach == Sach.id) \
-            .join(TheLoai, Sach.id_TheLoai == TheLoai.id) \
-            .filter(ChiTietDonHang.id_DonHang == id_bill) \
-            .all()
+    list_bill_detail = []
+    if request.method=='POST':
+        data=request.json
+        id_bill=data.get('id_Bill')
+        if id_bill:
+            selected_bill = utils.get_bill_by_id(int(id_bill))
+            list_bill_detail = db.session.query(ChiTietDonHang.soLuong, Sach.ten.label("ten_sach"),
+                                                Sach.tacGia.label("tac_gia"), TheLoai.ten.label("ten_the_loai")) \
+                .join(Sach, ChiTietDonHang.id_Sach == Sach.id) \
+                .join(TheLoai, Sach.id_TheLoai == TheLoai.id) \
+                .filter(ChiTietDonHang.id_DonHang == id_bill) \
+                .all()
+        details = [{
+            "ten_sach": ct.ten_sach,
+            "ten_the_loai": ct.ten_the_loai,
+            "tac_gia": ct.tac_gia,
+            "soLuong": ct.soLuong
+        } for ct in list_bill_detail]
 
-    return render_template('billHome.html', list_bill=list_bill,
+        return jsonify({
+            "success": True,
+            "details": details,
+            "ngay_dat_hang": selected_bill.ngayDatHang.strftime('%d-%m-%Y') if selected_bill else None
+        })
+    return render_template('bill_home.html', list_bill=list_bill,
                            selected_bill=selected_bill, list_bill_detail=list_bill_detail,
-                           page=math.ceil(l / app.config['LIST_SIZE']))
+                           page=math.ceil(l / app.config['LIST_SIZE']),
+                           current_page=current_page)
 
 
 @app.route('/billCreate', methods=['GET', 'POST'])
+@login_required
 def create_bill():
     check = checkEmployee()
     if check:
@@ -408,7 +470,7 @@ def create_bill():
                 for book in books
             ]
             return jsonify(results)
-        return render_template('billCreate.html', today=datetime.today().date())
+        return render_template('create_bill.html', today=datetime.today().date())
     elif request.method == 'POST':
         data = request.json
         ngay_lap_hoa_don = data.get('ngayDatHang')
@@ -441,6 +503,7 @@ def create_bill():
 
 
 @app.route('/billExport', methods=['POST'])
+@login_required
 def export_bill():
     data = request.json
     ngay_dat_hang = data.get('ngayDatHang')
@@ -518,9 +581,33 @@ def checkImporter():
         return redirect(url_for('index'))
 
 
-@app.route('/cart')
+@app.route('/cart', methods=['GET','POST'])
 def cart():
-    return render_template('cart.html')
+    if not current_user.is_authenticated:
+        return redirect('/login')
+        # Giả sử bạn lấy đơn hàng từ database dựa trên user_id
+    current_user_id = current_user.id  # ID người dùng hiện tại (nếu có đăng nhập)
+
+    # lấy giỏ hàng của người dùng đang đăng nhập hiện tại ( mỗi người chỉ có 1 giỏ hàng)
+    gio_hang = GioHang.query.filter_by(nguoiDung=current_user_id).first()
+    if not gio_hang:
+        return render_template('cart.html', carts=[])  # nếu giỏ hàng rỗng thì trả về rỗng
+    # lấy danh sách chi tiết giỏ hàng của người dùng
+    chi_tiet_GH = ChiTietGioHang.query.filter_by(gioHang=gio_hang.id).all()
+
+    danh_sach_sach = []
+    for chi_tiet in chi_tiet_GH:
+        danh_sach_sach.append({
+            'id': chi_tiet.Sach.id,
+            'image': chi_tiet.Sach.image,
+            'ten': chi_tiet.Sach.ten,
+            'tacGia': chi_tiet.Sach.tacGia,
+            'soLuong': chi_tiet.soLuong,
+            'donGia': chi_tiet.Sach.donGia,
+            'tongTien': chi_tiet.soLuong * chi_tiet.Sach.donGia,  # Tính tổng tiền
+        })
+    # Truyền dữ liệu vào template giỏ hàng
+    return render_template('cart.html', carts=danh_sach_sach)
 
 
 @app.route('/api/pay')
@@ -551,54 +638,75 @@ def pay():
 @app.route('/products/<int:sach_id>', methods=['POST'])
 @login_required
 def add_to_cart(sach_id):
-    # Lấy số lượng từ body của yêu cầu
-    print(request)
-    if request.method == 'POST':
-        data = request.get_json()  # Lấy dữ liệu JSON từ body của POST request
-        print(data)
-        quantity = data.get('quantity')  # Lấy giá trị số lượng, mặc định là 1 nếu không có
-        if not current_user.is_authenticated:
-            return redirect(url_for('login'))
-        # Lấy giỏ hàng của người dùng
-        gio_hang = GioHang.query.filter_by(nguoiDung=current_user.id).first()
-        # #truy vấn sản phẩm theo id
-        # product = Sach.query.filter_by(id=sach_id).first()
-        if gio_hang is None:
-            # Nếu không có giỏ hàng, tạo mới giỏ hàng cho người dùng
-            gio_hang = GioHang(nguoiDung=current_user.id)
-            db.session.add(gio_hang)
-            db.session.commit()
-        # Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
-        chi_tiet = ChiTietGioHang.query.filter(
-            ChiTietGioHang.gioHang == gio_hang.id,  # Đảm bảo `gio_hang` là một đối tượng
-            ChiTietGioHang.sachID == sach_id).first()  # Đảm bảo `sach` là một đối tượng
-
-        if chi_tiet:
-            # Nếu sản phẩm đã có trong giỏ hàng, tăng số lượng lên
-            chi_tiet.soLuong += int(quantity)
-        else:
-            # Nếu sản phẩm chưa có trong giỏ hàng, tạo mới chi tiết giỏ hàng
-            chi_tiet = ChiTietGioHang(gioHang=gio_hang.id, sachID=sach_id, soLuong=int(quantity))
-            db.session.add(chi_tiet)
-
-        db.session.commit()
-
-        # return redirect(url_for('add_to_cart', sach_id=sach_id))
-        return jsonify({"message": "Sản phẩm đã được thêm vào giỏ hàng!"})
     return render_template('productDetail.html')  # Chuyển hướng về trang giỏ hàng
 
-    # Trả về phản hồi dưới dạng JSON (nếu cần)
-    # return jsonify({"message": "Thêm vào giỏ hàng thành công", "quantity": quantity}), 200
-
-
-@app.route('/payment')
+@app.route('/payment', methods=['GET','POST'])
+@login_required
 def payment():
+    # Kiểm tra Content-Type
+    if not request.is_json:
+        return jsonify({"error": "Dữ liệu gửi lên không đúng định dạng JSON"}), 415
+    if request.method == 'POST':
+        products= []
+        data = request.get_json()  # Lấy dữ liệu JSON từ body của POST request
+        print("Data received:", data)
+
+        # Lấy giá trị của `products`
+        raw_products = data.get('products', '[]')  # Lấy giá trị mặc định là chuỗi '[]'
+
+        try:
+            # Parse chuỗi JSON thành danh sách Python
+            products = json.loads(raw_products)
+            print("Parsed products:", products)
+        except json.JSONDecodeError as e:
+            print("Error decoding JSON:", e)
+        # lây pttt
+        paymentMethod = products[0].get('paymentMethod','TRUC_TIEP')
+        if paymentMethod == 'TRUC_TIEP':
+            paymentMethod = PhuongThucThanhToan.TRUC_TIEP
+        else:
+            paymentMethod = PhuongThucThanhToan.TRUC_TUYEN
+        don_hang = DonHang(nguoiDung=current_user.id, phuongThucThanhToan=paymentMethod)
+        db.session.add(don_hang)
+        db.session.commit()
+        for pro in products:
+            if isinstance(pro, dict):  # Đảm bảo mỗi phần tử là dictionary
+                sach_id = pro.get('id')
+                quantity = pro.get('quantity')
+                if pro.get('paymentMethod') == 'Thanh toán trực tiếp':
+                    paymentMethod = 'TRUC_TIEP'
+                if pro.get('paymentMethod') == 'Thanh toán Momo':
+                    paymentMethod = 'TRUC_TUYEN'
+                print(f"sach_id: {sach_id}, quantity: {quantity}")
+                chi_tiet = ChiTietDonHang(id_DonHang=don_hang.id, id_Sach=sach_id, soLuong=int(quantity))
+                db.session.add(chi_tiet)
+                db.session.commit()
+            else:
+                print("Invalid product data:", pro)
+        print(don_hang.id)
+        return jsonify({"message": "Thanh toán thành công!", "donHangId": don_hang.id})
     return render_template('payment.html')
+    # don_hang = DonHang.query.filter_by(nguoiDung=current_user.id).order_by(
+    #     DonHang.id.desc()).first()  # Lấy đơn hàng mới nhất của người dùng
+    # chi_tiet_DH = ChiTietDonHang.query.filter_by(id_DonHang=don_hang.id).all()
+    #
+    # danh_sach_sach = []
+    # for chi_tiet in chi_tiet_DH:
+    #     danh_sach_sach.append({
+    #         'id': chi_tiet.Sach.id,
+    #         'image': chi_tiet.Sach.image,
+    #         'ten': chi_tiet.Sach.ten,
+    #         'tacGia': chi_tiet.Sach.tacGia,
+    #         'soLuong': chi_tiet.soLuong,
+    #         'donGia': chi_tiet.Sach.donGia,
+    #         'tongTien': chi_tiet.soLuong * chi_tiet.Sach.donGia,  # Tính tổng tiền
+    #     })
+    # print(danh_sach_sach)
 
 
 @app.route('/test')
 def test():
-    return render_template('employee_profile.html')
+    return render_template('sign_in.html')
 
 
 if __name__ == '__main__':

@@ -102,47 +102,82 @@
           });
 
       });
-       $("#export").click(function() {
-    let sachList = [];
-    $("#danh_sach_san_pham tr").each(function() {
-        let row = $(this);
-        let id_sach = parseInt(row.find("[name='id']").text());
-        let so_luong = parseInt(row.find("input[name='quantity']").val());
+      $("#export").click(function() {
+          let sachList = [];
+          $("#danh_sach_san_pham tr").each(function() {
+              let row = $(this);
+              let id_sach = parseInt(row.find("[name='id']").text());
+              let so_luong = parseInt(row.find("input[name='quantity']").val());
 
-        if (id_sach) {
-            sachList.push({
-                id_Sach: id_sach,
-                soLuong: so_luong
-            });
-        }
-    });
+              if (id_sach) {
+                  sachList.push({
+                      id_Sach: id_sach,
+                      soLuong: so_luong
+                  });
+              }
+          });
 
-    if (sachList.length === 0) {
-        alert("Vui lòng thêm ít nhất một sản phẩm vào danh sách hóa đơn.");
-        return;
-    }
+          if (sachList.length === 0) {
+              alert("Vui lòng thêm ít nhất một sản phẩm vào danh sách hóa đơn.");
+              return;
+          }
 
-    let payload = {
-        ten_kh: $("#ten_kh").val(),
-        ngayDatHang: $("#ngay_lap_hoa_don").val(),
-        sachList: sachList,
-    };
+          let payload = {
+              ten_kh: $("#ten_kh").val(),
+              ngayDatHang: $("#ngay_lap_hoa_don").val(),
+              sachList: sachList,
+          };
 
-    $.ajax({
-        url: "/billExport",
-        method: "POST",
-        contentType: "application/json",
-        data: JSON.stringify(payload),
-        success: function(response) {
-            if (response.success) {
-                window.location.href = response.download_url; // Tải file
-            } else {
-                alert("Không thể xuất hóa đơn. Vui lòng thử lại.");
-            }
-        },
-        error: function() {
-            alert("Đã xảy ra lỗi khi tạo file hóa đơn.");
-        },
-    });
-});
+          $.ajax({
+              url: "/billExport",
+              method: "POST",
+              contentType: "application/json",
+              data: JSON.stringify(payload),
+              success: function(response) {
+                  if (response.success) {
+                      window.location.href = response.download_url; // Tải file
+                  } else {
+                      alert("Không thể xuất hóa đơn. Vui lòng thử lại.");
+                  }
+              },
+              error: function() {
+                  alert("Đã xảy ra lỗi khi tạo file hóa đơn.");
+              },
+          });
+      });
+      $(".load-detail").click(function() {
+          const id = $(this).data("id"); // Lấy ID từ nút bấm
+
+          $.ajax({
+              url: "/bill",
+              type: "POST",
+              contentType: "application/json", // Header Content-Type
+              data: JSON.stringify({
+                  id_Bill: id
+              }), // Dữ liệu JSON
+              success: function(response) {
+                  if (response.success) {
+                      $("#detail-title").text(`Chi tiết đơn hàng ${response.ngay_dat_hang}:`);
+                      const tbody = $("#detail-table tbody");
+                      tbody.empty();
+                      response.details.forEach((detail, index) => {
+                          tbody.append(`
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${detail.ten_sach}</td>
+                        <td>${detail.ten_the_loai}</td>
+                        <td>${detail.tac_gia}</td>
+                        <td class="text-center">${detail.soLuong}</td>
+                    </tr>
+                `);
+                      });
+                  } else {
+                      alert("Không thể tải chi tiết phiếu nhập!");
+                  }
+              },
+              error: function() {
+                  alert("Đã xảy ra lỗi khi tải chi tiết phiếu nhập!");
+              }
+          });
+      });
   });

@@ -5,44 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="104cf8c2-7b15-4777-a429-3dc760ec57cd" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/static/css/argon-dashboard.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/static/images/apple-icon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/static/images/favicon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/static/images/logo.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/static/js/argon-dashboard.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/static/js/billCreate.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/static/js/bootstrap.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/static/js/perfect-scrollbar.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/static/js/popper.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/static/js/smooth-scrollbar.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/templates/add_book.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/templates/billCreate.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/templates/billHome.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/templates/bill_home.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/templates/create_import.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/templates/employee_profile.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/templates/import_home.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/templates/layout/base_employee.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/templates/layout/employee_nav.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/cnpm-qlns.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cnpm-qlns.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SellingBookManagement.asta" beforeDir="false" afterPath="$PROJECT_DIR$/SellingBookManagement.asta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/index.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/.idea/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/app/.idea/app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/static/css/import.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/static/css/import.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/static/js/importCreate.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/static/js/importCreate.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/addBook.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/importCreate.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/importHome.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/layout/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/layout/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/layout/nav.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/layout/nav.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/productDetail.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/productDetail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/products.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/products.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,9 +44,10 @@
     "Python.index.executor": "Run",
     "Python.models.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "D:/cnpm-qlns/app/static/images",
+    "last_opened_file_path": "D:/BanSach/QuanLyBanSach/app",
     "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
 }]]></component>
@@ -97,7 +66,6 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="SDK_NAME" value="Python 3.12" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/app" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -143,7 +111,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-d7ad00fb9fc3-c546a90a8094-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-242.23726.102" />
+        <option value="bundled-python-sdk-1b1018131e27-aa17d162503b-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-243.22562.180" />
       </set>
     </attachedChunks>
   </component>
