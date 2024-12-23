@@ -601,8 +601,6 @@ def add_to_cart(sach_id):
 @login_required
 def payment():
     # Kiểm tra Content-Type
-    if not request.is_json:
-        return jsonify({"error": "Dữ liệu gửi lên không đúng định dạng JSON"}), 415
     if request.method == 'POST':
         products= []
         data = request.get_json()  # Lấy dữ liệu JSON từ body của POST request
