@@ -4,10 +4,18 @@
     <div class="row">
         <!-- Book Image -->
         <div class="col-lg-5">
-            <div class="position-relative d-flex justify-content-center align-items-center">
-                <img src="{{sach.image}}"
+            <div class="position-relative d-flex justify-content-center align-items-center mb-3">
+                <img id="mainImage" src="{{sach.image}}"
                      alt="{{sach.ten}}"
                      class="img-fluid border rounded">
+            </div>
+            <!-- Thumbnails -->
+            <div class="d-flex justify-content-center gap-2">
+                <img class="thumbnail img-fluid border rounded" src="{{sach.image}}" alt="Thumbnail 1"
+                     style="width: 60px; height: 60px; cursor: pointer;">
+                <!--                <img class="thumbnail img-fluid border rounded" src="/static/images/sample2.jpg" alt="Thumbnail 2" style="width: 60px; height: 60px; cursor: pointer;">-->
+                <!--                <img class="thumbnail img-fluid border rounded" src="/static/images/sample3.jpg" alt="Thumbnail 3" style="width: 60px; height: 60px; cursor: pointer;">-->
+                <!--                <img class="thumbnail img-fluid border rounded" src="/static/images/sample4.jpg" alt="Thumbnail 4" style="width: 60px; height: 60px; cursor: pointer;">-->
             </div>
         </div>
         <!-- Book Details -->
@@ -28,7 +36,7 @@
                     <input id="quantity" type="number" class="form-control text-center border-0" value="1" min="1"
                            max="100" style="width: 60px;">
                 </div>
-                <p class="text-secondary m-auto-0">Còn lại <strong>{{sach.soLuongTonKho}}</strong> trong kho</p>
+                <p class="text-secondary my-auto"><strong>{{sach.soLuongTonKho}}</strong> sản phẩm có sẵn</p>
 
             </div>
                 <input id="id" type="hidden" value="{{sach.id}}">
@@ -36,32 +44,32 @@
                 {% if current_user.is_authenticated %}
                 <button class="btn btn-success px-4" onclick="addToCart()">Thêm vào giỏ hàng</button>
                 {% else %}
-                <div class="mb-3">        
+                <div class="mb-3">
                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#myModal">
                     Thêm vào giỏ hàng
                     </button>
                 </div>
-                
+
                 <!-- The Modal -->
                 <div class="modal fade" id="myModal">
                     <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
-                
+
                         <!-- Modal Header -->
                         <div class="modal-header">
                         <h4 class="modal-title">Thông báo</h4>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
-                
+
                         <!-- Modal body -->
                         <div class="modal-body">
                             <p>Bạn cần <a href="/login?next=/products/{{ sach.id }}">đăng nhập</a> để thêm vào giỏ hàng!</p>
                         </div>
-                
+
                         <!-- Modal footer -->
                         <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
-                        </div>                
+                        </div>
                     </div>
                     </div>
                 </div>
@@ -77,7 +85,122 @@
             </div>
         </div>
     </div>
+    <div class="mt-2">
+        <h2 class="list-header">SÁCH ĐỀ XUẤT</h2>
+        <div class="carousel container">
+            <div class="row">
+                <div id="product-slideshow-container" class="carousel slide product-slideshow" data-bs-ride="carousel"
+                     data-bs-interval="3000">
+                    <div class="carousel-inner p-4">
+                        {% for book in related_books %}
+                        {% if loop.index0 % 5 == 0 %}
+                        <div class="carousel-item {% if loop.index0 == 0 %}active{% endif %}">
+                            <div class="row">
+                                {% endif %}
+                                <div class="product-link col-6 col-md-4 col-lg-2 flex-grow-1 d-flex justify-content-center mb-4">
+                                    <div class="card product-card">
+                                        <a href="{{ url_for('productDetail', sach_id=book.id) }}">
+                                            <img src="{{ book.image }}" class="card-img-top" alt="Product">
+                                        </a>
+                                        <div class="card-body">
+                                            <h5 class="card-title text-truncate">
+                                                {{ book.ten }}
+                                            </h5>
+                                            <div>
+                                                <span class="text-danger fw-bold fs-5">{{ book.donGia }} đ</span>
+                                            </div>
+                                            <button class="btn btn-outline-danger rounded-pill px-4 py-2 w-100">
+                                                Thêm vào giỏ hàng
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% if (loop.index0 + 1) % 5 == 0 or loop.last %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev btn-banner-prev custom-btn-prev" type="button"
+                            data-bs-target="#product-slideshow-container"
+                            data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon d-none"></span>
+                        <i class="fa-solid fa-angle-left"></i>
+                    </button>
+
+                    <button class="carousel-control-next btn-banner-next custom-btn-next" type="button"
+                            data-bs-target="#product-slideshow-container"
+                            data-bs-slide="next">
+                        <span class="carousel-control-next-icon d-none"></span>
+                        <i class="fa-solid fa-angle-right"></i> <!-- Sử dụng biểu tượng Bootstrap Icons -->
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-12 col-lg-10 col-xl-10">
+            <div class="card">
+                <div id="tabComment">
+                    {% for c in comments%}
+                    <div class="card-body">
+                        <div class="d-flex flex-start align-items-center">
+                            {% if c.NguoiDung.anhDaiDien and c.NguoiDung.anhDaiDien.startswith('https') %}
+                            <img class="rounded-circle shadow-1-strong me-3"
+                                 src="{{ c.NguoiDung.anhDaiDien }}" alt="{{c.NguoiDung.hoVaTen}}"
+                                 width="60"
+                                 height="60"/>
+                            {% else%}
+                            <img class="rounded-circle shadow-1-strong me-3"
+                                 src="{{ url_for('static', filename='user.png') }}" alt="aaa"
+                                 width="60"
+                                 height="60"/>
+                            {% endif %}
+                            <div>
+                                <h6 class="fw-bold text-primary mb-1">{{ c.NguoiDung.hoVaTen }}</h6>
+                                <p class="text-muted small mb-0 created-date">
+                                    {{ c.thoiGian }}
+                                </p>
+                            </div>
+                        </div>
+                        <p class="mt-3 mb-4 pb-2">{{ c.noiDung }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% if pages > 1 %}
+                <ul class="pagination justify-content-end mt-4">
+                    {% for p in range(1,pages+1) %}
+                    <li class="page-item"><a class="page-link"
+                                             href="{{url_for('productDetail',sach_id=sach.id,page=p)}}">{{p}}</a></li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <div class="card-footer py-3 border-0" style="background-color: #f8f9fa;">
+                    <div class="d-flex flex-start w-100">
+                        {% if current_user.is_authenticated %}
+                        <img class="rounded-circle shadow-1-strong me-3"
+                             src="{{ current_user.anhDaiDien }}" alt="avatar" width="40" height="40"/>
+                        {% else %}
+                        <img class="rounded-circle shadow-1-strong me-3"
+                             src="{{ url_for('static',filename='user.png') }}" alt="avatar" width="40" height="40"/>
+                        {% endif %}
+                        <h6 class="fw-bold text-primary mb-1">{{ current_user.hoVaTen }}</h6>
+                        <div data-mdb-input-init class="form-outline w-100">
+                        <textarea class="form-control" rows="4"
+                                  style="background: #fff;" id="content"></textarea>
+                        </div>
+                    </div>
+                    <div class="float-end mt-2 pt-1">
+                        <button class="btn btn-success px-4" onclick="addComment({{sach.id}})">Đăng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+{% endblock %}
+{% block js %}
 <script>
     function addToCart() {
     // Lấy số lượng từ input
@@ -112,5 +235,13 @@
         alert("Đã có lỗi xảy ra. Vui lòng thử lại.");
     });
 }
+    window.onload = function(){
+        let d = document.getElementsByClassName('created-date')
+        for(let i=0;i<d.length; i++){
+            d[i].innerText = moment(d[i].innerText).locale('vi').fromNow()
+        }
+    }
 </script>
+<script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+<script src="{{url_for('static', filename='js/product_detail.js')}}"></script>
 {% endblock %}

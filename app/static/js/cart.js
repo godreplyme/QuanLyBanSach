@@ -5,9 +5,9 @@ function pay() {
             if (data.status === 200)
                 location.reload();
             else
-                alert("Có lỗi xảy ra!")    
+                alert("Có lỗi xảy ra!")
         })
-    }    
+    }
 }
 // Hàm thêm vào giỏ hàng
 function addToCart() {
@@ -43,6 +43,50 @@ function addToCart() {
         alert("Vui lòng đăng nhập để thêm vào giỏ hàng!");
     });
 }
+
+function addComment(sach_id){
+    let content = document.getElementById('content')
+    if(content!=null){
+        fetch('/api/comments',{
+            method: 'POST',
+            body: JSON.stringify({
+                'sach_id':sach_id,
+                'content': content.value
+            }),
+            headers:{
+                'Content-Type': 'application/json'
+            }
+        }).then(res=>res.json()).then(data=>{
+            if (data.status==201){
+                let c = data.comment
+                let comment = document.getElementById('tabComment')
+                comment.innerHTML = `
+                <div class="card-body">
+                        <div class="d-flex flex-start align-items-center">
+                            <img class="rounded-circle shadow-1-strong me-3"
+                                 src="${c.user.avatar}" alt="${c.user.name}"
+                                 width="60"
+                                 height="60"/>
+                            <div>
+                                <h6 class="fw-bold text-primary mb-1">${c.user.name}</h6>
+                                <p class="text-muted small mb-0">
+                                    ${moment(c.created_date).locale('vi').fromNow()}
+                                </p>
+                            </div>
+                        </div>
+                        <p class="mt-3 mb-4 pb-2" id="content">
+                            ${c.content}
+                        </p>
+                    </div>
+                ` + comment.innerHTML
+                content.value=''
+            }
+        })
+    }
+}
+
+
+
 
 // Hàm thu thập sản phẩm đã chọn
 
@@ -166,25 +210,4 @@ if (cartData && cartData.length > 0) {
         </tr>
     `;
 }
-//// hàm mua ngay sản phẩm
-//function paymentNow(sachId, ten, donGia) {
-//    const selectedProduct ;
-//    // Lấy số lượng từ input
-//    const quantity = document.getElementById("quantity").value;
-//    // Kiểm tra nếu `quantity` không hợp lệ
-//    if (!quantity || isNaN(quantity) || quantity <= 0) {
-//        alert("Vui lòng nhập số lượng hợp lệ.");
-//        return;
-//    }
-//    // Thêm sản phẩm vào danh sách
-//    selectedProduct.push({
-//        id: sachId,
-//        ten: ten,
-//        donGia: donGia,
-//        quantity: quantity, // Số lượng mặc định là 1 nếu không hợp lệ
-//        paymentMethod: paymentMethod
-//    });
-//    localStorage.setItem("selectedProduct", JSON.stringify(selectedProducts));
-//    return selectedProduct;
-//}
 

@@ -19,9 +19,10 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="apple-touch-icon" sizes="76x76" href="{{ url_for('static', filename='images/logo.png') }}">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}">
     <title>
-        BookStore
+        {% block title %}
+        {% endblock %}
     </title>
     <!--     Fonts and icons     -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet"/>
@@ -84,11 +85,7 @@
             </li>
             {% elif current_user.is_employee() %}
              <li class="nav-item">
-<<<<<<< HEAD
-                <a class="nav-link" href="{{ url_for('import_book') }}">
-=======
-                <a class="nav-link {% block bill_home %} {% endblock %}" href="{{ url_for('import_book') }}">
->>>>>>> b33622f2bfee54ee9a64129c231d41e8f6f90f78
+                <a class="nav-link {% block bill_home %} {% endblock %}" href="{{ url_for('bill') }}">
                     <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="ni ni-collection text-dark text-sm opacity-10"></i>
                     </div>
@@ -96,11 +93,7 @@
                 </a>
             </li>
              <li class="nav-item">
-<<<<<<< HEAD
-                <a class="nav-link" href="{{ url_for('import_book') }}">
-=======
                 <a class="nav-link {% block create_bill %} {% endblock %}" href="{{ url_for('create_bill') }}">
->>>>>>> b33622f2bfee54ee9a64129c231d41e8f6f90f78
                     <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="fa-solid fa-plus text-dark text-sm opacity-10"></i>
                     </div>

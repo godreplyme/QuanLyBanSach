@@ -1,4 +1,7 @@
 {% extends 'layout/base_employee.html' %}
+{% block title %}
+Lập hóa đơn
+{% endblock %}
 {% block create_bill %}
 active
 {% endblock %}
@@ -16,6 +19,7 @@ active
                         <label class="form-control-label" for="ten_kh">Họ và tên khách hàng: </label>
                         <input type="text" class="form-control" id="ten_kh" aria-describedby="basic-addon3"
                                name="ten_kh" placeholder="Nhập họ và tên">
+                        <div id="searchResults" class="list-group mt-1"></div>
                     </div>
                     <div class="form-group">
                         <label class="form-control-label" for="ngay_lap_hoa_don">Ngày lập hóa đơn: </label>

@@ -1,4 +1,7 @@
 {% extends 'layout/base_employee.html' %}
+{% block title %}
+Lập phiếu nhập sách
+{% endblock %}
 {% block create_import %}
 active
 {% endblock %}
@@ -12,7 +15,7 @@ active
             <div class="form-group p-4 pb-0">
                 <label class="form-control-label" for="searchSach">Tìm kiếm sách:</label>
                 <input type="text" class="form-control" id="searchSach" aria-describedby="basic-addon3"
-                       placeholder="Nhập tên sách" , name="q">
+                       placeholder="Nhập tên sách" name="q">
                 <div id="searchResults" class="list-group mt-1"></div>
             </div>
             <div class="table-responsive p-0">

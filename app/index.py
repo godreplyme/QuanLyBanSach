@@ -1,5 +1,6 @@
-import math, utils, cloudinary.uploader, admin, hashlib, os, dao
 import json
+import math, utils, cloudinary.uploader, admin, hashlib, os, mail
+import math, utils, cloudinary.uploader, admin, hashlib, os, dao
 import docx
 from models import *
 from __init__ import app, loginMNG, db
@@ -10,13 +11,15 @@ from flask_login import login_user, logout_user, current_user, login_required
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import parse_xml
 from docx.oxml.ns import nsdecls
+from sendgrid.helpers.mail import Mail
+from sendgrid import SendGridAPIClient
 
 
 @app.context_processor
 def default_response():
     return {
         'category': utils.get_category(),
-        'sach': utils.get_book_home()
+        'related_books': utils.get_book_home()
     }
 
 
@@ -30,43 +33,82 @@ def list_book():
     cate_id = request.args.get('category_id')
     page = int(request.args.get('page', 1))
     kw = request.args.get('keyword')
-    size = app.config['LIST_SIZE']
-    start = (page - 1) * size
-    end = start + size
+    sach = utils.get_book_pagination(kw=kw, category_id=cate_id, page=page)
 
-    books = utils.get_list_books(id_category=cate_id, kw=kw)[start:end]
-    l = len(utils.get_list_books(id_category=cate_id, kw=kw))
     return render_template('products.html',
-                           page=math.ceil(l / app.config['LIST_SIZE']),
-                           lb=books)
+                           page=math.ceil(utils.count_book(category_id=cate_id, kw=kw) / app.config['LIST_SIZE']),
+                           lb=sach)
 
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
+        flash('Bạn đã đăng ký thành công, vui lòng đăng nhập để tiếp tục mua sắm ^^')
         return redirect(url_for('index'))
+
     err_msg = ''
-    if request.method.__eq__('POST'):
+    if request.method == 'POST':
         name = request.form.get('registerName')
         email = request.form.get('registerEmail')
         username = request.form.get('registerUserName')
         password = request.form.get('registerPassword')
         confirm = request.form.get('confirmPassword')
-        avatar_path = None
+
         try:
-            if password.__eq__(confirm):
-                avatar = request.files.get('avatar')
-                if avatar:
-                    res = cloudinary.uploader.upload(avatar)
-                    avatar_path = res['secure_url']
-                utils.add_user(name=name, username=username, password=password, email=email, avatar=avatar_path)
-                return redirect(url_for('login'))
+            if password != confirm:
+                flash('Mật khẩu không khớp', 'error')
+
             else:
-                err_msg = 'Mật khẩu không khớp'
+                if utils.get_user_by_username(username=username):
+                    flash('Username đã được sử dung, vui lòng đăng ký username khác', 'error')
+                else:
+                    if utils.get_user_by_email(email=email):
+                        flash('Email đã được đăng ký ở nơi khác, vui lòng đăng ký bằng email khác', 'error')
+                    else:
+                        # Tạo token xác thực email
+                        token = mail.generate_token(email)
+                        confirm_url = url_for('confirm_email', token=token, _external=True)
+                        flash('Vui lòng kiểm tra email để kích hoạt tài khoản.', 'info')
+
+                        # Gửi email qua SendGrid
+                        message = Mail(
+                            from_email='bookstore2k4@gmail.com',
+                            to_emails=email,
+                            subject='Xác nhận email đăng ký',
+                            html_content=f'<p>Nhấn vào đường dẫn sau để kích hoạt tài khoản:</p> <a href="{confirm_url}">{confirm_url}</a>'
+                        )
+
+                        sg = SendGridAPIClient(app.config["API_KEY"])
+                        response = sg.send(message)
+                        if response.status_code == 202:
+                            utils.add_user(name=name, username=username,
+                                           password=password,
+                                           email=email,
+                                           avatar=url_for('static', filename='images/user.png'))
+                            return redirect(url_for('login'))
+                        else:
+                            flash('Không thể gửi email xác nhận. Vui lòng thử lại sau.')
 
         except Exception as ex:
-            err_msg = 'Hệ thống đang có lỗi: ' + str(ex)
+            flash('Hệ thống đang có lỗi: ' + str(ex))
+
     return render_template('register.html', err_msg=err_msg)
+
+
+@app.route('/confirm_email/<token>', methods=['GET'])
+def confirm_email(token):
+    try:
+        email = mail.confirm_token(token)
+        # Lưu người dùng vào DB sau khi email được xác minh
+        user = utils.get_user_by_email(email=email)
+        user.active = True
+        db.session.add(user)
+        db.session.commit()
+        flash('Tài khoản đã được xác minh và đăng ký thành công!', 'success')
+        return redirect(url_for('login'))
+    except Exception as e:
+        flash('Token xác minh không hợp lệ hoặc hết hạn.', 'error')
+        return redirect(url_for('register'))
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -77,17 +119,72 @@ def login():
     if request.method.__eq__('POST'):
         username = request.form.get('username')
         password = request.form.get('password')
-        user = utils.check_login(username=username, password=password)
-        if user:
-            login_user(user=user)
+        if utils.get_user_by_username(username=username):
 
-            next = request.args.get("next")
-            print("Check next")
-            print(next)
-            return redirect(url_for('index') if next is None else next)
+            user = utils.get_user_by_username(username=username)
+            if str(hashlib.md5(password.strip().encode('utf-8')).hexdigest()).__eq__(user.password):
+                email = user.email
+                if user.active == False:
+                    token = mail.generate_token(email)
+                    confirm_url = url_for('confirm_email', token=token, _external=True)
+                    flash('Vui lòng kiểm tra email để kích hoạt tài khoản.', 'info')
+
+                    # Gửi email qua SendGrid
+                    message = Mail(
+                        from_email='bookstore2k4@gmail.com',  # Thay bằng email đã xác thực trên SendGrid
+                        to_emails=email,
+                        subject='Xác nhận email đăng ký',
+                        html_content=f'<p>Nhấn vào đường dẫn sau để kích hoạt tài khoản:</p> <a href="{confirm_url}">{confirm_url}</a>'
+                    )
+
+                    sg = SendGridAPIClient(app.config["API_KEY"])
+                    response = sg.send(message)
+                    if response.status_code == 202:
+                        return redirect(url_for('login'))
+                    else:
+                        flash('Không thể gửi email xác nhận. Vui lòng thử lại sau.', 'error')
+                else:
+                    login_user(user=user)
+                    return redirect(url_for('index'))
+            else:
+                flash('Mật khẩu không chính xác, vui lòng nhập lại.', 'error')
         else:
-            err_msg = 'username hoặc password ko chính xác'
-    return render_template('login.html', err_msg=err_msg)
+            flash('Username không tồn tài hoặc không chính xác, vui lòng nhập lại.', 'error')
+    return render_template('login.html')
+
+
+@app.route('/searchAccount', methods=['GET', 'POST'])
+def search_account():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    if request.method.__eq__('POST'):
+        email = request.form.get('email')
+        if utils.get_user_by_email(email=email):
+            return render_template('forgot_password.html', email=email)  # Gửi email qua template
+        else:
+            flash('Không có tài khoản nào đăng ký địa chỉ email này, hãy thử lại', 'error')
+    return render_template('search_account.html')
+
+
+@app.route('/forgotPassword', methods=['POST'])
+def forgot_password():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    email = request.form.get('email')  # Lấy email từ trường ẩn
+    password = request.form.get('password')
+    confirm = request.form.get('confirm')
+    if not password.__eq__(confirm):
+        flash('Mật khẩu không khớp, vui lòng nhập lại', 'error')
+        return render_template('forgot_password.html', email=email)
+    else:
+        user = utils.get_user_by_email(email=email)
+        if user:
+            user.password = hashlib.md5(password.strip().encode('utf-8')).hexdigest()
+            db.session.add(user)
+            db.session.commmit()
+            flash('Mật khẩu đã được cập nhật thành công.', 'success')
+            return redirect(url_for('login'))
+    return render_template('forgot_password.html', email=email)
 
 
 @app.route('/login_admin', methods=['POST'])
@@ -112,7 +209,7 @@ def user_load(user_id):
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('login'))
+    return redirect(url_for('index'))
 
 
 @app.route('/profile')
@@ -122,7 +219,7 @@ def profile():
     if check:
         return check
     checkAuthenticated()
-    return render_template('profile.html')
+    return render_template('user_profile.html')
 
 
 @app.route('/changeProfile', methods=['GET', 'POST'])
@@ -139,6 +236,11 @@ def changeProfile():
         email = request.form.get('email')
         gender = request.form.get('gender')
         birthday = request.form.get('birthday')
+        avatar = request.files.get('avatar')
+        if avatar:
+            res = cloudinary.uploader.upload(avatar)
+            avatar = res['secure_url']
+            current_user.anhDaiDien = avatar
 
         current_user.hoVaTen = name
         current_user.sdt = phone
@@ -156,8 +258,6 @@ def changeProfile():
 @app.route("/changePassword", methods=['GET', 'POST'])
 @login_required
 def changePassword():
-    err_msg = ''
-    suc_msg = ''
     check = checkAuthenticated()
     if check:
         return check
@@ -168,20 +268,25 @@ def changePassword():
         confirm = request.form.get('confirm')
 
         if current_user.password.__eq__(str(hashlib.md5(old.strip().encode('utf-8')).hexdigest())):
-            if new.__eq__(confirm):
-                current_user.password = str(hashlib.md5(new.strip().encode('utf-8')).hexdigest())
-                db.session.commit()
-                suc_msg = 'Đổi mật khẩu thành công'
+            if new:
+                if new.__eq__(confirm):
+                    current_user.password = str(hashlib.md5(new.strip().encode('utf-8')).hexdigest())
+                    db.session.commit()
+                    flash('Đổi mật khẩu thành công.', 'success')
+                else:
+                    flash('Mật khẩu nhập lại không trùng khớp, mời nhập lại.', 'error')
             else:
-                err_msg = 'Mật khẩu nhập lại không trùng khớp, mời nhập lại'
+                flash('Mật khẩu mới không hợp lệ, mời nhập lại.','error')
         else:
-            err_msg = 'Mật khẩu cũ không đúng, mời nhập lại'
-    return render_template('changePassword.html', err_msg=err_msg, suc_msg=suc_msg)
+            flash('Mật khẩu cũ không đúng, mời nhập lại.', 'error')
+    return render_template('changePassword.html')
 
 
-@app.route("/products/<int:sach_id>", methods=['GET','POST'])
+@app.route("/products/<int:sach_id>", methods=['GET', 'POST'])
 def productDetail(sach_id):
     book = utils.get_book_by_id(sach_id)
+    a = utils.count_comment(sach_id)
+    comments = utils.get_commment(int(request.args.get('page', 1)))
     if request.method == 'POST':
         data = request.get_json()  # Lấy dữ liệu JSON từ body của POST request
         print(data)
@@ -200,7 +305,7 @@ def productDetail(sach_id):
         # Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
         chi_tiet = ChiTietGioHang.query.filter(
             ChiTietGioHang.gioHang == gio_hang.id,  # Đảm bảo `gio_hang` là một đối tượng
-            ChiTietGioHang.sach == sach_id).first() # Đảm bảo `sach` là một đối tượng
+            ChiTietGioHang.sach == sach_id).first()  # Đảm bảo `sach` là một đối tượng
 
         if chi_tiet:
             # Nếu sản phẩm đã có trong giỏ hàng, tăng số lượng lên
@@ -214,7 +319,8 @@ def productDetail(sach_id):
 
         # return redirect(url_for('add_to_cart', sach_id=sach_id))
         return jsonify({"message": "Sản phẩm đã được thêm vào giỏ hàng!"})
-    return render_template('productDetail.html', sach=book)
+    return render_template('productDetail.html', sach=book, comments=comments,
+                           pages=math.ceil(utils.count_comment(sach_id=sach_id) / app.config['COMMENT_SIZE']))
 @app.route("/paymentNow", methods=['POST'])
 def paymentNow():
     if not current_user.is_authenticated:
@@ -401,29 +507,24 @@ def bill():
     if check:
         return check
     page = int(request.args.get('page', 1))
-    size = app.config['LIST_SIZE']
-    start = (page - 1) * size
-    end = start + size
-    id_bill = None
-    list_bill = db.session.query(DonHang.id.label('id_don_hang'),
-                                 DonHang.ngayDatHang.label('ngay_dat_hang'),
-                                 DonHang.phuongThucThanhToan.label('pttt'),
-                                 NguoiDung.hoVaTen.label('ten_user'),
-                                 DonHang.trangThai.label('trang_thai'),
-                                 func.sum(Sach.donGia * ChiTietDonHang.soLuong).label('tong_gia')) \
-        .select_from(DonHang).join(ChiTietDonHang, DonHang.id == ChiTietDonHang.id_DonHang) \
-        .join(Sach, ChiTietDonHang.id_Sach == Sach.id) \
-        .join(NguoiDung, DonHang.nguoiDung == NguoiDung.id) \
-        .group_by(DonHang.id, DonHang.ngayDatHang, DonHang.phuongThucThanhToan, NguoiDung.hoVaTen,
-                  DonHang.trangThai).order_by(DonHang.id.desc()).all()
-    l = len(list_bill)
+    # list_bill = db.session.query(DonHang.id.label('id_don_hang'),
+    #                              DonHang.ngayDatHang.label('ngay_dat_hang'),
+    #                              DonHang.phuongThucThanhToan.label('pttt'),
+    #                              NguoiDung.hoVaTen.label('ten_user'),
+    #                              DonHang.trangThai.label('trang_thai'),
+    #                              func.sum(Sach.donGia * ChiTietDonHang.soLuong).label('tong_gia')) \
+    #     .select_from(DonHang).join(ChiTietDonHang, DonHang.id == ChiTietDonHang.id_DonHang) \
+    #     .join(Sach, ChiTietDonHang.id_Sach == Sach.id) \
+    #     .join(NguoiDung, DonHang.nguoiDung == NguoiDung.id) \
+    #     .group_by(DonHang.id, DonHang.ngayDatHang, DonHang.phuongThucThanhToan, NguoiDung.hoVaTen,
+    #               DonHang.trangThai).order_by(DonHang.id.desc()).all()
+    list_bill=utils.get_bill_pagination(page)
     current_page = int(request.args.get('page', 1))
-    list_bill = list_bill[start:end]
     selected_bill = None
     list_bill_detail = []
-    if request.method=='POST':
-        data=request.json
-        id_bill=data.get('id_Bill')
+    if request.method == 'POST':
+        data = request.json
+        id_bill = data.get('id_Bill')
         if id_bill:
             selected_bill = utils.get_bill_by_id(int(id_bill))
             list_bill_detail = db.session.query(ChiTietDonHang.soLuong, Sach.ten.label("ten_sach"),
@@ -446,8 +547,11 @@ def bill():
         })
     return render_template('bill_home.html', list_bill=list_bill,
                            selected_bill=selected_bill, list_bill_detail=list_bill_detail,
-                           page=math.ceil(l / app.config['LIST_SIZE']),
+                           page=math.ceil(utils.count_bill_pagination() / app.config['LIST_SIZE']),
                            current_page=current_page)
+ # return render_template('products.html',
+ #                           page=math.ceil(utils.count_book(category_id=cate_id, kw=kw) / app.config['LIST_SIZE']),
+ #                           lb=sach)
 
 
 @app.route('/billCreate', methods=['GET', 'POST'])
@@ -470,26 +574,44 @@ def create_bill():
                 for book in books
             ]
             return jsonify(results)
+
+        query = request.args.get('q')
+        if query:
+            users = NguoiDung.query.filter(NguoiDung.hoVaTen.ilike(f"%{query}%")).all()
+            user_results = [
+                {
+                    'id': user.id,
+                    'ten': user.hoVaTen,
+                    'email': user.email
+                }
+                for user in users
+            ]
+            return jsonify(user_results)
         return render_template('create_bill.html', today=datetime.today().date())
     elif request.method == 'POST':
         data = request.json
         ngay_lap_hoa_don = data.get('ngayDatHang')
         sach_list = data.get('sachList', [])
-
-        hoa_don = DonHang(
+        id = data.get('id')
+        don_hang = DonHang(
             ngayDatHang=ngay_lap_hoa_don,
             ngayThanhToan=ngay_lap_hoa_don,
             trangThai=TrangThai.DA_NHAN_HANG,
             phuongThucThanhToan=PhuongThucThanhToan.TRUC_TIEP,
-            nguoiDung=current_user.id
+            nguoiDung=current_user.id if not id else utils.get_user_by_id(user_id=id).id
         )
+        db.session.add(don_hang)
+        db.session.commit()
+
+        hoa_don = DonHangOffline(id_NhanVien=current_user.id, id_DonHang=don_hang.id)
         db.session.add(hoa_don)
-        db.session.flush()
+        db.session.commit()
+
 
         for p in sach_list:
             chi_tiet = ChiTietDonHang(
                 id_Sach=p['id_Sach'],
-                id_DonHang=hoa_don.id,
+                id_DonHang=don_hang.id,
                 soLuong=p['soLuong']
             )
             db.session.add(chi_tiet)
@@ -507,42 +629,77 @@ def create_bill():
 def export_bill():
     data = request.json
     ngay_dat_hang = data.get('ngayDatHang')
-    id = len(utils.get_bill()) + 1
+    id = utils.count_bill() + 1
+    id_kh=data.get('id_kh')
     sach_list = data.get('sachList', [])
-    ten_kh = data.get('ten_kh')
-    tongTien = 0
+    ten_kh = utils.get_user_by_id(user_id=id_kh) if id_kh else None
+    tongTien, tongSoLuong= 0, 0
     document = Document()
-    document.add_heading('Hóa đơn bán sách', level=1).alignment = WD_ALIGN_PARAGRAPH.CENTER
+
+    document.add_heading('Book Store', level=1).alignment = WD_ALIGN_PARAGRAPH.CENTER
+    document.add_paragraph('Hóa đơn bán sách', style='Heading 2').alignment = WD_ALIGN_PARAGRAPH.CENTER
+    document.add_paragraph('-' * 50).alignment = WD_ALIGN_PARAGRAPH.CENTER
     document.add_paragraph(f'Mã hóa đơn: {id}').alignment = WD_ALIGN_PARAGRAPH.RIGHT
-    document.add_paragraph(f'Tên khách hàng: {ten_kh}')
+    if id_kh:
+        document.add_paragraph(f'Tên khách hàng: {ten_kh}')
     document.add_paragraph(f'Ngày lập hóa đơn: {ngay_dat_hang}')
 
-    table = document.add_table(rows=1, cols=5)
+    table = document.add_table(rows=1, cols=5, style='Table Grid')
     hdr_cells = table.rows[0].cells
-    hdr_cells[0].text = 'Mã sách'
-    hdr_cells[1].text = 'Tên sách'
-    hdr_cells[2].text = 'Thể loại'
-    hdr_cells[3].text = 'Đơn giá'
-    hdr_cells[4].text = 'Số lượng'
+    hdr_cells[0].text = 'Tên sách'
+    hdr_cells[1].text = 'Số lượng'
+    hdr_cells[2].text = 'Đơn giá'
+    hdr_cells[3].text = 'Thành tiền'
 
+    # Điền dữ liệu vào bảng
     for sach in sach_list:
         book = utils.get_book_by_id(sach['id_Sach'])
         row_cells = table.add_row().cells
-        row_cells[0].text = str(book.id)
-        row_cells[1].text = book.ten
-        row_cells[2].text = book.TheLoai.ten
-        row_cells[3].text = f"{book.donGia:,} VND"
-        row_cells[4].text = str(sach['soLuong'])
-        tongTien += book.donGia * sach['soLuong']
+        row_cells[0].text = book.ten
+        row_cells[1].text = str(sach['soLuong'])
+        row_cells[2].text = f"{book.donGia:,} VND"
+        thanhTien = book.donGia * sach['soLuong']
+        row_cells[3].text = f"{thanhTien:,} VND"
+        tongTien += thanhTien
+        tongSoLuong += sach['soLuong']
 
-    for row in table.rows:
-        for cell in row.cells:
-            # Đảm bảo tất cả các ô có viền
-            cell._element.get_or_add_tcPr().append(
-                parse_xml(
-                    f'<w:tcBorders {nsdecls("w")}><w:top w:val="single" w:space="0" w:color="000000" w:sz="4"/><w:left w:val="single" w:space="0" w:color="000000" w:sz="4"/><w:bottom w:val="single" w:space="0" w:color="000000" w:sz="4"/><w:right w:val="single" w:space="0" w:color="000000" w:sz="4"/></w:tcBorders>'
-                )
-            )
+    # Thêm tổng cộng bên dưới bảng
+    document.add_paragraph('-' * 50)
+    document.add_paragraph(f'Số lượng: {tongSoLuong} sản phẩm')
+    document.add_paragraph(f'Thành tiền: {tongTien:,} VND')
+    document.add_paragraph('-' * 50)
+
+    # Thêm thông tin nhân viên và lời cảm ơn
+    document.add_paragraph('Họ tên nhân viên: Tấn Phạm')
+    document.add_paragraph('Thank you & see you again!')
+    document.add_paragraph('Xã Nhơn Đức, huyện Nhà Bè, TP.HCM')
+
+    # table = document.add_table(rows=1, cols=5)
+    # hdr_cells = table.rows[0].cells
+    # hdr_cells[0].text = 'Mã sách'
+    # hdr_cells[1].text = 'Tên sách'
+    # hdr_cells[2].text = 'Thể loại'
+    # hdr_cells[3].text = 'Đơn giá'
+    # hdr_cells[4].text = 'Số lượng'
+    #
+    # for sach in sach_list:
+    #     book = utils.get_book_by_id(sach['id_Sach'])
+    #     row_cells = table.add_row().cells
+    #     row_cells[0].text = str(book.id)
+    #     row_cells[1].text = book.ten
+    #     row_cells[2].text = book.TheLoai.ten
+    #     row_cells[3].text = f"{book.donGia:,} VND"
+    #     row_cells[4].text = str(sach['soLuong'])
+    #     tongTien += book.donGia * sach['soLuong']
+    #
+    # for row in table.rows:
+    #     for cell in row.cells:
+    #         # Đảm bảo tất cả các ô có viền
+    #         cell._element.get_or_add_tcPr().append(
+    #             parse_xml(
+    #                 f'<w:tcBorders {nsdecls("w")}><w:top w:val="single" w:space="0" w:color="000000" w:sz="4"/><w:left w:val="single" w:space="0" w:color="000000" w:sz="4"/><w:bottom w:val="single" w:space="0" w:color="000000" w:sz="4"/><w:right w:val="single" w:space="0" w:color="000000" w:sz="4"/></w:tcBorders>'
+    #             )
+    #         )
 
     os.makedirs('exports', exist_ok=True)
 
@@ -564,6 +721,29 @@ def export_bill():
 @app.route('/download/<filename>')
 def download_file(filename):
     return send_file(f'exports/{filename}', as_attachment=True)
+
+
+@app.route('/api/comments', methods=['POST'])
+@login_required
+def add_comment():
+    data = request.json
+    content = data.get('content')  # Sửa ở đây
+    sach_id = data.get('sach_id')  # Sửa ở đây
+
+    try:
+        c = utils.add_comment(noiDung=content, sach_id=sach_id)
+    except:
+        return {'status': 404, 'err_msg': 'Đã có lỗi xảy ra'}
+
+    return {'status': 201, 'comment': {
+        'id': c.id,
+        'content': c.noiDung,
+        'created_date': c.thoiGian,
+        'user': {
+            'name': current_user.hoVaTen,
+            'avatar': current_user.anhDaiDien
+        }
+    }}
 
 
 def checkAuthenticated():
@@ -629,7 +809,7 @@ def pay():
         #del session(key) # xóa cart trong session, vì đã thanh toán xong
         pass
 
-    return jsonify({ 
+    return jsonify({
         "status": 200,
         "message": "Hoàn tất thanh toán",
     })
@@ -704,8 +884,9 @@ def payment():
 
 @app.route('/test')
 def test():
-    return render_template('sign_in.html')
+    return render_template('status.html', orders=utils.get_order())
 
 
 if __name__ == '__main__':
-    app.run()
+    with app.app_context():
+        app.run(debug=True)

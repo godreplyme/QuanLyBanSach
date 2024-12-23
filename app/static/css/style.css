@@ -13,7 +13,9 @@ body{
 .navbar-dark .nav-item .nav-link {
   color: #fff;
 }
-
+.container a{
+    color:white;
+}
 .navbar-dark .nav-item .nav-link:hover {
   background-color: rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
@@ -145,10 +147,10 @@ body{
     text-shadow: none;
     font-weight: bold;
 }
-.butn-product-prev i {
+.btn-product-prev i {
     margin-left: -2px;
 }
-.butn-product-next i {
+.btn-product-next i {
     margin-right: -4px;
 }
 .product-list-indicators {
@@ -178,13 +180,6 @@ body{
 }
 .product-slideshow .wish-icon .fa-heart {
     color: #ff6161;
-}
-.star-rating li {
-    padding: 0;
-}
-.star-rating i {
-    font-size: 14px;
-    color: #ffc000;
 }
 
 

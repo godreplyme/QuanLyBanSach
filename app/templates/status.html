@@ -1,0 +1,234 @@
+{% extends 'layout/base_user_profile.html' %}
+
+{% block title %}
+Thông tin cá nhân
+{% endblock %}
+
+{% block profile_content%}
+<style>
+  .dropdown-menu { max-height: 300px; overflow-y: auto; z-index: 1050; }
+</style>
+
+<div class="d-flex justify-content-center align-items-center bg-light w-100">
+    <div class="card p-3 shadow w-100">
+        <h2 class="text-center p-3">Card with Tabs</h2>
+        <nav>
+            <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+                <button class="nav-link active" id="dang-cho-thanh-toan-tab" data-bs-toggle="tab"
+                        data-bs-target="#dang-cho-thanh-toan"
+                        type="button" role="tab" aria-controls="dang-cho-thanh-toan" aria-selected="true">Đang chờ nhận
+                    hàng
+                </button>
+                <button class="nav-link" id="dang-giao-hang-tab" data-bs-toggle="tab" data-bs-target="#dang-giao-hang"
+                        type="button" role="tab" aria-controls="dang-giao-hang" aria-selected="false">Đang giao hàng
+                </button>
+                <button class="nav-link" id="cho-nhan-hang-tab" data-bs-toggle="tab" data-bs-target="#cho-nhan-hang"
+                        type="button" role="tab" aria-controls="cho-nhan-hang" aria-selected="false">Chờ nhận hàng
+                </button>
+                <button class="nav-link" id="da-nhan-hang-tab" data-bs-toggle="tab" data-bs-target="#da-nhan-hang"
+                        type="button" role="tab" aria-controls="da-nhan-hang" aria-selected="false">Đã nhận hàng
+                </button>
+                <button class="nav-link" id="da-huy-tab" data-bs-toggle="tab" data-bs-target="#da-huy"
+                        type="button" role="tab" aria-controls="da-huy" aria-selected="false">Đã hủy
+                </button>
+            </div>
+        </nav>
+        <div class="tab-content p-3 border bg-light" id="nav-tabContent">
+            <div class="tab-pane fade active show" id="dang-cho-thanh-toan" role="tabpanel"
+                 aria-labelledby="dang-cho-thanh-toan-tab">
+                {% for id_don_hang, group in orders|groupby('id_don_hang') %}
+                {% if group[0].trang_thai == 1 %}
+                <div class="dropdown mb-3">
+                    <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenu{{ id_don_hang }}_1"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        Đơn hàng #{{ id_don_hang }} - Ngày đặt: {{ group[0].ngay_dat_hang }}
+                    </button>
+                    <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenu{{ id_don_hang }}_1">
+                        <li>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Hình ảnh</th>
+                                        <th scope="col">Tên sách</th>
+                                        <th scope="col">Số lượng</th>
+                                        <th scope="col">Đơn giá</th>
+                                        <th scope="col">Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in group %}
+                                    <tr>
+                                        <td><img src="{{ item.image }}" alt="Product Image" class="img-fluid" style="height: 10em"></td>
+                                        <td>{{ item.ten_sach }}</td>
+                                        <td>{{ item.so_luong }}</td>
+                                        <td>{{ item.don_gia }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </li>
+                    </ul>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            <div class="tab-pane fade" id="dang-giao-hang" role="tabpanel" aria-labelledby="dang-giao-hang-tab">
+               {% for id_don_hang, group in orders|groupby('id_don_hang') %}
+                {% if group[0].trang_thai == 2 %}
+                <div class="dropdown mb-3">
+                    <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenu{{ id_don_hang }}_2"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        Đơn hàng #{{ id_don_hang }} - Ngày đặt: {{ group[0].ngay_dat_hang }}
+                    </button>
+                    <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenu{{ id_don_hang }}_2">
+                        <li>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Hình ảnh</th>
+                                        <th scope="col">Tên sách</th>
+                                        <th scope="col">Số lượng</th>
+                                        <th scope="col">Đơn giá</th>
+                                        <th scope="col">Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in group %}
+                                    <tr>
+                                        <td><img src="{{ item.image }}" alt="Product Image" class="img-fluid" style="height: 10em"></td>
+                                        <td>{{ item.ten_sach }}</td>
+                                        <td>{{ item.so_luong }}</td>
+                                        <td>{{ item.don_gia }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </li>
+                    </ul>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            <div class="tab-pane fade" id="da-nhan-hang" role="tabpanel" aria-labelledby="da-nhan-hang-tab">
+                {% for id_don_hang, group in orders|groupby('id_don_hang') %}
+                {% if group[0].trang_thai == 3 %}
+                <div class="dropdown mb-3">
+                    <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenu{{ id_don_hang }}_3"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        Đơn hàng #{{ id_don_hang }} - Ngày đặt: {{ group[0].ngay_dat_hang }}
+                    </button>
+                    <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenu{{ id_don_hang }}_3">
+                        <li>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Hình ảnh</th>
+                                        <th scope="col">Tên sách</th>
+                                        <th scope="col">Số lượng</th>
+                                        <th scope="col">Đơn giá</th>
+                                        <th scope="col">Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in group %}
+                                    <tr>
+                                        <td><img src="{{ item.image }}" alt="Product Image" class="img-fluid" style="height: 10em"></td>
+                                        <td>{{ item.ten_sach }}</td>
+                                        <td>{{ item.so_luong }}</td>
+                                        <td>{{ item.don_gia }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </li>
+                    </ul>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            <div class="tab-pane fade" id="cho-nhan-hang" role="tabpanel" aria-labelledby="cho-nhan-hang-tab">
+                {% for id_don_hang, group in orders|groupby('id_don_hang') %}
+                {% if group[0].trang_thai == 4 %}
+                <div class="dropdown mb-3">
+                    <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenu{{ id_don_hang }}_4"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        Đơn hàng #{{ id_don_hang }} - Ngày đặt: {{ group[0].ngay_dat_hang }}
+                    </button>
+                    <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenu{{ id_don_hang }}_4">
+                        <li>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Hình ảnh</th>
+                                        <th scope="col">Tên sách</th>
+                                        <th scope="col">Số lượng</th>
+                                        <th scope="col">Đơn giá</th>
+                                        <th scope="col">Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in group %}
+                                    <tr>
+                                        <td><img src="{{ item.image }}" alt="Product Image" class="img-fluid" style="height: 10em"></td>
+                                        <td>{{ item.ten_sach }}</td>
+                                        <td>{{ item.so_luong }}</td>
+                                        <td>{{ item.don_gia }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </li>
+                    </ul>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            <div class="tab-pane fade" id="da-huy" role="tabpanel" aria-labelledby="da-huy-tab">
+                {% for id_don_hang, group in orders|groupby('id_don_hang') %}
+                {% if group[0].trang_thai == 5 %}
+                <div class="dropdown mb-3">
+                    <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenu{{ id_don_hang }}_5"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        Đơn hàng #{{ id_don_hang }} - Ngày đặt: {{ group[0].ngay_dat_hang }}
+                    </button>
+                    <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenu{{ id_don_hang }}_5">
+                        <li>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Hình ảnh</th>
+                                        <th scope="col">Tên sách</th>
+                                        <th scope="col">Số lượng</th>
+                                        <th scope="col">Đơn giá</th>
+                                        <th scope="col">Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in group %}
+                                    <tr>
+                                        <td><img src="{{ item.image }}" alt="Product Image" class="img-fluid" style="height: 10em"></td>
+                                        <td>{{ item.ten_sach }}</td>
+                                        <td>{{ item.so_luong }}</td>
+                                        <td>{{ item.don_gia }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </li>
+                    </ul>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $(".nav-tabs a").click(function(){
+            $(this).tab('show');
+        });
+    });
+</script>
+{% endblock %}

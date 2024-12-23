@@ -1,0 +1,73 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<style>
+
+    .form-control:focus{
+        box-shadow: none;
+        border-color: #BA68C8
+    }
+    .profile-button{
+        background: rgb(99, 39, 120);
+        box-shadow: none;
+        border: none
+    }
+    .profile-button:hover{
+        background: #682773
+    }
+    .profile-button:focus{
+        background: #682773;
+        box-shadow: none
+    }
+    .profile-button:active{
+        background: #682773;
+        box-shadow: none
+    }
+    .back:hover{
+        color: #682773;
+        cursor: pointer
+    }
+    .labels{
+        font-size: 11px
+    }
+    .add-experience:hover{
+        background: #BA68C8;
+        color: #fff;
+        cursor: pointer;
+        border: solid 1px #BA68C8
+    }
+</style>
+<div class="d-flex">
+    <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 mt-2 bg-dark">
+        <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-60">
+            <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                <li>
+                    <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                        <i class="fa-solid fa-user"></i> <span
+                            class="ms-1 d-none d-sm-inline">Tài khoản của tôi <i
+                            class="fa-solid fa-caret-down"></i></span>
+                    </a>
+                    <ul class="collapse nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
+                        <li class="w-100">
+                            <a href="{{ url_for('profile') }}" class="nav-link px-2"> <span class="d-none d-sm-inline">Thông tin cá nhân</span></a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('changePassword') }}" class="nav-link px-2"> <span class="d-none d-sm-inline">Đổi mật khẩu</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="nav-link px-0 align-middle">
+                        <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline"><i
+                            class="fa-solid fa-receipt"></i> Đơn hàng</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    {% block profile_content%}
+    {% endblock %}
+</div>
+
+{% endblock %}

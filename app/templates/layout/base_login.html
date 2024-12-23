@@ -1,10 +1,115 @@
+<!--
+=========================================================
+* Argon Dashboard 3 - v2.1.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/argon-dashboard
+* Copyright 2024 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://www.creative-tim.com/license)
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
 
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="apple-touch-icon" sizes="76x76" href="{{ url_for('static', filename='images/logo.png') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}">
+    <title>{% block title %}{% endblock %}</title>
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet"/>
+    <!-- Nucleo Icons -->
+    <link href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-icons.css" rel="stylesheet"/>
+    <link href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-svg.css" rel="stylesheet"/>
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <!-- CSS Files -->
+    <link id="pagestyle" href="{{ url_for('static', filename='css/argon-dashboard.css') }}" rel="stylesheet"/>
+</head>
+
+<body class="">
+<div class="container position-sticky z-index-sticky top-0">
+    <div class="row">
+        <div class="col-12">
+            <!-- Navbar -->
+            <nav class="navbar navbar-expand-lg blur border-radius-lg top-0 z-index-3 position-absolute mt-4 py-2 start-0 end-0 mx-4">
+                <div class="container-fluid">
+                    <a class="navbar-brand font-weight-bolder ms-lg-0 ms-3 " href="{{ url_for('index') }}">
+                        <img id="MDB-logo"
+                             src="{{ url_for('static', filename='images/logo.png') }}"
+                             alt="MDB Logo"
+                             draggable="false" height="60"/>
+                        BookStore
+                    </a>
+                    <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false"
+                            aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon mt-2">
+                <span class="navbar-toggler-bar bar1"></span>
+                <span class="navbar-toggler-bar bar2"></span>
+                <span class="navbar-toggler-bar bar3"></span>
+              </span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navigation">
+                        <ul class="navbar-nav mx-auto">
+                            <li class="nav-item">
+                                <a class="nav-link me-2" href="{{ url_for('index') }}">
+                                    <i class="fa fa-user opacity-6 text-dark me-1"></i>
+                                    Home
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link me-2" href="{{ url_for('login') }}">
+                                    <i class="fas fa-key opacity-6 text-dark me-1"></i>
+                                    Đăng nhập
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link me-2" href="{{ url_for('register') }}">
+                                    <i class="fas fa-key opacity-6 text-dark me-1"></i>
+                                    Đăng ký
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <!-- End Navbar -->
+        </div>
+    </div>
+</div>
+{% block content %} {% endblock %}
+<!--   Core JS Files   -->
+<script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/perfect-scrollbar.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/smooth-scrollbar.min.js') }}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+{% block js %}
+{% endblock %}
+<script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+</script>
+
+
+<!-- Github buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+<script src="{{ url_for('static', filename='js/argon-dashboard.min.js') }}"></script>
 </body>
+
 </html>
+
+

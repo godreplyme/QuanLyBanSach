@@ -1,50 +1,95 @@
-{% extends 'layout/base.html' %}
-{% block css %}
-<link href="{{ url_for('static', filename='css/login.css')}}" rel="stylesheet">
+{% extends 'layout/base_login.html' %}
+{% block title %}
+Đăng ký
 {% endblock %}
 {% block content %}
-{% if err_msg %}
-<div class="alert alert-danger">
-    <h3>{{err_msg}}</h3>
-</div>
-{% endif %}
-<div class="form-container">
-    <div class="form-container-content">
-        <div class="form-content">
-            <ul class="nav nav-tabs justify-content-center pt-2 pb-1 w-100">
-                <li class="nav-item w-100">
-                    <a class="nav-link active text-center" href="#" id="register-tab">Đăng ký</a>
-                </li>
-            </ul>
+<main class="main-content mt-0">
+    <section>
+        <div class="page-header min-vh-100">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0 mx-auto mt-5  ">
+                        <div class="card card-plain">
+                            <div class="card-header pb-0 text-start">
+                                <h4 class="font-weight-bolder">Đăng ký</h4>
+                            </div>
+                            <div class="card-body">
+                                <form role="form" id="register-form" action="{{url_for('register') }}" method="post">
 
-            <form id="register-form" class="mt-4" method="post" action="{{ url_for('register') }}" enctype="multipart/form-data">
-                <div class="mb-3 py-1">
-                    <label for="registerName" class="form-label">Họ và tên</label>
-                    <input type="text" class="form-control" id="registerName" name="registerName" placeholder="Nhập tên" required>
+                                    {% with messages = get_flashed_messages(category_filter=['error']) %}
+                                    {% if messages %}
+                                    {% for message in messages %}
+                                    <div class="mb-3 alert alert-danger">
+                                        {{ message }}
+                                    </div>
+                                    {% endfor %}
+                                    {% endif %}
+                                    {% endwith %}
+                                    {% with messages = get_flashed_messages(category_filter=['success']) %}
+                                    {% if messages %}
+                                    {% for message in messages %}
+                                    <div class="mb-3 alert alert-success">
+                                        {{ message }}
+                                    </div>
+                                    {% endfor %}
+                                    {% endif %}
+                                    {% endwith %}
+                                    {% with messages = get_flashed_messages(category_filter=['info']) %}
+                                    {% if messages %}
+                                    {% for message in messages %}
+                                    <div class="mb-3 alert alert-success">
+                                        {{ message }}
+                                    </div>
+                                    {% endfor %}
+                                    {% endif %}
+                                    {% endwith %}
+
+                                    <div class="mb-3">
+                                        <label class="form-control-label" for="registerName">Họ và tên: </label>
+                                        <input type="text" class="form-control form-control-lg"
+                                               placeholder="Nhập họ và tên"
+                                               aria-label="Name" id="registerName" name="registerName">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-control-label" for="registerEmail">Email: </label>
+                                        <input type="email" class="form-control form-control-lg"
+                                               placeholder="Nhập email"
+                                               aria-label="Email" id="registerEmail" name="registerEmail">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-control-label" for="registerUserName">Username: </label>
+                                        <input type="text" class="form-control form-control-lg" placeholder="Username"
+                                               aria-label="Username" id="registerUserName" name="registerUserName">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-control-label" for="registerPassword">Mật khẩu: </label>
+                                        <input type="password" class="form-control form-control-lg"
+                                               placeholder="Nhập mật khẩu"
+                                               aria-label="Password" id="registerPassword" name="registerPassword">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-control-label" for="confirmPassword">Xác nhận mật
+                                            khẩu: </label>
+                                        <input type="password" class="form-control form-control-lg"
+                                               placeholder="Nhập lại mật khẩu"
+                                               aria-label="Password" id="confirmPassword" name="confirmPassword">
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">Đăng
+                                            ký
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
+                            <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden"
+                                 style="background-image: url('{{url_for('static', filename='images/thumbnail_login.jpg')}}');background-size: cover;">
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="mb-3 py-1">
-                    <label for="registerEmail" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="registerEmail" name="registerEmail" placeholder="Nhập email">
-                </div>
-                <div class="mb-3 py-1">
-                    <label for="registerUserName" class="form-label">Tên tài khoản</label>
-                    <input type="text" class="form-control" id="registerUserName" name="registerUserName" placeholder="Nhập tên đăng nhập" required>
-                </div>
-                <div class="mb-3 py-1">
-                    <label for="registerPassword" class="form-label">Mật khẩu</label>
-                    <input type="password" class="form-control" id="registerPassword" name="registerPassword" placeholder="Nhập mật khẩu">
-                </div>
-                <div class="mb-3 py-1">
-                    <label for="confirmPassword" class="form-label">Nhập lại mật khẩu</label>
-                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu">
-                </div>
-                <div class="mb-3 py-1">
-                    <label for="avatar" class="form-label">Ảnh đại diện</label>
-                    <input type="file" class="form-control" id="avatar" name="avatar">
-                </div>
-                <button type="submit" class="btn btn-register btn-success w-100 mt-3">Đăng ký</button>
-            </form>
-        </div>
-    </div>
-</div>
+            </div>
+    </section>
+</main>
 {% endblock %}

@@ -56,6 +56,7 @@
           let isValid = true;
           let errorMessage = "";
           let sachList = [];
+          let id_kh = $("#ten_kh").data("id")
           $("#danh_sach_san_pham tr").each(function() {
               let row = $(this);
               let id_sach = parseInt(row.find("[name='id']").text());
@@ -84,6 +85,7 @@
           let payload = {
               ngayDatHang: $("#ngay_lap_hoa_don").val(),
               sachList: sachList,
+              id : id_kh,
           };
           $.ajax({
               url: "/billCreate",
@@ -123,7 +125,7 @@
           }
 
           let payload = {
-              ten_kh: $("#ten_kh").val(),
+              id_kh: $("#ten_kh").data("id"),
               ngayDatHang: $("#ngay_lap_hoa_don").val(),
               sachList: sachList,
           };
@@ -180,4 +182,36 @@
               }
           });
       });
+
+      $("#ten_kh").on("input", function() {
+          let query = $(this).val();
+          if (query.length < 2) {
+              $("#ten_kh").empty();
+              return;
+          }
+          $.get("/billCreate", {
+              q: query
+          }, function(data) {
+              $("#searchResults").empty();
+              data.forEach((item) => {
+                  $("#searchResults").append(`
+                    <a href="#" class="list-group-item list-group-item-action" data-id="${item.id}" data-ten="${item.ten}" data-email"${item.email}">
+                        ${item.ten} - ${item.email}
+                    </a>
+                `);
+              });
+          });
+      });
+      $("#searchResults").on("click", ".list-group-item", function(e) {
+    e.preventDefault(); // Ngăn chặn hành động mặc định của thẻ <a>
+    let ten = $(this).data("ten");
+    let email = $(this).data("email");
+    let id = $(this).data("id");
+
+    $("#ten_kh").val(ten);
+
+    $("#ten_kh").data("id", id);
+
+    $("#searchResults").empty();
+});
   });

@@ -1,4 +1,7 @@
 {% extends 'layout/base.html' %}
+{% block title %}
+BookStore
+{% endblock %}
 {% block css %}
 <link href="{{ url_for('static', filename='css/home.css')}}" rel="stylesheet">
 {% endblock %}
@@ -44,29 +47,23 @@
     <div class="row">
         <div id="product-slideshow-container" class="carousel slide product-slideshow" data-bs-ride="carousel"
              data-bs-interval="3000">
-            <div class="carousel-indicators mt-10">
-                <button type="button" data-bs-target="#product-slideshow-container" data-bs-slide-to="0"
-                        class="active"></button>
-                <button type="button" data-bs-target="#product-slideshow-container" data-bs-slide-to="1"></button>
-                <button type="button" data-bs-target="#product-slideshow-container" data-bs-slide-to="2"></button>
-            </div>
             <div class="carousel-inner p-4">
-                <div class="carousel-item active">
+                {% for book in related_books %}
+                {% if loop.index0 % 5 == 0 %}
+                <div class="carousel-item {% if loop.index0 == 0 %}active{% endif %}">
                     <div class="row">
-                        {% for i in range(0,5)%}
+                        {% endif %}
                         <div class="product-link col-6 col-md-4 col-lg-2 flex-grow-1 d-flex justify-content-center mb-4">
                             <div class="card product-card">
-                                <a href="{{ url_for('productDetail', sach_id=sach[i].id) }}"><img
-                                        src="{{sach[i].image}}"
-                                        class="card-img-top"
-                                        alt="Product">
+                                <a href="{{ url_for('productDetail', sach_id=book.id) }}">
+                                    <img src="{{ book.image }}" class="card-img-top" alt="Product">
                                 </a>
                                 <div class="card-body">
                                     <h5 class="card-title text-truncate">
-                                        {{sach[i].ten}}
+                                        {{ book.ten }}
                                     </h5>
                                     <div>
-                                        <span class="text-danger fw-bold fs-5">{{sach[i].donGia}} đ</span>
+                                        <span class="text-danger fw-bold fs-5">{{ book.donGia }} đ</span>
                                     </div>
                                     <button class="btn btn-outline-danger rounded-pill px-4 py-2 w-100">
                                         Thêm vào giỏ hàng
@@ -74,74 +71,24 @@
                                 </div>
                             </div>
                         </div>
-                        {% endfor %}
+                        {% if (loop.index0 + 1) % 5 == 0 or loop.last %}
                     </div>
                 </div>
-                <div class="carousel-item">
-                    <div class="row">
-                        {% for i in range(5,10)%}
-                        <div class="product-link col-6 col-md-4 col-lg-2 flex-grow-1 d-flex justify-content-center mb-4">
-                            <div class="card product-card">
-                                <a href="{{ url_for('productDetail', sach_id=sach[i].id) }}">
-                                    <img src="{{sach[i].image}}"
-                                     class="card-img-top"
-                                     alt="Product">
-                                </a>                                
-                                <div class="card-body">
-                                    <h5 class="card-title text-truncate">
-                                        {{sach[i].ten}}
-                                    </h5>
-                                    <div>
-                                        <span class="text-danger fw-bold fs-5">{{ sach[i].donGia }}đ</span>
-                                    </div>
-                                    <button class="btn btn-outline-danger rounded-pill px-4 py-2 w-100">
-                                        Thêm vào giỏ hàng
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="row">
-                        {% for i in range(10,15)%}
-                        <div class="product-link col-6 col-md-4 col-lg-2 flex-grow-1 d-flex justify-content-center mb-4">
-                            <div class="card product-card">
-                                <a href="{{ url_for('productDetail', sach_id=sach[i].id) }}">
-                                    <img src="{{sach[i].image}}"
-                                         class="card-img-top"
-                                         alt="Product">
-                                </a>
-                                <div class="card-body">
-                                    <h5 class="card-title text-truncate">
-                                        {{sach[i].ten}}
-                                    </h5>
-                                    <div>
-                                        <span class="text-danger fw-bold fs-5">{{sach[i].donGia}}đ</span>
-                                    </div>
-                                    <button class="btn btn-outline-danger rounded-pill px-4 py-2 w-100">
-                                        Thêm vào giỏ hàng
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
+                {% endif %}
+                {% endfor %}
             </div>
-            <button class="carousel-control-prev butn-banner-prev custom-btn-prev" type="button"
+            <button class="carousel-control-prev btn-banner-prev custom-btn-prev" type="button"
                     data-bs-target="#product-slideshow-container"
                     data-bs-slide="prev">
                 <span class="carousel-control-prev-icon d-none"></span>
-                <i class="bi bi-chevron-left"></i> <!-- Sử dụng biểu tượng Bootstrap Icons -->
+                <i class="fa-solid fa-angle-left"></i>
             </button>
 
             <button class="carousel-control-next butn-banner-next custom-btn-next" type="button"
                     data-bs-target="#product-slideshow-container"
                     data-bs-slide="next">
                 <span class="carousel-control-next-icon d-none"></span>
-                <i class="bi bi-chevron-right"></i> <!-- Sử dụng biểu tượng Bootstrap Icons -->
+                <i class="fa-solid fa-angle-right"></i> <!-- Sử dụng biểu tượng Bootstrap Icons -->
             </button>
         </div>
     </div>

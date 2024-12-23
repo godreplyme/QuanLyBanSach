@@ -4,28 +4,15 @@
         <!-- Navbar brand -->
 
         <a class="navbar-brand" href="{{ url_for('index') }}"><img id="MDB-logo"
-                                                                   src="https://mdbcdn.b-cdn.net/wp-content/uploads/2018/06/logo-mdb-jquery-small.png"
+                                                                   src="{{ url_for('static', filename='images/logo.png') }}"
                                                                    alt="MDB Logo"
-                                                                   draggable="false" height="30"/></a>
+                                                                   draggable="false" height="60"/></a>
 
-        <!-- Toggle button -->
-        <button class="navbar-toggler" type="button" data-mdb-toggle="collapse"
-                data-mdb-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-            <i class="fas fa-bars"></i>
-        </button>
 
         <!-- Collapsible wrapper -->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <!-- Left links -->
-            <!--            <ul class="navbar-nav me-3">-->
-            <!--                <li class="nav-item">-->
-            <!--                    <a class="nav-link active d-flex align-items-center" aria-current="page" href="#"><i-->
-            <!--                            class="fa-solid fa-bars"></i>Menu</a>-->
-            <!--                </li>-->
-            <!--            </ul>-->
             <div class="dropdown">
-                <a href="#" class="dropdown-toggle text-white" data-bs-toggle="dropdown" style="color:white;">
+                <a href="#" class="dropdown-toggle text-white" data-bs-toggle="dropdown" style="color:white;text-decoration:none;">
                     <i class="fa-solid fa-bars"></i> Menu
                 </a>
                 <div class="dropdown-menu p-3 bg-dark text-white">
@@ -63,7 +50,7 @@
             </div>
             <!-- Left links -->
 
-            <form class="d-flex align-items-center w-100 form-search" action="{{url_for('list_book')}}">
+            <form class="d-flex align-items-center w-100 form-search mx-2 " action="{{url_for('list_book')}}">
                 <div class="input-group">
                     <input type="search" class="form-control" placeholder="Search" aria-label="Search" name="keyword"/>
                 </div>
@@ -72,8 +59,8 @@
 
             <ul class="navbar-nav ms-3">
                 <li class="nav-item m-auto" style="width: 130px;">
-                    <a title="Chi tiết giỏ hàng" class="nav-link d-flex align-items-center me-3" href="/cart">
-                        <i class="fa-solid fa-cart-shopping"></i> Giỏ hàng
+                    <a title="Chi tiết giỏ hàng" class="nav-link d-flex align-items-center me-3 text-sm opacity-10" href="/cart">
+                        <i class="fa-solid fa-cart-shopping"></i> <span class="text-sm opacity-10">Giỏ hàng</span>
                     </a>
                 </li>
                 {% if current_user.is_authenticated %}
@@ -87,7 +74,7 @@
                         {% endif %}
                         " alt="{{current_user.username}}" style="width:40px;" class="rounded-pill"><span
                             style="margin-left:10px;"> {{ current_user.hoVaTen }}</span></a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu bg-dark">
                         <li><a class="dropdown-item" href="{{url_for('profile')}}">Trang cá nhân</a></li>
                         {% if current_user.is_authenticated and current_user.is_admin() %}
                         <li><a class="dropdown-item" href="/admin">Trang quản trị</a></li>
@@ -104,7 +91,7 @@
                     <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
                        data-bs-toggle="dropdown"><img src="static/images/user.png" alt="Avatar Logo" style="width:40px;"
                                                       class="rounded-pill"> Anonymous</a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu bg-dark">
                         <li><a class="dropdown-item" href="{{ url_for('login') }}">Đăng nhập</a></li>
                         <li><a class="dropdown-item" href="{{ url_for('register') }}">Đăng ký</a></li>
                     </ul>

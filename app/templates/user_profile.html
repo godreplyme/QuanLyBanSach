@@ -1,0 +1,61 @@
+{% extends 'layout/base_user_profile.html' %}
+
+{% block title %}
+Thông tin cá nhân
+{% endblock %}
+
+{% block profile_content%}
+<div class="bg-white mt-2 w-100">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded mt-5 w-100"
+                                                                                             src="{{current_user.anhDaiDien}}">
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="p-3 py-5">
+                    <div class="d-flex justify-content-between align-items-center mb-3"><h4 class="text-right">Thông tin
+                        cá nhân</h4></div>
+                    <form>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Họ và tên</label>
+                            <input type="text" class="form-control" id="name" placeholder="Họ và tên"
+                                   value="{{current_user.hoVaTen}}" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Số điện thoại</label>
+                            <input type="text" class="form-control" id="phone" placeholder="Số điện thoại"
+                                   value="{{current_user.sdt}}" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Địa chỉ</label>
+                            <input type="text" class="form-control" id="address" placeholder="Địa chỉ" disabled
+                                   value="{{current_user.diaChi}}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" placeholder="Email" disabled
+                                   value="{{current_user.email  }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Giới tính</label>
+                            <div>
+                                <input type="radio" id="male" name="gender" value="male" disabled
+                                       {% if current_user.gioiTinh== 0%} checked {%endif%}>
+                                <label for="male">Nam</label>
+                                <input type="radio" id="female" name="gender" value="female" disabled
+                                       {% if current_user.gioiTinh== 1%} checked {%endif%}>
+                                <label for="female">Nữ</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="birthday" class="form-label">Birthday</label>
+                            <input type="date" class="form-control" id="birthday" disabled
+                                   value="{{ current_user.ngaySinh.strftime('%Y-%m-%d') }}">
+                        </div>
+                        <a href="{{ url_for('changeProfile') }}" class="btn btn-danger">Chỉnh sửa</a></form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
