@@ -82,10 +82,11 @@
                         {% for i in range(5,10)%}
                         <div class="product-link col-6 col-md-4 col-lg-2 flex-grow-1 d-flex justify-content-center mb-4">
                             <div class="card product-card">
-                                <a href="{{ url_for('productDetail', sach_id=sach[i].id) }}"></a>
-                                <img src="{{sach[i].image}}"
+                                <a href="{{ url_for('productDetail', sach_id=sach[i].id) }}">
+                                    <img src="{{sach[i].image}}"
                                      class="card-img-top"
                                      alt="Product">
+                                </a>                                
                                 <div class="card-body">
                                     <h5 class="card-title text-truncate">
                                         {{sach[i].ten}}

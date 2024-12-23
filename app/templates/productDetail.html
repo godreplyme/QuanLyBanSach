@@ -32,8 +32,42 @@
 
             </div>
                 <input id="id" type="hidden" value="{{sach.id}}">
+                <!-- <button class="btn btn-success px-4" onclick="addToCart()">Thêm vào giỏ hàng</button> -->
+                {% if current_user.is_authenticated %}
                 <button class="btn btn-success px-4" onclick="addToCart()">Thêm vào giỏ hàng</button>
+                {% else %}
+                <div class="mb-3">        
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#myModal">
+                    Thêm vào giỏ hàng
+                    </button>
+                </div>
+                
+                <!-- The Modal -->
+                <div class="modal fade" id="myModal">
+                    <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                        <h4 class="modal-title">Thông báo</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <p>Bạn cần <a href="/login?next=/products/{{ sach.id }}">đăng nhập</a> để thêm vào giỏ hàng!</p>
+                        </div>
+                
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+                        </div>                
+                    </div>
+                    </div>
+                </div>
+                {% endif %}
                 <button class="btn btn-primary px-4" onclick="paymentNow({{ sach.id }}, {{ sach.ten }}, {{ sach.donGia }})">Mua ngay</button>
+
             <!-- E-commerce Links -->
             <div class="mt-5">
                 <h4>Giới thiệu sách</h4>

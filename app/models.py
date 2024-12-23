@@ -104,7 +104,7 @@ class Sach(BaseModel):
     moTa = Column(Text, default='')
     donGia = Column(Float, nullable=False, default=0)
     soLuongTonKho = Column(Integer, nullable=False, default=0)
-    id_TheLoai = Column(Integer, ForeignKey('TheLoai.id'))
+    id_TheLoai = Column(Integer, ForeignKey('TheLoai.id'), nullable=False)
     image = Column(String(255))
     active = Column(Boolean, nullable=False, default=True)
 
@@ -128,14 +128,13 @@ class ChiTietGioHang(BaseModel):
 
     soLuong = Column(Integer, nullable=False, default=1)
     gioHang = Column(Integer, ForeignKey(GioHang.id))
-    sach = Column(Integer, ForeignKey(Sach.id))
+    sach = Column(Integer, ForeignKey(Sach.id), nullable=False)
 
 
 class TheLoai(BaseModel):
     __tablename__ = 'TheLoai'
 
     ten = Column(String(100), nullable=False)
-
     sach = relationship('Sach', backref='TheLoai', lazy=True)
 
     def __str__(self):
@@ -154,41 +153,41 @@ class DonHang(BaseModel):
     chiTietDonHang = relationship('ChiTietDonHang', backref='DonHang', lazy=True)
 
     def __str__(self):
-        return self.__tablename__ + self.id
+        return self.__tablename__ + str(self.id)
 
 
 class ChiTietDonHang(BaseModel):
     __tablename__ = 'ChiTietDonHang'
 
     id_Sach = Column(Integer, ForeignKey(Sach.id))
-    id_DonHang = Column(Integer, ForeignKey(DonHang.id))
+    id_DonHang = Column(Integer, ForeignKey(DonHang.id), nullable=False)
     soLuong = Column(Integer, nullable=False)
 
     def __str__(self):
-        return self.__tablename__ + self.id_Sach + self.id_DonHang
+        return self.__tablename__ + str(self.id_Sach) + str(self.id_DonHang)
 
 
 class PhieuNhapSach(BaseModel):
     __tablename__ = 'PhieuNhapSach'
 
-    id_NguoiDung = Column(Integer, ForeignKey(NguoiDung.id))
+    id_NguoiDung = Column(Integer, ForeignKey(NguoiDung.id), nullable=False)
     ngayNhapSach = Column(DateTime, nullable=False, default=datetime.now())
 
     chiTietNhapSach = relationship('ChiTietNhapSach', backref='PhieuNhapSach', lazy=True)
 
     def __str__(self):
-        return self.__tablename__ + self.id
+        return self.__tablename__ + str(self.id)
 
 
 class ChiTietNhapSach(BaseModel):
     __tablename__ = 'ChiTietNhapSach'
 
     soLuong = Column(Integer, nullable=False)
-    id_Sach = Column(Integer, ForeignKey(Sach.id))
-    id_PhieuNhapSach = Column(Integer, ForeignKey(PhieuNhapSach.id))
+    id_Sach = Column(Integer, ForeignKey(Sach.id), nullable=False)
+    id_PhieuNhapSach = Column(Integer, ForeignKey(PhieuNhapSach.id), nullable=False)
 
     def __str__(self):
-        return self.__tablename__ + self.id
+        return self.__tablename__ + str(self.id)
 
 
 class QuyDinh(BaseModel):

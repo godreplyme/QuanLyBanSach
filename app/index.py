@@ -1,9 +1,9 @@
-import math, utils, cloudinary.uploader, admin, hashlib, os
+import math, utils, cloudinary.uploader, admin, hashlib, os, dao
 import json
 import docx
 from models import *
 from __init__ import app, loginMNG, db
-from flask import render_template, request, redirect, url_for, jsonify, flash, send_file, Flask
+from flask import render_template, request, redirect, url_for, jsonify, flash, send_file, Flask, session
 from docx import Document
 from sqlalchemy import func
 from flask_login import login_user, logout_user, current_user, login_required
@@ -80,10 +80,27 @@ def login():
         user = utils.check_login(username=username, password=password)
         if user:
             login_user(user=user)
-            return redirect(url_for('index'))
+
+            next = request.args.get("next")
+            print("Check next")
+            print(next)
+            return redirect(url_for('index') if next is None else next)
         else:
             err_msg = 'username hoặc password ko chính xác'
     return render_template('login.html', err_msg=err_msg)
+
+
+@app.route('/login_admin', methods=['POST'])
+def login_admin():
+        username = request.form.get('username')
+        password = request.form.get('password')
+        user = utils.check_login(username=username, password=password, role=NguoiDung.vaiTro)
+        if user:
+            login_user(user=user)
+
+            return redirect('/admin')
+        else:
+            err_msg = 'username hoặc password ko chính xác'
 
 
 @loginMNG.user_loader
@@ -593,7 +610,33 @@ def cart():
     return render_template('cart.html', carts=danh_sach_sach)
 
 
+@app.route('/api/pay')
+@login_required
+def pay():
+    # ghi nhận đơn hàng
+    key = app.config['CART_KEY'] # lấy 'cart' ra
+    cart = session.get(key)
+
+    try: # check có bị lỗi ko, thường bị lỗi ràng buộc về CSDL
+        dao.save_order(cart)
+    except Exception as ex: # lỗi thì vào đây
+        print(str(ex))
+        return jsonify({
+            "status": 500,
+            "message": "Lỗi hệ thống",
+        })
+    else: # chạy lệnh success
+        #del session(key) # xóa cart trong session, vì đã thanh toán xong
+        pass
+
+    return jsonify({ 
+        "status": 200,
+        "message": "Hoàn tất thanh toán",
+    })
+
+
 @app.route('/products/<int:sach_id>', methods=['POST'])
+@login_required
 def add_to_cart(sach_id):
     return render_template('productDetail.html')  # Chuyển hướng về trang giỏ hàng
 

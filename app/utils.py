@@ -2,6 +2,7 @@ from sqlalchemy import func
 from models import *
 from __init__ import db, app
 import os, hashlib
+import dao
 
 
 def get_book():
@@ -41,11 +42,15 @@ def add_user(name, username, password, **kw):
         db.session.commit()
 
 
-def check_login(username, password):
+def check_login(username, password, role=None):
     if username and password:
         password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
-        return NguoiDung.query.filter(NguoiDung.username.__eq__(username.strip()),
-                                      NguoiDung.password.__eq__(password)).first()
+        u = NguoiDung.query.filter(NguoiDung.username.__eq__(username.strip()),
+                                      NguoiDung.password.__eq__(password))
+        if role:
+            u = u.filter(NguoiDung.vaiTro.__eq__(role))
+
+        return u.first()
 
 
 def get_user_by_id(user_id):
