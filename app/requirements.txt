@@ -25,3 +25,8 @@ urllib3==2.2.3
 virtualenv==20.27.1
 Werkzeug==3.1.2
 WTForms==3.2.1
+distlib==0.3.9
+filelock==3.16.1
+fpdf==1.7.2
+platformdirs==4.3.6
+virtualenv==20.27.1

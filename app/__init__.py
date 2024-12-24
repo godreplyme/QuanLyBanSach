@@ -8,7 +8,7 @@ app = Flask(__name__, static_folder='./static/')
 
 app.secret_key = 'skdljfsdlfjkfljasflajsflks'
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:%s@localhost/bookstore?charset=utf8mb4" % quote(
-    "vrain2403")
+    "runa@2610")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 app.config["LIST_SIZE"] = 9
 app.config['COMMENT_SIZE'] =10

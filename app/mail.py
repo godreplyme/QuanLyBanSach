@@ -1,6 +1,7 @@
 from flask import flash, redirect, url_for
 
-from app import app, db, utils
+from __init__ import app, db
+import utils
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer
 from models import NguoiDung

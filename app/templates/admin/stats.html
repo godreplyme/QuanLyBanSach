@@ -1,7 +1,108 @@
 {% extends 'admin/master.html' %}
 
 {% block body %}
+<h1 id="title" class="text-danger text-center mt-2">THÔNG KÊ BÁO CÁO</h1>
+<div>
+    <input type="radio" name="select" id="revenue" checked>Thống kê báo cáo về doanh thu từng tháng được chọn cho từng thể loại sách.<br>
+    <input type="radio" name="select" id="frequency">Thống kê tuần suất từng đầu sách theo tháng
+</div>
 
-<h1 class="text-info mt-1">THỐNG KÊ BÁO CÁO</h1>
+<form action="">
+    <div class="row">
+            <div class="col-md-6 form-group p_star">
+                Tháng:
+                <input type="number" class="form-control" name="month" min="1" max="12" value="{{ current_month }}"/>
+              </div>
+              <div class="col-md-6 form-group p_star">
+                  Năm:
+                <input type="number" class="form-control" name="year" min="{{ min_year }}" max="{{ max_year }}" value="{{ current_year }}"/>
+              </div>
+        </div>
 
+    <div>
+        <input type="submit" value="Lọc dữ liệu" class="btn btn-info">
+    </div>
+</form>
+
+<div id="revenue_stats" class="row mt-2">
+    <div class="col-md-6 col-12">
+        <table class="table">
+            <tr>
+                <th>Id</th>
+                <th>Tên sách</th>
+                <th>Tổng doanh thu</th>
+            </tr>
+            {% for c in revenue_stats %}
+            <tr>
+                <td>{{ c[0] }}</td>
+                <td>{{ c[1] }}</td>
+                <td>{{ "{:,.0f}".format(c[2]) }} VNĐ</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-md-6 col-12">
+        <canvas id="revenueChart"></canvas>
+    </div>
+</div>
+
+<div style="display: none;" id="frequency_stats" class="row mt-2">
+    <div class="col-md-6 col-12">
+        <table class="table">
+            <tr>
+                <th>Thời gian</th>
+                <th>Tổng doanh thu</th>
+            </tr>
+            {% for c in frequency_stats %}
+            <tr>
+                <td>{{ c[0] }}</td>
+
+                <td>{{ "{:,.0f}".format(c[1]) }} VNĐ</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-md-7 col-12">
+        <canvas id="frequencyChart"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script src="{{ url_for('static', filename='js/chartjs.js') }}"></script>
+
+<script>
+    let labels_revenue = []
+    let data_revenue = []
+
+    {% for c in revenue_stats %}
+    labels_revenue.push({{ c[2] }})
+    data_revenue.push('{{ c[1] }}')
+    {% endfor %}
+
+    let labels_frequency = []
+    let data_frequency = []
+
+    {% for c in frequency_stats %}
+    labels_frequency.push({{ c[0] }})
+    data_frequency.push({{ c[1] }})
+    {% endfor %}
+
+    window.onload = function() {
+        drawRevenueChart(labels_revenue, data_revenue);
+        drawfrequencyChart(labels_frequency, data_frequency);
+    }
+    $("input[name='select']").click(function() {
+        if($('#revenue').is(':checked')) {
+            $('#revenue_stats').fadeIn();
+            $('#frequency_stats').fadeOut();
+            $('#title').text('BÁO CÁO THỐNG KÊ DOANH THU THEO THÁNG');
+        }
+        else {
+            $('#revenue_stats').fadeOut();
+            $('#frequency_stats').fadeIn();
+            $('#title').text('BÁO CÁO THỐNG KÊ TUẦN SUẤT SÁCH BÁN');
+        }
+    });
+</script>
 {% endblock %}

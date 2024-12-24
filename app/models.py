@@ -169,6 +169,7 @@ class ChiTietDonHang(BaseModel):
     id_Sach = Column(Integer, ForeignKey(Sach.id))
     id_DonHang = Column(Integer, ForeignKey(DonHang.id), nullable=False)
     soLuong = Column(Integer, nullable=False)
+    tongTien = Column(Float, default=0)
 
     def __str__(self):
         return self.__tablename__ + str(self.id_Sach) + str(self.id_DonHang)
@@ -379,27 +380,28 @@ if __name__ == '__main__':
                     trangThai=TrangThai.DA_HUY, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TUYEN, nguoiDung=1)
         ]
         db.session.add_all(don_hang)
+        
         chi_tiet_don_hang = [
-            ChiTietDonHang(id_Sach=1, id_DonHang=1, soLuong=2),
-            ChiTietDonHang(id_Sach=2, id_DonHang=1, soLuong=3),
-            ChiTietDonHang(id_Sach=3, id_DonHang=2, soLuong=1),
-            ChiTietDonHang(id_Sach=4, id_DonHang=2, soLuong=5),
-            ChiTietDonHang(id_Sach=5, id_DonHang=3, soLuong=2),
-            ChiTietDonHang(id_Sach=6, id_DonHang=3, soLuong=1),
-            ChiTietDonHang(id_Sach=7, id_DonHang=4, soLuong=4),
-            ChiTietDonHang(id_Sach=8, id_DonHang=4, soLuong=2),
-            ChiTietDonHang(id_Sach=9, id_DonHang=5, soLuong=1),
-            ChiTietDonHang(id_Sach=10, id_DonHang=5, soLuong=3),
-            ChiTietDonHang(id_Sach=11, id_DonHang=6, soLuong=2),
-            ChiTietDonHang(id_Sach=12, id_DonHang=6, soLuong=1),
-            ChiTietDonHang(id_Sach=13, id_DonHang=7, soLuong=5),
-            ChiTietDonHang(id_Sach=14, id_DonHang=7, soLuong=2),
-            ChiTietDonHang(id_Sach=15, id_DonHang=8, soLuong=4),
-            ChiTietDonHang(id_Sach=16, id_DonHang=8, soLuong=1),
-            ChiTietDonHang(id_Sach=1, id_DonHang=9, soLuong=2),
-            ChiTietDonHang(id_Sach=2, id_DonHang=9, soLuong=3),
-            ChiTietDonHang(id_Sach=3, id_DonHang=10, soLuong=4),
-            ChiTietDonHang(id_Sach=4, id_DonHang=10, soLuong=2)
+            ChiTietDonHang(id_Sach=1, id_DonHang=1, soLuong=2, tongTien=100000),
+            ChiTietDonHang(id_Sach=2, id_DonHang=1, soLuong=3, tongTien=103400),
+            ChiTietDonHang(id_Sach=3, id_DonHang=2, soLuong=1, tongTien=455000),
+            ChiTietDonHang(id_Sach=4, id_DonHang=2, soLuong=5, tongTien=300000),
+            ChiTietDonHang(id_Sach=5, id_DonHang=3, soLuong=2, tongTien=900000),
+            ChiTietDonHang(id_Sach=6, id_DonHang=3, soLuong=1, tongTien=13000),
+            ChiTietDonHang(id_Sach=7, id_DonHang=4, soLuong=4, tongTien=100330),
+            ChiTietDonHang(id_Sach=8, id_DonHang=4, soLuong=2, tongTien=132000),
+            ChiTietDonHang(id_Sach=9, id_DonHang=5, soLuong=1, tongTien=870000),
+            ChiTietDonHang(id_Sach=10, id_DonHang=5, soLuong=3, tongTien=455000),
+            ChiTietDonHang(id_Sach=11, id_DonHang=6, soLuong=2, tongTien=123300),
+            ChiTietDonHang(id_Sach=12, id_DonHang=6, soLuong=1, tongTien=100033),
+            ChiTietDonHang(id_Sach=13, id_DonHang=7, soLuong=5, tongTien=103220),
+            ChiTietDonHang(id_Sach=14, id_DonHang=7, soLuong=2, tongTien=104380),
+            ChiTietDonHang(id_Sach=15, id_DonHang=8, soLuong=4, tongTien=873000),
+            ChiTietDonHang(id_Sach=16, id_DonHang=8, soLuong=1, tongTien=256000),
+            ChiTietDonHang(id_Sach=1, id_DonHang=9, soLuong=2, tongTien=120000),
+            ChiTietDonHang(id_Sach=2, id_DonHang=9, soLuong=3, tongTien=103220),
+            ChiTietDonHang(id_Sach=3, id_DonHang=10, soLuong=4, tongTien=132900),
+            ChiTietDonHang(id_Sach=4, id_DonHang=10, soLuong=2, tongTien=232000)
         ]
         db.session.add_all(chi_tiet_don_hang)
         quy_dinh = QuyDinh(soLuongNhapToiThieu=150, gioiHanNhap=300, thoiGianQuyDinh=48)

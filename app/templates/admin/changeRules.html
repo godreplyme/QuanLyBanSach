@@ -1,0 +1,24 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+{% if current_user.is_authenticated %}
+<h1 class = "text-center">THAY ĐỔI QUY ĐỊNH</h1>
+<form action="/action_page.php">
+    <div class="form-floating mb-3 mt-3">
+        <label for="quantity_import">Số lượng nhập tối thiểu</label>
+        <input type="number" class="form-control" min = 1>
+    </div>
+    <div class="form-floating mb-3 mt-3">
+        <label for="quantity_in_stocks">Số lượng tồn tối thiểu</label>
+        <input type="number" class="form-control" min = 1>
+    </div>
+    <div class="form-floating mb-3 mt-3">
+        <label for="delete_time">Thay đổi qui định thời gian hủy đơn hàng</label>
+        <input type="number" class="form-control" min = 1>
+    </div>
+    <div>
+        <input type = "submit" value = "Xác nhận thay đổi" class = "btn btn-success">
+    </div>
+</form>
+{% endif %}
+{% endblock %}
