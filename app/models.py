@@ -118,7 +118,7 @@ class Sach(BaseModel):
 class GioHang(BaseModel):
     __tablename__ = 'GioHang'
 
-    nguoiDung = Column(Integer, ForeignKey(NguoiDung.id))
+    id_NguoiDung = Column(Integer, ForeignKey(NguoiDung.id))
     chiTietGioHang = relationship('ChiTietGioHang', backref='GioHang', lazy=True)
 
 
@@ -126,8 +126,8 @@ class ChiTietGioHang(BaseModel):
     __tablename__ = 'ChiTietGioHang'
 
     soLuong = Column(Integer, nullable=False, default=1)
-    gioHang = Column(Integer, ForeignKey(GioHang.id))
-    sach = Column(Integer, ForeignKey(Sach.id), nullable=False)
+    id_GioHang = Column(Integer, ForeignKey(GioHang.id))
+    id_Sach = Column(Integer, ForeignKey(Sach.id), nullable=False)
 
 
 class TheLoai(BaseModel):
@@ -147,10 +147,8 @@ class DonHang(BaseModel):
     ngayThanhToan = Column(DateTime)
 
     trangThai = Column(SQLEnum(TrangThai), default=TrangThai.DANG_CHO_THANH_TOAN, nullable=False)
-    phuongThucThanhToan = Column(SQLEnum(PhuongThucThanhToan),default=PhuongThucThanhToan.TRUC_TIEP, nullable=False)
-    nguoiDung = Column(Integer, ForeignKey(NguoiDung.id), nullable=True)
     phuongThucThanhToan = Column(SQLEnum(PhuongThucThanhToan), nullable=False)
-    nguoiDung = Column(Integer, ForeignKey(NguoiDung.id), nullable=False)
+    id_NguoiDung = Column(Integer, ForeignKey(NguoiDung.id), nullable=False)
     chiTietDonHang = relationship('ChiTietDonHang', backref='DonHang', lazy=True)
     donHangOffline = relationship('DonHangOffline', backref='DonHang', lazy=True)
 
@@ -355,29 +353,29 @@ if __name__ == '__main__':
         don_hang = [
             DonHang(ngayDatHang=datetime(2024, 12, 1), ngayThanhToan=datetime(2024, 12, 11),
                     trangThai=TrangThai.DANG_CHO_THANH_TOAN, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TIEP,
-                    nguoiDung=1),
+                    id_NguoiDung=1),
             DonHang(ngayDatHang=datetime(2024, 12, 2), ngayThanhToan=datetime(2024, 12, 12),
                     trangThai=TrangThai.DANG_CHO_THANH_TOAN, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TUYEN,
-                    nguoiDung=2),
+                    id_NguoiDung=2),
             DonHang(ngayDatHang=datetime(2024, 12, 3), ngayThanhToan=datetime(2024, 12, 13),
-                    trangThai=TrangThai.DANG_GIAO_HANG, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TIEP, nguoiDung=3),
+                    trangThai=TrangThai.DANG_GIAO_HANG, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TIEP, id_NguoiDung=3),
             DonHang(ngayDatHang=datetime(2024, 12, 4), ngayThanhToan=datetime(2024, 12, 14),
-                    trangThai=TrangThai.DA_NHAN_HANG, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TUYEN, nguoiDung=1),
+                    trangThai=TrangThai.DA_NHAN_HANG, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TUYEN, id_NguoiDung=1),
             DonHang(ngayDatHang=datetime(2024, 12, 5), ngayThanhToan=datetime(2024, 12, 15), trangThai=TrangThai.DA_HUY,
-                    phuongThucThanhToan=PhuongThucThanhToan.TRUC_TIEP, nguoiDung=2),
+                    phuongThucThanhToan=PhuongThucThanhToan.TRUC_TIEP, id_NguoiDung=2),
             DonHang(ngayDatHang=datetime(2024, 12, 6), ngayThanhToan=datetime(2024, 12, 16),
                     trangThai=TrangThai.DANG_CHO_THANH_TOAN, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TUYEN,
-                    nguoiDung=3),
+                    id_NguoiDung=3),
             DonHang(ngayDatHang=datetime(2024, 12, 7), ngayThanhToan=datetime(2024, 12, 17),
                     trangThai=TrangThai.DANG_CHO_THANH_TOAN, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TIEP,
-                    nguoiDung=1),
+                    id_NguoiDung=1),
             DonHang(ngayDatHang=datetime(2024, 12, 8), ngayThanhToan=datetime(2024, 12, 18),
                     trangThai=TrangThai.DANG_GIAO_HANG, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TUYEN,
-                    nguoiDung=2),
+                    id_NguoiDung=2),
             DonHang(ngayDatHang=datetime(2024, 12, 9), ngayThanhToan=datetime(2024, 12, 19),
-                    trangThai=TrangThai.DA_NHAN_HANG, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TIEP, nguoiDung=3),
+                    trangThai=TrangThai.DA_NHAN_HANG, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TIEP, id_NguoiDung=3),
             DonHang(ngayDatHang=datetime(2024, 12, 10), ngayThanhToan=datetime(2024, 12, 20),
-                    trangThai=TrangThai.DA_HUY, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TUYEN, nguoiDung=1)
+                    trangThai=TrangThai.DA_HUY, phuongThucThanhToan=PhuongThucThanhToan.TRUC_TUYEN, id_NguoiDung=1)
         ]
         db.session.add_all(don_hang)
         
@@ -407,7 +405,7 @@ if __name__ == '__main__':
         quy_dinh = QuyDinh(soLuongNhapToiThieu=150, gioiHanNhap=300, thoiGianQuyDinh=48)
         db.session.add(quy_dinh)
         gio_hang = [
-            GioHang(nguoiDung=1), GioHang(nguoiDung=2), GioHang(nguoiDung=3)
+            GioHang(id_NguoiDung=1), GioHang(id_NguoiDung=2), GioHang(id_NguoiDung=3)
         ]
         db.session.add_all(gio_hang)
         db.session.commit()

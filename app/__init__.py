@@ -14,6 +14,13 @@ app.config["LIST_SIZE"] = 9
 app.config['COMMENT_SIZE'] =10
 app.config['SECRET_KEY'] = "kldsfjhsalkfjaslfjs"
 
+
+
+
+app.config["VNPAY_TMN_CODE"] = "4PJ3DKYQ"
+app.config["VNPAY_PAYMENT_URL"] = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
+app.config["VNPAY_HASH_SECRET_KEY"]= "ABXVSFWECOAMWENZLE2YRPA3LB0NKUM1"
+app.config["VNPAY_RETURN_URL"] = "http://localhost:5000/payment_return"
 db = SQLAlchemy(app)
 
 cloudinary.config(

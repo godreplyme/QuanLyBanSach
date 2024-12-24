@@ -13,7 +13,8 @@ from docx.oxml import parse_xml
 from docx.oxml.ns import nsdecls
 from sendgrid.helpers.mail import Mail
 from sendgrid import SendGridAPIClient
-
+from app.vnpay.form import PaymentForm
+from app.vnpay.vnpay import Vnpay
 
 @app.context_processor
 def default_response():
@@ -189,15 +190,15 @@ def forgot_password():
 
 @app.route('/login_admin', methods=['POST'])
 def login_admin():
-        username = request.form.get('username')
-        password = request.form.get('password')
-        user = utils.check_login(username=username, password=password, role=NguoiDung.vaiTro)
-        if user:
-            login_user(user=user)
+    username = request.form.get('username')
+    password = request.form.get('password')
+    user = utils.check_login(username=username, password=password, role=NguoiDung.vaiTro)
+    if user:
+        login_user(user=user)
 
-            return redirect('/admin')
-        else:
-            err_msg = 'username hoặc password ko chính xác'
+        return redirect('/admin')
+    else:
+        err_msg = 'username hoặc password ko chính xác'
 
 
 @loginMNG.user_loader
@@ -276,7 +277,7 @@ def changePassword():
                 else:
                     flash('Mật khẩu nhập lại không trùng khớp, mời nhập lại.', 'error')
             else:
-                flash('Mật khẩu mới không hợp lệ, mời nhập lại.','error')
+                flash('Mật khẩu mới không hợp lệ, mời nhập lại.', 'error')
         else:
             flash('Mật khẩu cũ không đúng, mời nhập lại.', 'error')
     return render_template('changePassword.html')
@@ -294,25 +295,25 @@ def productDetail(sach_id):
         if not current_user.is_authenticated:
             return redirect(url_for('login'))
         # Lấy giỏ hàng của người dùng
-        gio_hang = GioHang.query.filter_by(nguoiDung=current_user.id).first()
+        gio_hang = GioHang.query.filter_by(id_NguoiDung=current_user.id).first()
         # #truy vấn sản phẩm theo id
         # product = Sach.query.filter_by(id=sach_id).first()
         if gio_hang is None:
             # Nếu không có giỏ hàng, tạo mới giỏ hàng cho người dùng
-            gio_hang = GioHang(nguoiDung=current_user.id)
+            gio_hang = GioHang(id_NguoiDung=current_user.id)
             db.session.add(gio_hang)
             db.session.commit()
         # Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
         chi_tiet = ChiTietGioHang.query.filter(
-            ChiTietGioHang.gioHang == gio_hang.id,  # Đảm bảo `gio_hang` là một đối tượng
-            ChiTietGioHang.sach == sach_id).first()  # Đảm bảo `sach` là một đối tượng
+            ChiTietGioHang.id_GioHang == gio_hang.id,  # Đảm bảo `gio_hang` là một đối tượng
+            ChiTietGioHang.id_Sach == sach_id).first()  # Đảm bảo `sach` là một đối tượng
 
         if chi_tiet:
             # Nếu sản phẩm đã có trong giỏ hàng, tăng số lượng lên
             chi_tiet.soLuong += int(quantity)
         else:
             # Nếu sản phẩm chưa có trong giỏ hàng, tạo mới chi tiết giỏ hàng
-            chi_tiet = ChiTietGioHang(gioHang=gio_hang.id, sach=sach_id, soLuong=int(quantity))
+            chi_tiet = ChiTietGioHang(id_GioHang=gio_hang.id, id_Sach=sach_id, soLuong=int(quantity))
             db.session.add(chi_tiet)
 
         db.session.commit()
@@ -321,6 +322,8 @@ def productDetail(sach_id):
         return jsonify({"message": "Sản phẩm đã được thêm vào giỏ hàng!"})
     return render_template('productDetail.html', sach=book, comments=comments,
                            pages=math.ceil(utils.count_comment(sach_id=sach_id) / app.config['COMMENT_SIZE']))
+
+
 @app.route("/paymentNow", methods=['POST'])
 def paymentNow():
     if not current_user.is_authenticated:
@@ -335,7 +338,7 @@ def paymentNow():
             product = data.get('quantity')  # Giá trị mặc định nếu không có
 
             # Tạo đơn hàng
-            don_hang = DonHang(nguoiDung=current_user.id)
+            don_hang = DonHang(id_NguoiDung=current_user.id)
             db.session.add(don_hang)
             db.session.commit()
 
@@ -356,7 +359,9 @@ def paymentNow():
             print("Lỗi:", e)
             return jsonify({"error": str(e)}), 500
     return render_template('payment.html')
-#note
+
+
+# note
 
 
 @app.route("/import", methods=['GET', 'POST'])
@@ -518,7 +523,7 @@ def bill():
     #     .join(NguoiDung, DonHang.nguoiDung == NguoiDung.id) \
     #     .group_by(DonHang.id, DonHang.ngayDatHang, DonHang.phuongThucThanhToan, NguoiDung.hoVaTen,
     #               DonHang.trangThai).order_by(DonHang.id.desc()).all()
-    list_bill=utils.get_bill_pagination(page)
+    list_bill = utils.get_bill_pagination(page)
     current_page = int(request.args.get('page', 1))
     selected_bill = None
     list_bill_detail = []
@@ -549,9 +554,11 @@ def bill():
                            selected_bill=selected_bill, list_bill_detail=list_bill_detail,
                            page=math.ceil(utils.count_bill_pagination() / app.config['LIST_SIZE']),
                            current_page=current_page)
- # return render_template('products.html',
- #                           page=math.ceil(utils.count_book(category_id=cate_id, kw=kw) / app.config['LIST_SIZE']),
- #                           lb=sach)
+
+
+# return render_template('products.html',
+#                           page=math.ceil(utils.count_book(category_id=cate_id, kw=kw) / app.config['LIST_SIZE']),
+#                           lb=sach)
 
 
 @app.route('/billCreate', methods=['GET', 'POST'])
@@ -598,7 +605,7 @@ def create_bill():
             ngayThanhToan=ngay_lap_hoa_don,
             trangThai=TrangThai.DA_NHAN_HANG,
             phuongThucThanhToan=PhuongThucThanhToan.TRUC_TIEP,
-            nguoiDung=current_user.id if not id else utils.get_user_by_id(user_id=id).id
+            id_NguoiDung=current_user.id if not id else utils.get_user_by_id(user_id=id).id
         )
         db.session.add(don_hang)
         db.session.commit()
@@ -630,10 +637,10 @@ def export_bill():
     data = request.json
     ngay_dat_hang = data.get('ngayDatHang')
     id = utils.count_bill() + 1
-    id_kh=data.get('id_kh')
+    id_kh = data.get('id_kh')
     sach_list = data.get('sachList', [])
     ten_kh = utils.get_user_by_id(user_id=id_kh) if id_kh else None
-    tongTien, tongSoLuong= 0, 0
+    tongTien, tongSoLuong = 0, 0
     document = Document()
 
     document.add_heading('Book Store', level=1).alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -761,7 +768,7 @@ def checkImporter():
         return redirect(url_for('index'))
 
 
-@app.route('/cart', methods=['GET','POST'])
+@app.route('/cart', methods=['GET', 'POST'])
 def cart():
     if not current_user.is_authenticated:
         return redirect('/login')
@@ -769,11 +776,11 @@ def cart():
     current_user_id = current_user.id  # ID người dùng hiện tại (nếu có đăng nhập)
 
     # lấy giỏ hàng của người dùng đang đăng nhập hiện tại ( mỗi người chỉ có 1 giỏ hàng)
-    gio_hang = GioHang.query.filter_by(nguoiDung=current_user_id).first()
+    gio_hang = GioHang.query.filter_by(id_NguoiDung=current_user_id).first()
     if not gio_hang:
         return render_template('cart.html', carts=[])  # nếu giỏ hàng rỗng thì trả về rỗng
     # lấy danh sách chi tiết giỏ hàng của người dùng
-    chi_tiet_GH = ChiTietGioHang.query.filter_by(gioHang=gio_hang.id).all()
+    chi_tiet_GH = ChiTietGioHang.query.filter_by(id_GioHang=gio_hang.id).all()
 
     danh_sach_sach = []
     for chi_tiet in chi_tiet_GH:
@@ -790,29 +797,29 @@ def cart():
     return render_template('cart.html', carts=danh_sach_sach)
 
 
-@app.route('/api/pay')
-@login_required
-def pay():
-    # ghi nhận đơn hàng
-    key = app.config['CART_KEY'] # lấy 'cart' ra
-    cart = session.get(key)
-
-    try: # check có bị lỗi ko, thường bị lỗi ràng buộc về CSDL
-        dao.save_order(cart)
-    except Exception as ex: # lỗi thì vào đây
-        print(str(ex))
-        return jsonify({
-            "status": 500,
-            "message": "Lỗi hệ thống",
-        })
-    else: # chạy lệnh success
-        #del session(key) # xóa cart trong session, vì đã thanh toán xong
-        pass
-
-    return jsonify({
-        "status": 200,
-        "message": "Hoàn tất thanh toán",
-    })
+# @app.route('/api/pay')
+# @login_required
+# def pay():
+#     # ghi nhận đơn hàng
+#     key = app.config['CART_KEY']  # lấy 'cart' ra
+#     cart = session.get(key)
+#
+#     try:  # check có bị lỗi ko, thường bị lỗi ràng buộc về CSDL
+#         dao.save_order(cart)
+#     except Exception as ex:  # lỗi thì vào đây
+#         print(str(ex))
+#         return jsonify({
+#             "status": 500,
+#             "message": "Lỗi hệ thống",
+#         })
+#     else:  # chạy lệnh success
+#         # del session(key) # xóa cart trong session, vì đã thanh toán xong
+#         pass
+#
+#     return jsonify({
+#         "status": 200,
+#         "message": "Hoàn tất thanh toán",
+#     })
 
 
 @app.route('/products/<int:sach_id>', methods=['POST'])
@@ -820,12 +827,13 @@ def pay():
 def add_to_cart(sach_id):
     return render_template('productDetail.html')  # Chuyển hướng về trang giỏ hàng
 
-@app.route('/payment', methods=['GET','POST'])
+
+@app.route('/payment', methods=['GET', 'POST'])
 @login_required
 def payment():
     # Kiểm tra Content-Type
     if request.method == 'POST':
-        products= []
+        products = []
         data = request.get_json()  # Lấy dữ liệu JSON từ body của POST request
         print("Data received:", data)
 
@@ -839,12 +847,12 @@ def payment():
         except json.JSONDecodeError as e:
             print("Error decoding JSON:", e)
         # lây pttt
-        paymentMethod = products[0].get('paymentMethod','TRUC_TIEP')
+        paymentMethod = products[0].get('paymentMethod', 'TRUC_TIEP')
         if paymentMethod == 'TRUC_TIEP':
             paymentMethod = PhuongThucThanhToan.TRUC_TIEP
         else:
             paymentMethod = PhuongThucThanhToan.TRUC_TUYEN
-        don_hang = DonHang(nguoiDung=current_user.id, phuongThucThanhToan=paymentMethod)
+        don_hang = DonHang(id_NguoiDung=current_user.id, phuongThucThanhToan=paymentMethod)
         db.session.add(don_hang)
         db.session.commit()
         for pro in products:
@@ -882,10 +890,126 @@ def payment():
     # print(danh_sach_sach)
 
 
-@app.route('/test')
-def test():
+@app.route('/status')
+def status():
     return render_template('status.html', orders=utils.get_order())
 
+
+@app.route('/api/pay', methods=['POST'])
+def api_pay():
+    try:
+        data = request.json
+        amount = int(data.get('amount', 100000))
+        chi_tiet_don_hang = data.get('chi_tiet_don_hang')
+        don_hang = DonHang(
+            trangThai=TrangThai.DANG_CHO_THANH_TOAN,
+            phuongThucThanhToan=PhuongThucThanhToan.TRUC_TUYEN,
+            id_NguoiDung=current_user.id
+        )
+        db.session.add(don_hang)
+        db.session.commit()
+        # vnp = Vnpay()
+        # vnp.requestData = {
+        #     'vnp_Version': '2.1.0',
+        #     'vnp_Command': 'pay',
+        #     'vnp_TmnCode': ,  # Kiểm tra mã TMN code
+        #     'vnp_Amount': amount * 100,  # Nhân 100 để đưa về VNĐ
+        #     'vnp_CurrCode': 'VND',
+        #     'vnp_TxnRef': str(don_hang.id),  # Mã đơn hàng duy nhất
+        #     'vnp_OrderInfo': str(don_hang.id),
+        #     'vnp_OrderType': 'billpayment',
+        #     'vnp_Locale': 'vn',
+        #     'vnp_BankCode': 'NCB',
+        #     'vnp_ReturnUrl': app.config["VNPAY_RETURN_URL"]  # URL trả về sau thanh toán
+        # }
+        # print( vnp.requestData)
+        ipaddr = request.remote_addr
+        # Build URL Payment
+        vnp = Vnpay()
+        vnp.requestData['vnp_Version'] = '2.1.0'
+        vnp.requestData['vnp_Command'] = 'pay'
+        vnp.requestData['vnp_TmnCode'] = app.config["VNPAY_TMN_CODE"]
+        vnp.requestData['vnp_Amount'] = amount * 100
+        vnp.requestData['vnp_CurrCode'] = 'VND'
+        vnp.requestData['vnp_TxnRef'] = str(don_hang.id) + "_" + datetime.now().__str__()
+        vnp.requestData['vnp_OrderInfo'] = str(don_hang.id)
+        vnp.requestData['vnp_OrderType'] = str(don_hang.id)
+        # Check language, default: vn
+        vnp.requestData['vnp_Locale'] = 'vn'
+        vnp.requestData['vnp_BankCode'] = 'NCB'
+
+        vnp.requestData['vnp_CreateDate'] = datetime.now().strftime('%Y%m%d%H%M%S')  # 20150410063022
+        vnp.requestData['vnp_IpAddr'] = ipaddr
+        vnp.requestData['vnp_ReturnUrl'] = app.config["VNPAY_RETURN_URL"]
+
+        for p in chi_tiet_don_hang:
+            chi_tiet = ChiTietDonHang(
+                id_Sach=p['product_id'],
+                id_DonHang=don_hang.id,
+                soLuong=p['quantity'],
+            )
+            ChiTietGioHang.query.filter_by(
+                id_Sach=p['product_id'],
+                id_GioHang=GioHang.query.filter(GioHang.id_NguoiDung==current_user.id).first().id
+            ).delete()
+            db.session.add(chi_tiet)
+        db.session.commit()
+        print("Request Data:", vnp.requestData)
+        payment_url = vnp.get_payment_url(
+            'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html',
+            app.config["VNPAY_HASH_SECRET_KEY"]
+        )
+
+        # Log URL thanh toán
+        print("Payment URL:", payment_url)
+
+        return jsonify({'status': 200, 'payment_url': payment_url})
+    except Exception as e:
+        return jsonify({'status': 500, 'message': str(e)})
+
+
+
+@app.route("/payment_return", methods=["GET"])
+def payment_return():
+    if request.args:
+        vnp = Vnpay()
+        vnp.responseData = request.args.to_dict()
+        order_id = request.args.get('vnp_TxnRef')
+        amount = int(request.args.get('vnp_Amount')) / 100
+        order_desc = request.args.get('vnp_OrderInfo')
+        vnp_BankTranNo = request.args.get("vnp_BankTranNo")
+        vnp_TransactionNo = request.args.get('vnp_TransactionNo')
+        vnp_ResponseCode = request.args.get('vnp_ResponseCode')
+        print(vnp_ResponseCode)
+        vnp_PayDate = request.args.get('vnp_PayDate')
+        vnp_BankCode = request.args.get('vnp_BankCode')
+        vnp_CardType = request.args.get('vnp_CardType')
+        vnp_SecureHash = request.args.get('vnp_SecureHash')
+        if vnp.validate_response(app.config["VNPAY_HASH_SECRET_KEY"]):
+            if vnp_ResponseCode == "00":
+                dh=DonHang.query.get(order_id)
+                dh.trangThai=TrangThai.DANG_GIAO_HANG
+                db.session.commit()
+                return render_template("vnpay/payment_return.html", title="Kết quả giao dịch",
+                                       result="Thành công", order_id=order_id,
+                                       amount=amount,
+                                       order_desc=order_desc,
+                                       vnp_TransactionNo=vnp_TransactionNo,
+                                       vnp_ResponseCode=vnp_ResponseCode)
+            else:
+                return render_template("vnpay/payment_return.html", title="Kết quả giao dịch",
+                                       result="Lỗi", order_id=order_id,
+                                       amount=amount,
+                                       order_desc=order_desc,
+                                       vnp_TransactionNo=vnp_TransactionNo,
+                                       vnp_ResponseCode=vnp_ResponseCode)
+        else:
+            return render_template("vnpay/payment_return.html",
+                                   title="Kết quả giao dịch", result="Lỗi", order_id=order_id, amount=amount,
+                                   order_desc=order_desc, vnp_TransactionNo=vnp_TransactionNo,
+                                   vnp_ResponseCode=vnp_ResponseCode, msg="Sai checksum")
+    else:
+        return render_template("vnpay/payment_return.html", title="Kết quả thanh toán", result="")
 
 if __name__ == '__main__':
     with app.app_context():

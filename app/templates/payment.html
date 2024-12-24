@@ -32,23 +32,31 @@
     <!-- Địa chỉ nhận hàng -->
     <div class="cart-tab mb-4 p-3">
         <h4>Thông tin người nhận</h4>
-    <form action="/action_page.php">
-        <div class="mb-3 mt-3">
-          <label for="username" class="form-label">Họ và tên:</label>
-          <input type="text" class="form-control" id="username" placeholder="Nhập họ và tên" name="username" required>
-        </div>
-        <div class="mb-3">
-          <label id="phone" class="form-label">Số điện thoại:</label>
-          <input type="tel" class="form-control" id="tel" placeholder="Nhập số điện thoại(Vd:(0)123456789)" 
-          name="phone" pattern="[0][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" required>
-        </div>
-        <div class="mb-3">
-            <label for="city" class="form-label">Địa chỉ nhận hàng:</label>
-            <input type="text" class="form-control" id="city" placeholder="Nhập địa chỉ nhận hàng" name="city" required>
-        </div>
-        <!-- <button type="submit" class="btn btn-danger">Submit</button> -->
-    </form>
-    </div> 
+        <form action="/action_page.php">
+            <div class="mb-3 mt-3">
+                <label for="username" class="form-label">Họ và tên:</label>
+                <input type="text" class="form-control" id="username" placeholder="Nhập họ và tên" name="username"
+                       value="{{current_user.hoVaTen}}" disabled>
+            </div>
+            <div class="mb-3">
+                <label id="phone" class="form-label">Số điện thoại:</label>
+
+                <input type="tel" class="form-control" id="tel" placeholder="Nhập số điện thoại(Vd:(0)123456789)"
+                       name="phone" pattern="[0][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]"
+                       {% if current_user.sdt %} value="{{ current_user.sdt }}" disabled
+                        {% else %} required
+                        {% endif %}>
+            </div>
+            <div class="mb-3">
+                <label for="city" class="form-label">Địa chỉ nhận hàng:</label>
+                <input type="text" class="form-control" id="city" placeholder="Nhập địa chỉ nhận hàng" name="city"
+                        {% if current_user.diaChi %} value="{{ current_user.diaChi }}" disabled
+                        {% else %} required
+                        {% endif %}>
+            </div>
+            <!-- <button type="submit" class="btn btn-danger">Submit</button> -->
+        </form>
+    </div>
 
     <!-- <form class="row g-3 needs-validation" novalidate>
         <div class="col-md-4">
@@ -76,61 +84,45 @@
           </div>
         </div>
     </form> -->
-    
-    <div class="cart-tab mb-4 p-3">
+
+    <div id="cart-table" class="cart-tab mb-4 p-3">
         <h4>Sản phẩm</h4>
         <table class="table">
-        <thead>
+            <thead>
             <tr>
                 <th>Tên sản phẩm</th>
                 <th>Đơn giá</th>
                 <th>Số lượng</th>
                 <th>Thành tiền</th>
             </tr>
-        </thead>
-        <tbody id="productList">
+            </thead>
+            <tbody id="productList">
 
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
+    <div class="alert alert-light">
+        <h3>Tổng tiền: <span id="total"></span> VNĐ</h3>
     </div>
 
     <div class="cart-tab mb-4 p-3">
         <h4>Phương thức thanh toán</h4>
         <form action="{{ url_for('payment') }}" method="post">
             <div class="form-check">
-              <input type="radio" class="form-check-input" id="radio1" name="optradio" value="TRUC_TIEP" checked>
-              <label class="form-check-label" for="radio1">Thanh toán trực tiếp</label>
+                <input type="radio" class="form-check-input" id="radio1" name="optradio" value="TRUC_TIEP" checked>
+                <label class="form-check-label" for="radio1">Thanh toán trực tiếp</label>
             </div>
             <div class="form-check">
-              <input type="radio" class="form-check-input" id="radio2" name="optradio" value="TRUC_TUYEN">
-              <label class="form-check-label" for="radio2">Thanh toán Momo</label>
+                <input type="radio" class="form-check-input" id="radio2" name="optradio" value="TRUC_TUYEN">
+                <label class="form-check-label" for="radio2">Thanh toán VNPay</label>
             </div>
             <div class="mb-4">
                 <a title="Thanh toán" class="nav-link d-flex align-items-center me-3" href="#">
-                    <button type="submit" class="btn btn-danger" onclick="processPayment()">Xác nhận thanh toán</button>
+                    <button type="submit" class="btn btn-danger" onclick="payment()">Xác nhận thanh toán</button>
                 </a>
             </div>
         </form>
     </div>
-
-    <div class="alert alert-light">
-        <h3>Tổng tiền: VNĐ</h3>
-    </div>
-
-
-
-      <!-- Chưa chọn sản phẩm để thanh toán -->
-    <div class="cart-tab">
-        <div style="display:flex; justify-content: center; align-items: center;">
-            <div style="text-align: center;">
-                <div>
-                    <img title="Giỏ hàng rỗng" src="static/images/cart-empty.png" alt="Cart empty"style="width:30rem"/>
-                </div>
-                <p style="font: italic 1.2rem fangsong;">Bạn chưa chọn sản phẩm nào để mua. Vui lòng quay lại trang giỏ hàng để chọn sản phẩm!</p>
-            </div>
-        </div>
-    </div>
-
     <div class="mt-4">
         <a title="Thanh toán" class="nav-link d-flex align-items-center me-3" href="/cart">
             <button type="submit" class="btn btn-danger">Quay lại giỏ hàng</button>
@@ -140,4 +132,7 @@
 </section>
 
 {% endif %}
+{% endblock %}
+{% block js%}
+<script src="{{url_for('static', filename='js/payment.js')}}"></script>
 {% endblock %}

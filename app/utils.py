@@ -1,8 +1,10 @@
+import os, hashlib
 from flask_login import current_user
+os.environ["PLATFORM_WMI_DISABLE"] = "1"  # Tắt truy vấn WMI
 from sqlalchemy import func
 from models import *
 from __init__ import db, app
-import os, hashlib
+
 import dao
 
 
@@ -152,7 +154,7 @@ def get_bill_pagination(page=1):
                      func.sum(Sach.donGia * ChiTietDonHang.soLuong).label('tong_gia')) \
         .select_from(DonHang).join(ChiTietDonHang, DonHang.id == ChiTietDonHang.id_DonHang) \
         .join(Sach, ChiTietDonHang.id_Sach == Sach.id) \
-        .join(NguoiDung, DonHang.nguoiDung == NguoiDung.id) \
+        .join(NguoiDung, DonHang.id_NguoiDung == NguoiDung.id) \
         .group_by(DonHang.id, DonHang.ngayDatHang, DonHang.phuongThucThanhToan, NguoiDung.hoVaTen,
                   DonHang.trangThai).order_by(DonHang.id.desc()).slice(start, start + page_size).all()
 
@@ -165,7 +167,7 @@ def count_bill_pagination():
                      func.sum(Sach.donGia * ChiTietDonHang.soLuong).label('tong_gia')) \
         .select_from(DonHang).join(ChiTietDonHang, DonHang.id == ChiTietDonHang.id_DonHang) \
         .join(Sach, ChiTietDonHang.id_Sach == Sach.id) \
-        .join(NguoiDung, DonHang.nguoiDung == NguoiDung.id) \
+        .join(NguoiDung, DonHang.id_NguoiDung == NguoiDung.id) \
         .group_by(DonHang.id, DonHang.ngayDatHang, DonHang.phuongThucThanhToan, NguoiDung.hoVaTen,
                   DonHang.trangThai).count()
 
@@ -188,7 +190,7 @@ def get_order():
     ).select_from(DonHang)\
         .join(ChiTietDonHang, DonHang.id == ChiTietDonHang.id_DonHang)\
         .join(Sach, Sach.id == ChiTietDonHang.id_Sach)\
-        .join(NguoiDung, NguoiDung.id == DonHang.nguoiDung)\
-        .filter(current_user.id == DonHang.nguoiDung)\
+        .join(NguoiDung, NguoiDung.id == DonHang.id_NguoiDung)\
+        .filter(current_user.id == DonHang.id_NguoiDung)\
         .order_by(DonHang.ngayDatHang.desc())\
         .all()
