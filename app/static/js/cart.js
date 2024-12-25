@@ -122,6 +122,10 @@ function collectSelectedProducts() {
             paymentMethod: paymentMethod
         });
     });
+       if (selectedProducts.length === 0) {
+        alert("Vui lòng chọn ít nhất một sản phẩm trước khi tiếp tục."); // Hiển thị thông báo
+        window.location.href="http://127.0.0.1:5000/cart"
+    }
     localStorage.setItem("selectedProducts", JSON.stringify(selectedProducts));
     return selectedProducts;
 }

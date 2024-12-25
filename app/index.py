@@ -1,6 +1,8 @@
 import json
 import math, utils, cloudinary.uploader, admin, hashlib, os, mail
 import math, utils, cloudinary.uploader, admin, hashlib, os, dao
+from datetime import timedelta
+
 import docx
 from models import *
 from __init__ import app, loginMNG, db
@@ -1010,6 +1012,48 @@ def payment_return():
                                    vnp_ResponseCode=vnp_ResponseCode, msg="Sai checksum")
     else:
         return render_template("vnpay/payment_return.html", title="Kết quả thanh toán", result="")
+
+
+def cap_nhat_trang_thai_don_hang():
+    try:
+        # Thời điểm hiện tại
+        now = datetime.now()
+
+        # Tìm các đơn hàng cần cập nhật
+        don_hang_can_cap_nhat = DonHang.query.filter(
+            DonHang.trangThai == TrangThai.DANG_CHO_THANH_TOAN,
+            DonHang.ngayDatHang <= now - timedelta(hours=48)
+        ).all()
+
+        # Cập nhật trạng thái cho từng đơn hàng
+        for don_hang in don_hang_can_cap_nhat:
+            don_hang.trangThai = TrangThai.DA_HUY
+            print(f"Cập nhật đơn hàng ID {don_hang.id}: Chuyển sang trạng thái 'Hủy'")
+
+        # Lưu thay đổi vào cơ sở dữ liệu
+        db.session.commit()
+        print(f"Cập nhật trạng thái cho {len(don_hang_can_cap_nhat)} đơn hàng.")
+    except Exception as e:
+        db.session.rollback()  # Hoàn tác nếu có lỗi
+        print(f"Lỗi khi cập nhật trạng thái đơn hàng: {e}")
+
+
+def run_scheduler():
+    with app.app_context():
+        cap_nhat_trang_thai_don_hang()
+
+# from apscheduler.schedulers.background import BackgroundScheduler
+#
+# def start_scheduler():
+#     scheduler = BackgroundScheduler()
+#     scheduler.add_job(run_scheduler, 'interval', hours=1)
+#     scheduler.start()
+#
+#     try:
+#         while True:
+#             pass
+#     except (KeyboardInterrupt, SystemExit):
+#         scheduler.shutdown()
 
 if __name__ == '__main__':
     with app.app_context():

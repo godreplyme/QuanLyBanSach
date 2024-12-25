@@ -27,7 +27,7 @@
             </p>
 
             <div class="d-flex align-items-center mb-3">
-                <h3 class="text-success fw-bold mb-0">{{sach.donGia}}₫</h3>
+                <h3 class="text-success fw-bold mb-0">{{ "{:,.0f}".format(sach.donGia).replace(",", ".") }}₫</h3>
             </div>
             <hr>
             <!-- Quantity and Buttons -->
@@ -107,7 +107,7 @@
                                                 {{ book.ten }}
                                             </h5>
                                             <div>
-                                                <span class="text-danger fw-bold fs-5">{{ book.donGia }} đ</span>
+                                                <span class="text-danger fw-bold fs-5">{{ "{:,.0f}".format(book.donGia).replace(",", ".") }} đ</span>
                                             </div>
                                             <button class="btn btn-outline-danger rounded-pill px-4 py-2 w-100">
                                                 Thêm vào giỏ hàng

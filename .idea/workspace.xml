@@ -5,21 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="104cf8c2-7b15-4777-a429-3dc760ec57cd" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/static/js/payment.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/templates/vnpay/payment.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/templates/vnpay/payment_return.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/vnpay/form.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/vnpay/vnpay.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SellingBookManagement.asta" beforeDir="false" afterPath="$PROJECT_DIR$/SellingBookManagement.asta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/index.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/index.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/static/js/cart.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/static/js/cart.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/layout/base_user_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/layout/base_user_profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/home.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/templates/payment.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/payment.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/exports/HoaDon_11.docx" beforeDir="false" afterPath="$PROJECT_DIR$/app/exports/HoaDon_1.docx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/productDetail.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/productDetail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/status.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/status.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/vnpay/payment_return.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/vnpay/payment_return.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/untils.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,21 +42,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "Python.__init__.executor": "Run",
-    "Python.index.executor": "Run",
-    "Python.mail.executor": "Run",
-    "Python.models.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "D:/cnpm-qlns/app",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Python.__init__.executor&quot;: &quot;Run&quot;,
+    &quot;Python.index.executor&quot;: &quot;Run&quot;,
+    &quot;Python.mail.executor&quot;: &quot;Run&quot;,
+    &quot;Python.models.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/cnpm-qlns/app&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\cnpm-qlns\app\static\images" />
@@ -191,48 +187,43 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/app/index.py</url>
-          <line>402</line>
+          <line>404</line>
           <option name="timeStamp" value="74" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/app/index.py</url>
-          <line>419</line>
+          <line>421</line>
           <option name="timeStamp" value="75" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/app/index.py</url>
-          <line>414</line>
+          <line>416</line>
           <option name="timeStamp" value="76" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/app/index.py</url>
-          <line>433</line>
+          <line>435</line>
           <option name="timeStamp" value="78" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/app/index.py</url>
-          <line>417</line>
+          <line>419</line>
           <option name="timeStamp" value="79" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/app/index.py</url>
-          <line>418</line>
+          <line>420</line>
           <option name="timeStamp" value="80" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/app/index.py</url>
-          <line>273</line>
+          <line>275</line>
           <option name="timeStamp" value="87" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/app/index.py</url>
-          <line>260</line>
+          <line>262</line>
           <option name="timeStamp" value="88" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/app/index.py</url>
-          <line>1013</line>
-          <option name="timeStamp" value="97" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
