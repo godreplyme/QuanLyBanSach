@@ -910,21 +910,6 @@ def api_pay():
         )
         db.session.add(don_hang)
         db.session.commit()
-        # vnp = Vnpay()
-        # vnp.requestData = {
-        #     'vnp_Version': '2.1.0',
-        #     'vnp_Command': 'pay',
-        #     'vnp_TmnCode': ,  # Kiểm tra mã TMN code
-        #     'vnp_Amount': amount * 100,  # Nhân 100 để đưa về VNĐ
-        #     'vnp_CurrCode': 'VND',
-        #     'vnp_TxnRef': str(don_hang.id),  # Mã đơn hàng duy nhất
-        #     'vnp_OrderInfo': str(don_hang.id),
-        #     'vnp_OrderType': 'billpayment',
-        #     'vnp_Locale': 'vn',
-        #     'vnp_BankCode': 'NCB',
-        #     'vnp_ReturnUrl': app.config["VNPAY_RETURN_URL"]  # URL trả về sau thanh toán
-        # }
-        # print( vnp.requestData)
         ipaddr = request.remote_addr
         # Build URL Payment
         vnp = Vnpay()
@@ -969,7 +954,35 @@ def api_pay():
     except Exception as e:
         return jsonify({'status': 500, 'message': str(e)})
 
-
+@app.route('/api/cash', methods=['POST'])
+def cash():
+    try:
+        data = request.json
+        amount = int(data.get('amount', 100000))
+        chi_tiet_don_hang = data.get('chi_tiet_don_hang')
+        don_hang = DonHang(
+            trangThai=TrangThai.CHO_NHAN_HANG,
+            phuongThucThanhToan=PhuongThucThanhToan.TRUC_TIEP,
+            id_NguoiDung=current_user.id
+        )
+        db.session.add(don_hang)
+        db.session.commit()
+        for p in chi_tiet_don_hang:
+            chi_tiet = ChiTietDonHang(
+                id_Sach=p['product_id'],
+                id_DonHang=don_hang.id,
+                soLuong=p['quantity'],
+            )
+            ChiTietGioHang.query.filter_by(
+                id_Sach=p['product_id'],
+                id_GioHang=GioHang.query.filter(GioHang.id_NguoiDung == current_user.id).first().id
+            ).delete()
+            db.session.add(chi_tiet)
+        db.session.commit()
+        payment_url = url_for('status')
+        return jsonify({'status': 200, 'payment_url': payment_url})
+    except Exception as e:
+        return jsonify({'status': 500, 'message': str(e)})
 
 @app.route("/payment_return", methods=["GET"])
 def payment_return():

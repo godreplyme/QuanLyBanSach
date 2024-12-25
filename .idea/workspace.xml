@@ -6,16 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="104cf8c2-7b15-4777-a429-3dc760ec57cd" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/index.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/index.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/static/js/cart.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/static/js/cart.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/home.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/static/js/payment.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/static/js/payment.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/templates/payment.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/payment.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/productDetail.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/productDetail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/status.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/status.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/vnpay/payment_return.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/vnpay/payment_return.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/untils.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
